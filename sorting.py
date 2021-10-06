@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import statsmodels.graphics.api as smg
 import statsmodels.api as sm
 from scipy import stats
-#testing pushes @2
 
 print("...")
 print("Begininng Updating Sequence...")
