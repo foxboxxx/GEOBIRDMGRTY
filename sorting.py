@@ -127,6 +127,20 @@ otherm = magData30N90W.copy().query('2000 <= year < 2020')
 magStrength30N90W = otherm['intensity'].values.tolist()
 
 #correlation tests
+#these are the dataframes needed for the all birds correlation
+smallCountPercentages = (smallCount['countS'].copy() / largeCount['countS'].copy()) * 100
+print(smallCountPercentages)
+smallCountWPercentages = (smallCountW['countS'].copy() / largeCountW['countS'].copy()) * 100
+print(smallCountWPercentages)
+smallCountPPercentages = (smallCountP['countS'].copy() / largeCountP['countS'].copy()) * 100
+print(smallCountPPercentages)
+smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].copy()) * 100
+print(smallCountHPercentages)
+allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
+print(allBirdPercentages)
+
+print("30S60W All Birds: ",stats.pearsonr(magStrength3060S,allBirdPercentages))
+
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
 ploverLargeList3060S = largeCount.copy()['countS'].values.tolist()
 percentagesPlover3060S = []
