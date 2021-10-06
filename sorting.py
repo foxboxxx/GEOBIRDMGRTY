@@ -109,69 +109,72 @@ magStrength30N90W = otherm['intensity'].values.tolist()
 
 #correlation tests
 #these are the dataframes needed for the all birds correlation
+print("|------------------------------------------------------------------------|")#section start
 smallCountPercentages = (smallCount['countS'].copy() / largeCount['countS'].copy()) * 100
 smallCountWPercentages = (smallCountW['countS'].copy() / largeCountW['countS'].copy()) * 100
 smallCountPPercentages = (smallCountP['countS'].copy() / largeCountP['countS'].copy()) * 100
 smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].copy()) * 100
 allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
 
-print("30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
+print("> 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
 
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
 ploverLargeList3060S = largeCount.copy()['countS'].values.tolist()
 percentagesPlover3060S = []
 for x in range(len(ploverSmallList3060S)):
     percentagesPlover3060S.append((ploverSmallList3060S[x]/ploverLargeList3060S[x]) * 100)
-print("30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
+print("> 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
 
 whiteSmallList3060S = smallCountW.copy()['countS'].values.tolist()
 whiteLargeList3060S = largeCountW.copy()['countS'].values.tolist()
 percentagesWhite3060S = []
 for x in range(len(whiteSmallList3060S)):
     percentagesWhite3060S.append((whiteSmallList3060S[x]/whiteLargeList3060S[x]) * 100)
-print("30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
+print("> 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
 
 pectoralSmallList3060S = smallCountP.copy()['countS'].values.tolist()
 pectoralLargeList3060S = largeCountP.copy()['countS'].values.tolist()
 percentagesPectoral3060S = []
 for x in range(len(pectoralSmallList3060S)):
     percentagesPectoral3060S.append((pectoralSmallList3060S[x]/pectoralLargeList3060S[x]) * 100)
-print("30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPectoral3060S)[1]))
+print("> 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPectoral3060S)[1]))
 
 hawkSmallList3060S = smallCountH.copy()['countS'].values.tolist()
 hawkLargeList3060S = largeCountH.copy()['countS'].values.tolist()
 percentagesHawk3060S = []
 for x in range(len(hawkSmallList3060S)):
     percentagesHawk3060S.append((hawkSmallList3060S[x]/hawkLargeList3060S[x]) * 100)
-print("30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesHawk3060S)[1]))
+print("> 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesHawk3060S)[1]))
 
 forkSmallList3060S = smallCountF.copy()['countS'].values.tolist()
 forkLargeList3060S = largeCountF.copy()['countS'].values.tolist()
 percentagesFork3060S = []
 for x in range(len(forkSmallList3060S)):
     percentagesFork3060S.append((forkSmallList3060S[x]/forkLargeList3060S[x]) * 100)
-print("30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
+print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
 
 NAPloverSmallList3060S = smallCountNAPlover.copy()['countS'].values.tolist()
 NAPloverLargeList3060S = largeCountNAPlover.copy()['countS'].values.tolist()
 percentagesNAPlover30N90W = []
 for x in range(len(NAPloverSmallList3060S)):
     percentagesNAPlover30N90W.append((NAPloverSmallList3060S[x]/NAPloverLargeList3060S[x]) * 100)
-print("30N90W American Golden-PLover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
+print("> 30N90W American Golden-PLover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
 
 NAWhiteSmallList3060S = smallCountNARump.copy()['countS'].values.tolist()
 NAWhiteLargeList3060S = largeCountNARump.copy()['countS'].values.tolist()
 percentagesNAWhite30N90W = []
 for x in range(len(NAWhiteSmallList3060S)):
     percentagesNAWhite30N90W.append((NAWhiteSmallList3060S[x]/NAWhiteLargeList3060S[x]) * 100)
-print("30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
+print("> 30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
 
 NAPiperSmallList3060S = smallCountNAPiper.copy()['countS'].values.tolist()
 NAPiperLargeList3060S = largeCountNAPiper.copy()['countS'].values.tolist()
 percentagesNAPiper30N90W = []
 for x in range(len(NAPiperSmallList3060S)):
     percentagesNAPiper30N90W.append((NAPiperSmallList3060S[x]/NAPiperLargeList3060S[x]) * 100)
-print("30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
+print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
+
+print("|------------------------------------------------------------------------|")#section end
 
 # hie_data = sm.datasets.randhie.load_pandas()
 # corr_matrix = np.corrcoef(hie_data.data.T)
