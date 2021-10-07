@@ -55,7 +55,7 @@ northAmericanHawk = pSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= de
 
 specificHawk = sHawkRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
 specificHawk2 = sHawkRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= decimalLongitude >= -64 & individualCount < 1000')
-#specificHawk3 = sHawkRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
+specificHawk3 = sHawkRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
 
 
 southAmericanRump = wSandpiperRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
@@ -76,7 +76,7 @@ def yearCount(smallSet, bigSet, yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSet
 
-smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = pd.DataFrame({'year':[], 'countS':[]})
+smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
 
@@ -100,6 +100,10 @@ largeCountNAPiper = yearCount(largeCountNAPiper, northAmericanPiper, 2000, 2020)
 
 smallCountNARump = yearCount(smallCountNARump, specificRump3, 2000, 2020)
 largeCountNARump = yearCount(largeCountNARump, northAmericanRump, 2000, 2020)
+
+smallCountNAHawk = yearCount(smallCountNAHawk, specificHawk3, 2000,2020)
+largeCountNAHawk = yearCount(largeCountNAHawk, northAmericanHawk, 2000, 2020)
+
 
 newm = magData3060.copy().query('2000 <= year < 2020')
 magStrength3060S = newm['intensity'].values.tolist()
@@ -173,6 +177,13 @@ percentagesNAPiper30N90W = []
 for x in range(len(NAPiperSmallList3060S)):
     percentagesNAPiper30N90W.append((NAPiperSmallList3060S[x]/NAPiperLargeList3060S[x]) * 100)
 print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
+
+NAHawkSmallList3060S = smallCountNAHawk.copy()['countS'].values.tolist()
+NAHawkLargeList3060S = largeCountNAHawk.copy()['countS'].values.tolist()
+percentagesNAHawk30N90W = []
+for x in range(len(NAHawkSmallList3060S)):
+    percentagesNAHawk30N90W.append((NAHawkSmallList3060S[x]/NAHawkLargeList3060S[x]) * 100)
+print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAHawk30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAHawk30N90W)[1]))
 
 print("|------------------------------------------------------------------------|")#section end
 
@@ -788,6 +799,36 @@ wrcorrelationNA.plot(x = smallCountNARump.year, y = (smallCountNARump.countS/lar
 wrcorrelationNA.legend(position = "jTL+o0.1c", box = True)
 wrcorrelationNA.savefig("WrCorrelation30N90W.png",show = False)
 print("5R Analysis of WrBird % In North America (30N 90W) Successfully Updated.")
+
+#rump na correlation (30N 90W) 2000-2020
+shcorrelationNA = pygmt.Figure()
+shcorrelationNA.basemap(region=[2000,2020,46000,50000], projection = "X15c/15c", frame = ["St", "xaf+lYear"])
+shcorrelationNA.basemap(frame=["a", '+t"5R Analysis of ShBird % In North America (30N 90W)"'])
+with pygmt.config(
+    MAP_FRAME_PEN = "blue",
+    MAP_TICK_PEN = "blue", 
+    FONT_ANNOT_PRIMARY = "blue", 
+    FONT_LABEL = "blue",
+):
+    shcorrelationNA.basemap(frame=["W", 'yaf+l"Magnetic Strength (nT)"'])
+    
+shcorrelationNA.plot(x = magData30N90W.year, y = magData30N90W.intensity, pen="1p,blue")
+shcorrelationNA.plot(x = magData30N90W.year, y = magData30N90W.intensity, style="c0.2c", color = "blue", label = '"Magnetic Strength (nT)"')
+
+with pygmt.config(
+    MAP_FRAME_PEN = "red",
+    MAP_TICK_PEN = "red",
+    FONT_ANNOT_PRIMARY = "red",
+    FONT_LABEL = "red",
+):
+    shcorrelationNA.basemap(region = [2000,2020,0,100], frame=["E", 'yaf+l"ShBird Population Density %"'])
+    
+shcorrelationNA.plot(x = smallCountNAHawk.year, y = (smallCountNAHawk.countS/largeCountNAHawk.countS)*100, pen = "1p,red")
+shcorrelationNA.plot(x = smallCountNAHawk.year, y = (smallCountNAHawk.countS/largeCountNAHawk.countS)*100, style = "s0.25c", color = "red", label = '"ShBird Population Density %"')
+
+shcorrelationNA.legend(position = "jTL+o0.1c", box = True)
+shcorrelationNA.savefig("ShCorrelation30N90W.png",show = False)
+print("5R Analysis of ShBird % In North America (30N 90W) Successfully Updated.")
 
 #piper correlation 2000-2020
 correlationP = pygmt.Figure()
