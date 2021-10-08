@@ -7,8 +7,52 @@ def yearCount(smallSet, bigSet, yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSet
 
-def mapMaker():
-    print("WIP")
+def mapMaker(yearMin, yearMax, birdName, rawBirdFile, latMin, latMax, lonMin, lonMax):
+    rawBirdData = pd.read_csv(rawBirdFile)
+    rawBirdData = rawBirdData.loc[rawBirdData['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
+    filteredBirdData = rawBirdData.query('@yearMin <= year <= @yearMax')
+
+    if(latMin >= 0):
+        latMinName = str(abs(latMin)) + "E"
+    else:
+        latMinName = str(abs(latMin)) + "W"
+
+    if(latMax >= 0):
+        latMaxName = str(abs(latMax)) + "E"
+    else:
+        latMaxName = str(abs(latMax)) + "W"
+
+    if(lonMin >= 0):
+        lonMinName = str(abs(lonMin)) + "N"
+    else:
+        lonMinName = str(abs(lonMin)) + "S"
+
+    if(lonMax >= 0):
+        lonMaxName = str(abs(lonMax)) + "N"
+    else:
+        lonMaxName = str(abs(lonMax)) + "S"
+
+    finalRegion = [latMin,latMax,lonMin,lonMax]
+
+    Fig = pygmt.Figure()
+    Fig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t' + birdName  + "_" + lonMinName + lonMaxName + latMaxName + latMaxName + "(" + str(yearMin) + "-" + str(yearMax) + ")"])
+    Fig.coast(land="burlywood", water="lightblue")
+    pygmt.makecpt(cmap="viridis", series=[yearMin,yearMax])
+    Fig.plot(
+        x=filteredBirdData.decimalLongitude,
+        y=filteredBirdData.decimalLatitude,
+        color = filteredBirdData.year,
+        cmap= True,
+        size= 0.05 + ((filteredBirdData.individualCount + 1)/10000),
+        style= "cc",
+        pen = "black"
+    )
+    Fig.colorbar(frame='af+l"Year"')
+    Fig.savefig(birdName + "_" + lonMinName + lonMaxName + latMaxName + latMaxName + "_" + "(" + str(yearMin) + "_" + str(yearMax) + ")" + ".png", show = False)
+
+    print("{} - {}{}{}{} ({} - {}) Successfully Updated.".format(birdName, latMinName, latMaxName, lonMinName, lonMaxName, yearMin, yearMax))
+
+# finalRegion = [-90,177,-55,1]
 
 def graphMaker(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax, birdName, rawBirdFile, populationCap, rawMagData, region, latitude, longitude, latMin, latMax, lonMin, lonMax):
     filteredMagData = pd.read_csv(rawMagData)
@@ -68,3 +112,4 @@ def graphMaker(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax,
 
 #(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax, birdName, rawBirdFile, populationCap, rawMagData, region, latitude, longitude, latMin, latMax, lonMin, lonMax)
 graphMaker(5, 2000, 2020, 22000, 26000, 0, 100, "AgBird", "plovercsv.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
+mapMaker(2000,2020,"AgBird", "plovercsv.csv",-90, 177,-55,1)
