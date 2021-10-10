@@ -119,7 +119,6 @@ smallCountWPercentages = (smallCountW['countS'].copy() / largeCountW['countS'].c
 smallCountPPercentages = (smallCountP['countS'].copy() / largeCountP['countS'].copy()) * 100
 smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].copy()) * 100
 allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
-
 print("> 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
 
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
@@ -128,6 +127,11 @@ percentagesPlover3060S = []
 for x in range(len(ploverSmallList3060S)):
     percentagesPlover3060S.append((ploverSmallList3060S[x]/ploverLargeList3060S[x]) * 100)
 print("> 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
+plt.scatter(magStrength3060S, percentagesPlover3060S)
+plt.title("30S60W American Golden-Plover")
+plt.xlabel("Magnetic Strength (nT)")
+plt.ylabel("Population Density %")
+plt.show()
 
 whiteSmallList3060S = smallCountW.copy()['countS'].values.tolist()
 whiteLargeList3060S = largeCountW.copy()['countS'].values.tolist()
