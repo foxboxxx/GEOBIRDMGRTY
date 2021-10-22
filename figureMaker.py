@@ -11,6 +11,7 @@ def mapMaker(yearMin, yearMax, birdName, rawBirdFile, latMin, latMax, lonMin, lo
     rawBirdData = pd.read_csv(rawBirdFile)
     rawBirdData = rawBirdData.loc[rawBirdData['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
     filteredBirdData = rawBirdData.query('@yearMin <= year <= @yearMax')
+    filteredBirdData = filteredBirdData.query('individualCount < 1000')
 
     if(latMin >= 0):
         latMinName = str(abs(latMin)) + "E"
@@ -113,3 +114,5 @@ def graphMaker(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax,
 #(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax, birdName, rawBirdFile, populationCap, rawMagData, region, latitude, longitude, latMin, latMax, lonMin, lonMax)
 graphMaker(5, 2000, 2020, 22000, 26000, 0, 100, "AgBird", "plovercsv.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
 mapMaker(2000,2020,"AgBird", "plovercsv.csv",-90, 177,-55,1)
+mapMaker(1970,2020,"AgBird", "plovercsv.csv",-150, -60,0,60)
+

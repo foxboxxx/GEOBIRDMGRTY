@@ -3,6 +3,7 @@ import numpy as np
 import pygmt
 import datetime
 import matplotlib.pyplot as plt
+import matplotlib as matplotlib
 import statsmodels.graphics.api as smg
 import statsmodels.api as sm
 from scipy import stats
@@ -111,8 +112,22 @@ magStrength3060S = newm['intensity'].values.tolist()
 otherm = magData30N90W.copy().query('2000 <= year < 2020')
 magStrength30N90W = otherm['intensity'].values.tolist()
 
+print(matplotlib.get_cachedir())
+
 #correlation tests
 #these are the dataframes needed for the all birds correlation
+def scatterPlot(mag, per, title, file):
+    font = {'fontname':'Helvetica', 'style':'italic'}
+    plt.clf()
+    plt.scatter(mag, per)
+    plt.title(title, **font)
+    plt.xlabel("Magnetic Strength (nT)", **font)
+    plt.ylabel("Population Density %", **font)
+    plt.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
+
+    plt.savefig(file)
+    
+
 print("|------------------------------------------------------------------------|")#section start
 smallCountPercentages = (smallCount['countS'].copy() / largeCount['countS'].copy()) * 100
 smallCountWPercentages = (smallCountW['countS'].copy() / largeCountW['countS'].copy()) * 100
@@ -120,6 +135,7 @@ smallCountPPercentages = (smallCountP['countS'].copy() / largeCountP['countS'].c
 smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].copy()) * 100
 allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
 print("> 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
+scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds", "30S60WAbBird.png")
 
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
 ploverLargeList3060S = largeCount.copy()['countS'].values.tolist()
@@ -127,11 +143,7 @@ percentagesPlover3060S = []
 for x in range(len(ploverSmallList3060S)):
     percentagesPlover3060S.append((ploverSmallList3060S[x]/ploverLargeList3060S[x]) * 100)
 print("> 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
-plt.scatter(magStrength3060S, percentagesPlover3060S)
-plt.title("30S60W American Golden-Plover")
-plt.xlabel("Magnetic Strength (nT)")
-plt.ylabel("Population Density %")
-plt.show()
+scatterPlot(magStrength3060S, percentagesPlover3060S, "30S60W American Golden-Plover", "30S60WAgBird.png")
 
 whiteSmallList3060S = smallCountW.copy()['countS'].values.tolist()
 whiteLargeList3060S = largeCountW.copy()['countS'].values.tolist()
@@ -139,6 +151,7 @@ percentagesWhite3060S = []
 for x in range(len(whiteSmallList3060S)):
     percentagesWhite3060S.append((whiteSmallList3060S[x]/whiteLargeList3060S[x]) * 100)
 print("> 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
+scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper", "30S60WWrBird.png")
 
 pectoralSmallList3060S = smallCountP.copy()['countS'].values.tolist()
 pectoralLargeList3060S = largeCountP.copy()['countS'].values.tolist()
@@ -146,6 +159,7 @@ percentagesPectoral3060S = []
 for x in range(len(pectoralSmallList3060S)):
     percentagesPectoral3060S.append((pectoralSmallList3060S[x]/pectoralLargeList3060S[x]) * 100)
 print("> 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPectoral3060S)[1]))
+scatterPlot(magStrength3060S, percentagesPectoral3060S, "30S60W Pectoral Sandpiper", "30S60WPsBird.png")
 
 hawkSmallList3060S = smallCountH.copy()['countS'].values.tolist()
 hawkLargeList3060S = largeCountH.copy()['countS'].values.tolist()
@@ -153,6 +167,7 @@ percentagesHawk3060S = []
 for x in range(len(hawkSmallList3060S)):
     percentagesHawk3060S.append((hawkSmallList3060S[x]/hawkLargeList3060S[x]) * 100)
 print("> 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesHawk3060S)[1]))
+scatterPlot(magStrength3060S, percentagesHawk3060S, "30S60W Swainson's Hawk", "30S60WShBird.png")
 
 forkSmallList3060S = smallCountF.copy()['countS'].values.tolist()
 forkLargeList3060S = largeCountF.copy()['countS'].values.tolist()
@@ -160,13 +175,15 @@ percentagesFork3060S = []
 for x in range(len(forkSmallList3060S)):
     percentagesFork3060S.append((forkSmallList3060S[x]/forkLargeList3060S[x]) * 100)
 print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
+scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher", "30S60WFtBird.png")
 
 NAPloverSmallList3060S = smallCountNAPlover.copy()['countS'].values.tolist()
 NAPloverLargeList3060S = largeCountNAPlover.copy()['countS'].values.tolist()
 percentagesNAPlover30N90W = []
 for x in range(len(NAPloverSmallList3060S)):
     percentagesNAPlover30N90W.append((NAPloverSmallList3060S[x]/NAPloverLargeList3060S[x]) * 100)
-print("> 30N90W American Golden-PLover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
+print("> 30N90W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
+scatterPlot(magStrength30N90W, percentagesNAPlover30N90W, "30N90W American Golden-Plover", "30N90WAgBird.png")
 
 NAWhiteSmallList3060S = smallCountNARump.copy()['countS'].values.tolist()
 NAWhiteLargeList3060S = largeCountNARump.copy()['countS'].values.tolist()
@@ -174,6 +191,7 @@ percentagesNAWhite30N90W = []
 for x in range(len(NAWhiteSmallList3060S)):
     percentagesNAWhite30N90W.append((NAWhiteSmallList3060S[x]/NAWhiteLargeList3060S[x]) * 100)
 print("> 30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
+scatterPlot(magStrength30N90W, percentagesNAWhite30N90W, "30N90W White-rumped Sandpiper", "30N90WWrBird.png")
 
 NAPiperSmallList3060S = smallCountNAPiper.copy()['countS'].values.tolist()
 NAPiperLargeList3060S = largeCountNAPiper.copy()['countS'].values.tolist()
@@ -181,6 +199,7 @@ percentagesNAPiper30N90W = []
 for x in range(len(NAPiperSmallList3060S)):
     percentagesNAPiper30N90W.append((NAPiperSmallList3060S[x]/NAPiperLargeList3060S[x]) * 100)
 print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
+scatterPlot(magStrength30N90W, percentagesNAPiper30N90W, "30N90W Pectoral Sandpiper", "30N90WPsBird.png")
 
 NAHawkSmallList3060S = smallCountNAHawk.copy()['countS'].values.tolist()
 NAHawkLargeList3060S = largeCountNAHawk.copy()['countS'].values.tolist()
@@ -188,6 +207,7 @@ percentagesNAHawk30N90W = []
 for x in range(len(NAHawkSmallList3060S)):
     percentagesNAHawk30N90W.append((NAHawkSmallList3060S[x]/NAHawkLargeList3060S[x]) * 100)
 print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAHawk30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAHawk30N90W)[1]))
+scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk", "30N90WShBird.png")
 
 print("|------------------------------------------------------------------------|")#section end
 
@@ -530,7 +550,7 @@ tB = tB.query("individualCount <= 10000")
 ploverFull = pygmt.Figure()
 ploverFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird)- World"'])
 ploverFull.coast(land="burlywood", water="lightblue", resolution="f")
-pygmt.makecpt(cmap="gray", series=[tB.year.min(), tB.year.max()])
+pygmt.makecpt(cmap="inferno", series=[tB.year.min(), tB.year.max()])
 ploverFull.plot(
     x=tB.decimalLongitude, 
     y=tB.decimalLatitude, 
