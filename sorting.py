@@ -7,6 +7,7 @@ import matplotlib as matplotlib
 import statsmodels.graphics.api as smg
 import statsmodels.api as sm
 from scipy import stats
+import seaborn as sb
 
 print("Begininng Updating Sequence...")
 #testData = pd.read_csv(r"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1QvEdtQLKMGXxyN0QhQL46AdUdJ9iJVB-50NBHe1s_tnx2KCymG0ZYX43eB-SEjTl9Dj_5WHU8qj3/pub?output=csv")
@@ -136,6 +137,14 @@ smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].c
 allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
 print("> 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
 scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds", "30S60WAbBird.png")
+# a, b = np.polyfit(magStrength3060S, allBirdPercentages, deg = 1)
+# aBest = a * magStrength3060S + allBirdPercentages
+# aBerr = magStrength3060S.std() * np.sqrt(1/len(magStrength3060S) + (magStrength3060S - magStrength3060S.mean())**2 / np.sum((magStrength3060S - magStrength3060S.mean())**2))
+
+# fig, ax = plt.subplots()
+# ax.plot(magStrength3060S, aBest, '-')
+# ax.fill_between(magStrength3060S, aBest - aBerr, aBest + aBerr, alpha = 0.2)
+# ax.plot(magStrength3060S, allBirdPercentages, 'o', color='tab:blue')
 
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
 ploverLargeList3060S = largeCount.copy()['countS'].values.tolist()
