@@ -33,6 +33,8 @@ wSandpiperRaw = wSandpiperRaw.loc[wSandpiperRaw['occurrenceStatus']=='PRESENT', 
 fTailedRaw = pd.read_csv(r"forktailedUnfiltered.csv")
 fTailedRaw = fTailedRaw.loc[fTailedRaw['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
 
+sScreamerRaw = pd.read_csv(r"unfilteredSouthernScreamer.csv")
+sScreamerRaw = sScreamerRaw.loc[sScreamerRaw['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
 
 #controlOne = messingData[ (messingData['decimalLatitude'] >= 0) & ((messingData['decimalLongitude'] <= -90) & messingData['decimalLongitude'] >= -30)].index
 #controlTwo = messingData[ (messingData['decimalLatitude'] >= -59) & (messingData['decimalLongitude'] <= -61) & (messingData['decimalLongitude'] >= -29) & (messingData['decimalLongitude'] <= -31)].index
