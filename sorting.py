@@ -80,7 +80,7 @@ def yearCount(smallSet, bigSet, yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSet
 
-smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = pd.DataFrame({'year':[], 'countS':[]})
+smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
 
