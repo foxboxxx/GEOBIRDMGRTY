@@ -200,20 +200,18 @@ for x in range(len(forkSmallList3060S)):
 print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
 scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher", "30S60WFtBird.png")
 
-toto = magData3060.copy().query('year >= 2005 & year < 2020')
-nMMNn = toto['intensity'].values.tolist()
-print(nMMNn)
+#<--------------------------------------WIP RN-------------------------------------------->
+# toto = magData3060.copy().query('year >= 2005 & year < 2020')
+# nMMNn = toto['intensity'].values.tolist()
 
-#Southern Screamer South America
-screamSmallList3060S = smallCountScreamer.copy()['countS'].values.tolist()
-screamLargeList3060S = largeCountScreamer.copy()['countS'].values.tolist()
-percentagesScream3060S = []
-for x in range(len(screamSmallList3060S)):
-    percentagesScream3060S.append((screamSmallList3060S[x]/screamLargeList3060S[x]) * 100)
-print(percentagesScream3060S)
-
-print("> 30S60W Southern Screamer: " + "r value = " + str(stats.pearsonr(nMMNn,percentagesScream3060S)[0]) + "; p value = " + str(stats.pearsonr(nMMNn, percentagesScream3060S)[1]))
-scatterPlot(nMMNn, percentagesScream3060S, "30S60W Southern Screamer", "30S60WSsBird.png")
+# #Southern Screamer South America
+# screamSmallList3060S = smallCountScreamer.copy()['countS'].values.tolist()
+# screamLargeList3060S = largeCountScreamer.copy()['countS'].values.tolist()
+# percentagesScream3060S = []
+# for x in range(len(screamSmallList3060S)):
+#     percentagesScream3060S.append((screamSmallList3060S[x]/screamLargeList3060S[x]) * 100)
+# print("> 30S60W Southern Screamer: " + "r value = " + str(stats.pearsonr(nMMNn,percentagesScream3060S)[0]) + "; p value = " + str(stats.pearsonr(nMMNn, percentagesScream3060S)[1]))
+# scatterPlot(nMMNn, percentagesScream3060S, "30S60W Southern Screamer", "30S60WSsBird.png")
 
 #American Golden-Plover Correlation North America
 NAPloverSmallList3060S = smallCountNAPlover.copy()['countS'].values.tolist()
