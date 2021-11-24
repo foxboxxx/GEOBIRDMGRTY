@@ -38,6 +38,9 @@ sScreamerRaw = sScreamerRaw.loc[sScreamerRaw['occurrenceStatus']=='PRESENT', ['e
 
 #controlOne = messingData[ (messingData['decimalLatitude'] >= 0) & ((messingData['decimalLongitude'] <= -90) & messingData['decimalLongitude'] >= -30)].index
 #controlTwo = messingData[ (messingData['decimalLatitude'] >= -59) & (messingData['decimalLongitude'] <= -61) & (messingData['decimalLongitude'] >= -29) & (messingData['decimalLongitude'] <= -31)].index
+southAmericanScreamer = sScreamerRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+specificScreamer = sScreamerRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
+
 southAmericanPlover = messingData.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 northAmericanPlover = messingData.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
@@ -108,12 +111,17 @@ largeCountNARump = yearCount(largeCountNARump, northAmericanRump, 2000, 2020)
 smallCountNAHawk = yearCount(smallCountNAHawk, specificHawk3, 2000,2020)
 largeCountNAHawk = yearCount(largeCountNAHawk, northAmericanHawk, 2000, 2020)
 
+smallCountScreamer = yearCount(smallCountScreamer, specificScreamer, 2005, 2020)
+largeCountScreamer = yearCount(largeCountScreamer, southAmericanScreamer, 2005, 2020)
+
 
 newm = magData3060.copy().query('2000 <= year < 2020')
 magStrength3060S = newm['intensity'].values.tolist()
 
 otherm = magData30N90W.copy().query('2000 <= year < 2020')
 magStrength30N90W = otherm['intensity'].values.tolist()
+
+
 
 print(matplotlib.get_cachedir())
 
@@ -156,6 +164,7 @@ for x in range(len(ploverSmallList3060S)):
 print("> 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
 scatterPlot(magStrength3060S, percentagesPlover3060S, "30S60W American Golden-Plover", "30S60WAgBird.png")
 
+#White-rumped Sandpiper South America
 whiteSmallList3060S = smallCountW.copy()['countS'].values.tolist()
 whiteLargeList3060S = largeCountW.copy()['countS'].values.tolist()
 percentagesWhite3060S = []
@@ -164,6 +173,7 @@ for x in range(len(whiteSmallList3060S)):
 print("> 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
 scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper", "30S60WWrBird.png")
 
+#Pectoral Sandpiper South America
 pectoralSmallList3060S = smallCountP.copy()['countS'].values.tolist()
 pectoralLargeList3060S = largeCountP.copy()['countS'].values.tolist()
 percentagesPectoral3060S = []
@@ -172,6 +182,7 @@ for x in range(len(pectoralSmallList3060S)):
 print("> 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPectoral3060S)[1]))
 scatterPlot(magStrength3060S, percentagesPectoral3060S, "30S60W Pectoral Sandpiper", "30S60WPsBird.png")
 
+#Swainson's Hawk South America
 hawkSmallList3060S = smallCountH.copy()['countS'].values.tolist()
 hawkLargeList3060S = largeCountH.copy()['countS'].values.tolist()
 percentagesHawk3060S = []
@@ -180,6 +191,7 @@ for x in range(len(hawkSmallList3060S)):
 print("> 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesHawk3060S)[1]))
 scatterPlot(magStrength3060S, percentagesHawk3060S, "30S60W Swainson's Hawk", "30S60WShBird.png")
 
+#Fork-tailed Flycatcher South America
 forkSmallList3060S = smallCountF.copy()['countS'].values.tolist()
 forkLargeList3060S = largeCountF.copy()['countS'].values.tolist()
 percentagesFork3060S = []
@@ -188,6 +200,22 @@ for x in range(len(forkSmallList3060S)):
 print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
 scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher", "30S60WFtBird.png")
 
+toto = magData3060.copy().query('year >= 2005 & year < 2020')
+nMMNn = toto['intensity'].values.tolist()
+print(nMMNn)
+
+#Southern Screamer South America
+screamSmallList3060S = smallCountScreamer.copy()['countS'].values.tolist()
+screamLargeList3060S = largeCountScreamer.copy()['countS'].values.tolist()
+percentagesScream3060S = []
+for x in range(len(screamSmallList3060S)):
+    percentagesScream3060S.append((screamSmallList3060S[x]/screamLargeList3060S[x]) * 100)
+print(percentagesScream3060S)
+
+print("> 30S60W Southern Screamer: " + "r value = " + str(stats.pearsonr(nMMNn,percentagesScream3060S)[0]) + "; p value = " + str(stats.pearsonr(nMMNn, percentagesScream3060S)[1]))
+scatterPlot(nMMNn, percentagesScream3060S, "30S60W Southern Screamer", "30S60WSsBird.png")
+
+#American Golden-Plover Correlation North America
 NAPloverSmallList3060S = smallCountNAPlover.copy()['countS'].values.tolist()
 NAPloverLargeList3060S = largeCountNAPlover.copy()['countS'].values.tolist()
 percentagesNAPlover30N90W = []
@@ -196,6 +224,7 @@ for x in range(len(NAPloverSmallList3060S)):
 print("> 30N90W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAPlover30N90W, "30N90W American Golden-Plover", "30N90WAgBird.png")
 
+#White-rumped Sandpiper Correlation North America
 NAWhiteSmallList3060S = smallCountNARump.copy()['countS'].values.tolist()
 NAWhiteLargeList3060S = largeCountNARump.copy()['countS'].values.tolist()
 percentagesNAWhite30N90W = []
@@ -204,6 +233,7 @@ for x in range(len(NAWhiteSmallList3060S)):
 print("> 30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAWhite30N90W, "30N90W White-rumped Sandpiper", "30N90WWrBird.png")
 
+#Pectoral Sandpiper Correlation North America
 NAPiperSmallList3060S = smallCountNAPiper.copy()['countS'].values.tolist()
 NAPiperLargeList3060S = largeCountNAPiper.copy()['countS'].values.tolist()
 percentagesNAPiper30N90W = []
@@ -212,6 +242,7 @@ for x in range(len(NAPiperSmallList3060S)):
 print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAPiper30N90W, "30N90W Pectoral Sandpiper", "30N90WPsBird.png")
 
+#Swainson's Hawk Correlation North America
 NAHawkSmallList3060S = smallCountNAHawk.copy()['countS'].values.tolist()
 NAHawkLargeList3060S = largeCountNAHawk.copy()['countS'].values.tolist()
 percentagesNAHawk30N90W = []
