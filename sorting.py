@@ -18,6 +18,18 @@ fullMagData3060 = pd.read_csv(r"3060fullMag.csv")
 birdData = pd.read_csv(r"filteredPloverData.csv")
 magData30N90W = pd.read_csv(r'30N90Wdata.csv')
 
+climateDataGen = pd.read_csv(r"weatherDataNew.csv")
+print(climateDataGen)
+print(climateDataGen['STATION'])
+cDataFiltered = {'STATION': climateDataGen['STATION'], 'LATITUDE': climateDataGen['LATITUDE'], 'LONGITUDE': climateDataGen['LONGITUDE'], 'DATE': climateDataGen['DATE'], 'PRCP': climateDataGen['PRCP'], 'TAVG': climateDataGen['TAVG'], 'TMAX': climateDataGen['TMAX'], 'TMIN': climateDataGen['TMIN']}
+cdf1 = pd.DataFrame(cDataFiltered)
+cdf1 = cdf1.query('STATION == "PA000086086"')
+print(cdf1)
+# climateDataGen = climateDataGen.loc['STATION', 'LATITUDE', 'LONGITUDE', 'DATE', 'PRCP', 'TAVG', 'TMAX', 'TMIN']
+# climateDataGen = climateDataGen.query('STATION == PA000086086 & TMIN != null & TMAX != null')
+
+
+
 messingData = pd.read_csv(r"plovercsv.csv")
 messingData = messingData.loc[messingData['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
 
@@ -83,9 +95,19 @@ def yearCount(smallSet, bigSet, yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSet
 
-smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
+def monthCount(smallSet, bigSet, yearMin, yearMax):
+    smallSetMonth = pd.DataFrame({})
+    for i in np.arange(yearMin, yearMax):
+        smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
+        for j in np.arange(1,13):
+            smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'countS': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
+    return smallSetMonth
+
+smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
+smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
+print(smallCountMonth)
 
 smallCountP = yearCount(smallCountP, specificPiper, 2000, 2020)
 largeCountP = yearCount(largeCountP, southAmericanPiper, 2000, 2020)
@@ -111,8 +133,8 @@ largeCountNARump = yearCount(largeCountNARump, northAmericanRump, 2000, 2020)
 smallCountNAHawk = yearCount(smallCountNAHawk, specificHawk3, 2000,2020)
 largeCountNAHawk = yearCount(largeCountNAHawk, northAmericanHawk, 2000, 2020)
 
-smallCountScreamer = yearCount(smallCountScreamer, specificScreamer, 2005, 2020)
-largeCountScreamer = yearCount(largeCountScreamer, southAmericanScreamer, 2005, 2020)
+smallCountScreamer = yearCount(smallCountScreamer, specificScreamer, 2000, 2020)
+largeCountScreamer = yearCount(largeCountScreamer, southAmericanScreamer, 2000, 2020)
 
 
 newm = magData3060.copy().query('2000 <= year < 2020')
@@ -130,11 +152,15 @@ print(matplotlib.get_cachedir())
 def scatterPlot(mag, per, title, file):
     font = {'fontname':'Helvetica', 'style':'italic'}
     plt.clf()
-    plt.scatter(mag, per)
+    sb.regplot(mag, per, 'o')
     plt.title(title, **font)
     plt.xlabel("Magnetic Strength (nT)", **font)
     plt.ylabel("Population Density %", **font)
     plt.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
+    plt.text(0.1, 0.9, 'text', size=15, color='purple')
+    # m, b = np.polyfit(mag, per, 1)
+    # plt.plot(mag, m(mag) + b)
+
 
     plt.savefig(file)
     
@@ -204,14 +230,14 @@ scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatch
 # toto = magData3060.copy().query('year >= 2005 & year < 2020')
 # nMMNn = toto['intensity'].values.tolist()
 
-# #Southern Screamer South America
-# screamSmallList3060S = smallCountScreamer.copy()['countS'].values.tolist()
-# screamLargeList3060S = largeCountScreamer.copy()['countS'].values.tolist()
-# percentagesScream3060S = []
-# for x in range(len(screamSmallList3060S)):
-#     percentagesScream3060S.append((screamSmallList3060S[x]/screamLargeList3060S[x]) * 100)
-# print("> 30S60W Southern Screamer: " + "r value = " + str(stats.pearsonr(nMMNn,percentagesScream3060S)[0]) + "; p value = " + str(stats.pearsonr(nMMNn, percentagesScream3060S)[1]))
-# scatterPlot(nMMNn, percentagesScream3060S, "30S60W Southern Screamer", "30S60WSsBird.png")
+#Southern Screamer South America
+screamSmallList3060S = smallCountScreamer.copy()['countS'].values.tolist()
+screamLargeList3060S = largeCountScreamer.copy()['countS'].values.tolist()
+percentagesScream3060S = []
+for x in range(len(screamSmallList3060S)):
+    percentagesScream3060S.append((screamSmallList3060S[x]/screamLargeList3060S[x]) * 100)
+print("> 30S60W Southern Screamer: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesScream3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesScream3060S)[1]))
+scatterPlot(magStrength3060S, percentagesScream3060S, "30S60W Southern Screamer", "30S60WSsBird.png")
 
 #American Golden-Plover Correlation North America
 NAPloverSmallList3060S = smallCountNAPlover.copy()['countS'].values.tolist()
