@@ -23,7 +23,7 @@ print(climateDataGen)
 print(climateDataGen['STATION'])
 cDataFiltered = {'STATION': climateDataGen['STATION'], 'LATITUDE': climateDataGen['LATITUDE'], 'LONGITUDE': climateDataGen['LONGITUDE'], 'DATE': climateDataGen['DATE'], 'PRCP': climateDataGen['PRCP'], 'TAVG': climateDataGen['TAVG'], 'TMAX': climateDataGen['TMAX'], 'TMIN': climateDataGen['TMIN']}
 cdf1 = pd.DataFrame(cDataFiltered)
-cdf1 = cdf1.query('STATION == "PA000086086"')
+cdf1 = cdf1.query('STATION == "PA000086086"').copy()
 print(cdf1)
 # climateDataGen = climateDataGen.loc['STATION', 'LATITUDE', 'LONGITUDE', 'DATE', 'PRCP', 'TAVG', 'TMAX', 'TMIN']
 # climateDataGen = climateDataGen.query('STATION == PA000086086 & TMIN != null & TMAX != null')
@@ -100,13 +100,14 @@ def monthCount(smallSet, bigSet, yearMin, yearMax):
     for i in np.arange(yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
         for j in np.arange(1,13):
-            smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'countS': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
+            smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'count': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSetMonth
 
 smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
 smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
+largeCountMonth = monthCount(largeCount, southAmericanPlover, 2000, 2020)
 print(smallCountMonth)
 
 smallCountP = yearCount(smallCountP, specificPiper, 2000, 2020)
@@ -163,7 +164,55 @@ def scatterPlot(mag, per, title, file):
 
 
     plt.savefig(file)
-    
+
+# Data for plotting
+def plotter(start, finish, pltr, label):
+    for i in range(start, finish):
+        initStart = 12 * i
+        initEnd = initStart + 11
+        pltr.plot(np.arange(1,13), (smallCountMonth.loc[initStart:initEnd]['count'] / (largeCountMonth.loc[initStart:initEnd]['count'] + 0.01)) * 100, 'C' + str(i), label = str(2000 + i))
+        pltr.set_title(label)
+
+x1 = np.arange(1, 13)
+y1 = (smallCountMonth.loc[0:11]['count'] / (largeCountMonth.loc[0:11]['count'] + 0.01)) * 100
+fig, ax = plt.subplots()
+plotter(0,20,ax, "")
+#ax.plot(x1, y1)
+
+
+ax.set(xlabel='Month #', ylabel='Number of Birds Spotted',
+       title='30S60W AgBird Monthly Plot')
+ax.grid()
+ax.legend(loc="upper left")
+fig.savefig("30S60WAgBirdMonthly.png")
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+fig.suptitle('Five Year Intervals')
+plotter(0,6,ax1, "2000-2005")
+plotter(6,11,ax2, "2006-2010")
+plotter(11,16,ax3, "2011-2015")
+plotter(16,20,ax4, "2016-2020")
+# ax1.plot(x1, y1)
+# ax2.plot(x1, (smallCountMonth.loc[12:23]['count'] / (largeCountMonth.loc[12:23]['count'] + 0.01)) * 100, 'tab:orange')
+# ax3.plot(x1, (smallCountMonth.loc[24:35]['count'] / (largeCountMonth.loc[24:35]['count'] + 0.01)) * 100, 'tab:green')
+# ax4.plot(x1, (smallCountMonth.loc[36:47]['count'] / (largeCountMonth.loc[36:47]['count'] + 0.01)) * 100, 'tab:red')
+for ax in fig.get_axes():
+    ax.label_outer()
+
+fig.savefig("fiveDecadesPopulationDensityChanges.png")
+
+fig, ax5 = plt.subplots()
+ax5.set_title("Daily Average Temperatures in Paraguay from 2000-2020")
+ax5.set_xlabel("Day Number")
+ax5.set_ylabel("Temperature (Farenheit)")
+ax5.plot(np.arange(cdf1['TAVG'].size), cdf1['TAVG'])
+fig.savefig("tteettt")
+
+
+print((smallCountMonth.loc[:11]['count'] / (largeCountMonth.loc[0:11]['count'] + 0.01)) * 100)
+print((smallCountMonth.loc[24:35]['count'] / (largeCountMonth.loc[24:35]['count'] + 0.01)) * 100)
+fvalue, pvalue = stats.f_oneway((smallCountMonth.loc[120:131]['count'] / (largeCountMonth.loc[120:131]['count'] + 0.01)) * 100, (smallCountMonth.loc[132:143]['count'] / (largeCountMonth.loc[132:143]['count'] + 0.01)) * 100, (smallCountMonth.loc[144:155]['count'] / (largeCountMonth.loc[144:155]['count'] + 0.01)) * 100)
+print(fvalue, pvalue)
 
 print("|------------------------------------------------------------------------|")#section start
 smallCountPercentages = (smallCount['countS'].copy() / largeCount['countS'].copy()) * 100
