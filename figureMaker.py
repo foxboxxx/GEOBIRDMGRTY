@@ -112,8 +112,8 @@ def graphMaker(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax,
     print("{}R Analysis of {} % In {} ({}{}) Successfully Updated.".format(rName, birdName, region, latName, lonName))
 
 #(radius, yearMin, yearMax, magMin, magMax, percentMin, percentMax, birdName, rawBirdFile, populationCap, rawMagData, region, latitude, longitude, latMin, latMax, lonMin, lonMax)
-graphMaker(5, 1970, 2020, 22000, 26000, 0, 100, "AgBird", "plovercsv.csv", 10000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
-graphMaker(5, 2000, 2020, 22000, 26000, 0, 100, "Southern_Screamer", "unfilteredSouthernScreamer.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
+graphMaker(5, 1970, 2021, 22000, 26000, 0, 100, "AgBird", "plovercsv.csv", 10000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
+graphMaker(5, 2000, 2021, 22000, 26000, 0, 100, "Southern_Screamer", "unfilteredSouthernScreamer.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
 mapMaker(2000,2020,"AgBird", "plovercsv.csv",-90, 177,-55,1)
 mapMaker(1970,2020,"AgBird", "plovercsv.csv",-150, -60,0,60)
 mapMaker(1970, 2020, "SsBird", "unfilteredSouthernScreamer.csv", -90,177,-55,1)

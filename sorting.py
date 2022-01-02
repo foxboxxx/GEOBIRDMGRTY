@@ -24,10 +24,36 @@ print(climateDataGen['STATION'])
 cDataFiltered = {'STATION': climateDataGen['STATION'], 'LATITUDE': climateDataGen['LATITUDE'], 'LONGITUDE': climateDataGen['LONGITUDE'], 'DATE': climateDataGen['DATE'], 'PRCP': climateDataGen['PRCP'], 'TAVG': climateDataGen['TAVG'], 'TMAX': climateDataGen['TMAX'], 'TMIN': climateDataGen['TMIN']}
 cdf1 = pd.DataFrame(cDataFiltered)
 cdf1 = cdf1.query('STATION == "PA000086086"').copy()
+yearlyTemps = pd.DataFrame(columns = ['year', 'average'])
+yearlyPrcps = pd.DataFrame(columns = ['year', 'average'])
+
 print(cdf1)
+for i in range(0,20):
+    total = 0
+    count = 0
+    for j in range(0, cdf1['DATE'].size):
+        string1 = cdf1.iloc[j]['DATE']
+        if(string1[:4] == str(2000 + i)):
+            total += cdf1.iloc[j]['TAVG']
+            count += 1
+    yearlyTemps.loc[len(yearlyTemps.index)] = [2000 + i, (total/count)] 
+
+for i in range(0,20):
+    total1 = 0
+    count1 = 0
+    for j in range(0, cdf1['DATE'].size):
+        string1 = cdf1.iloc[j]['DATE']
+        if string1[:4] == str(2000 + i) and cdf1.iloc[j]['PRCP'] >= 0:
+            total1 += cdf1.iloc[j]['PRCP']
+            count1 += 1
+    yearlyPrcps.loc[len(yearlyPrcps.index)] = [2000 + i, (total1/count1)] 
+
+print(yearlyPrcps)
+
+
+
 # climateDataGen = climateDataGen.loc['STATION', 'LATITUDE', 'LONGITUDE', 'DATE', 'PRCP', 'TAVG', 'TMAX', 'TMIN']
 # climateDataGen = climateDataGen.query('STATION == PA000086086 & TMIN != null & TMAX != null')
-
 
 
 messingData = pd.read_csv(r"plovercsv.csv")
@@ -141,6 +167,9 @@ largeCountScreamer = yearCount(largeCountScreamer, southAmericanScreamer, 2000, 
 newm = magData3060.copy().query('2000 <= year < 2020')
 magStrength3060S = newm['intensity'].values.tolist()
 
+climate3060S = yearlyTemps['average'].values.tolist()
+prcp3060S = yearlyPrcps['average'].values.tolist()
+
 otherm = magData30N90W.copy().query('2000 <= year < 2020')
 magStrength30N90W = otherm['intensity'].values.tolist()
 
@@ -180,6 +209,7 @@ plotter(0,20,ax, "")
 #ax.plot(x1, y1)
 
 
+
 ax.set(xlabel='Month #', ylabel='Number of Birds Spotted',
        title='30S60W AgBird Monthly Plot')
 ax.grid()
@@ -209,10 +239,6 @@ ax5.plot(np.arange(cdf1['TAVG'].size), cdf1['TAVG'])
 fig.savefig("tteettt")
 
 
-print((smallCountMonth.loc[:11]['count'] / (largeCountMonth.loc[0:11]['count'] + 0.01)) * 100)
-print((smallCountMonth.loc[24:35]['count'] / (largeCountMonth.loc[24:35]['count'] + 0.01)) * 100)
-fvalue, pvalue = stats.f_oneway((smallCountMonth.loc[120:131]['count'] / (largeCountMonth.loc[120:131]['count'] + 0.01)) * 100, (smallCountMonth.loc[132:143]['count'] / (largeCountMonth.loc[132:143]['count'] + 0.01)) * 100, (smallCountMonth.loc[144:155]['count'] / (largeCountMonth.loc[144:155]['count'] + 0.01)) * 100)
-print(fvalue, pvalue)
 
 print("|------------------------------------------------------------------------|")#section start
 smallCountPercentages = (smallCount['countS'].copy() / largeCount['countS'].copy()) * 100
@@ -220,7 +246,17 @@ smallCountWPercentages = (smallCountW['countS'].copy() / largeCountW['countS'].c
 smallCountPPercentages = (smallCountP['countS'].copy() / largeCountP['countS'].copy()) * 100
 smallCountHPercentages = (smallCountH['countS'].copy() / largeCountH['countS'].copy()) * 100
 allBirdPercentages = smallCountPercentages.multiply(0.25) + smallCountWPercentages.multiply(0.25) + smallCountPPercentages.multiply(0.25) + smallCountHPercentages.multiply(0.25)
-print("> 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
+
+print("> Magnetic 30S60W All Birds: " + "r value = " + str(stats.pearsonr(magStrength3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, allBirdPercentages)[1]))
+print("> Climate 30S60W All Birds: " + "r value = " + str(stats.pearsonr(climate3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, allBirdPercentages)[1]))
+print("> Precipitation 30S60W All Birds: " + "r value = " + str(stats.pearsonr(prcp3060S,allBirdPercentages)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, allBirdPercentages)[1]))
+
+# fvalue, pvalue = stats.f_oneway(climate3060S, prcp3060S, allBirdPercentages)
+# fvalue2, pvalue2 = stats.f_oneway(magStrength3060S, allBirdPercentages)
+
+# print(str(fvalue) + " and " + str(pvalue))
+# print(str(fvalue2) + " and " + str(pvalue2))
+
 scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds", "30S60WAbBird.png")
 # a, b = np.polyfit(magStrength3060S, allBirdPercentages, deg = 1)
 # aBest = a * magStrength3060S + allBirdPercentages
@@ -233,10 +269,15 @@ scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds", "30S60WAbB
 
 ploverSmallList3060S = smallCount.copy()['countS'].values.tolist()
 ploverLargeList3060S = largeCount.copy()['countS'].values.tolist()
+print(ploverSmallList3060S)
 percentagesPlover3060S = []
 for x in range(len(ploverSmallList3060S)):
     percentagesPlover3060S.append((ploverSmallList3060S[x]/ploverLargeList3060S[x]) * 100)
-print("> 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
+print("> Magnetic 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPlover3060S)[1]))
+print("> Climate 30S60W American Golden-Plover: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesPlover3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesPlover3060S)[1]))
+
+
+#scatterPlot(climate3060S, percentagesPlover3060S, "30S60W American Golden-Plover", "CLM30S60WAgBird.png")
 scatterPlot(magStrength3060S, percentagesPlover3060S, "30S60W American Golden-Plover", "30S60WAgBird.png")
 
 #White-rumped Sandpiper South America
@@ -246,6 +287,7 @@ percentagesWhite3060S = []
 for x in range(len(whiteSmallList3060S)):
     percentagesWhite3060S.append((whiteSmallList3060S[x]/whiteLargeList3060S[x]) * 100)
 print("> 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
+print("> 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesWhite3060S)[1]))
 scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper", "30S60WWrBird.png")
 
 #Pectoral Sandpiper South America
@@ -255,6 +297,7 @@ percentagesPectoral3060S = []
 for x in range(len(pectoralSmallList3060S)):
     percentagesPectoral3060S.append((pectoralSmallList3060S[x]/pectoralLargeList3060S[x]) * 100)
 print("> 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesPectoral3060S)[1]))
+print("> 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesPectoral3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesPectoral3060S)[1]))
 scatterPlot(magStrength3060S, percentagesPectoral3060S, "30S60W Pectoral Sandpiper", "30S60WPsBird.png")
 
 #Swainson's Hawk South America
@@ -394,6 +437,33 @@ QQlargeCountH =yearCount(QQlargeCountH, southAmericanHawk, 2000, 2020)
 
 QQsmallCountW = yearCount(QQsmallCountW, specificRump2, 2000, 2020)
 QQlargeCountW = yearCount(QQlargeCountW, southAmericanRump, 2000, 2020)
+
+
+t = np.arange(2000,2020, 1)
+data1 = magStrength3060S
+data2 = percentagesPlover3060S
+
+fig, ax1 = plt.subplots()
+
+color = 'tab:red'
+ax1.set_xlabel('Year')
+ax1.set_ylabel('Magnetic Strength (nT)', color=color)
+ax1.set_title('5R Analysis of American Golden-Plover 30S60W from 2000-2020')
+ax1.plot(t, data1, color=color)
+ax1.tick_params(axis='y', labelcolor=color)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('Population Density (%)', color=color)  # we already handled the x-label with ax1
+ax2.plot(t, data2, color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+fig.savefig("newDoubleY-axisPlot.png")
+
+
+
 
 
 
@@ -1189,48 +1259,6 @@ print("4R Analysis of All Birds % In South America (30S 60W) Successfully Update
 
 
 
-
-# #scatterplot
-# region = pygmt.info(
-#     table=birdData[["decimalLatitude", "decimalLongitude"]],  # x and y columns
-#     per_column=True, 
-# )
-
-# scatter = pygmt.Figure()
-
-# scatter.basemap(
-#     region=region,
-#     projection="X10c/10c",
-#     frame=[
-#         'xafg+l"Latitude (S)"',
-#         'yafg+l"Longitude (W)"',
-#         'WSen+t"Penguin size at Palmer Station"',
-#     ],
-# )
-
-# pygmt.makecpt(cmap="inferno", series=(0, 2, 1), color_model="+cAdelie,Chinstrap,Gentoo")
-
-# scatter.plot(
-#     # Use bill length and bill depth as x and y data input, respectively
-#     x = birdData.decimalLatitude,
-#     y = birdData.decimalLongitude,
-#     # Vary each symbol size according to another feature (body mass, scaled by 7.5*10e-5)
-#     size = 1,
-#     # Points colored by categorical number code
-#     color=birdData.year(int),
-#     # Use colormap created by makecpt
-#     cmap=True,
-#     # Do not clip symbols that fall close to the map bounds
-#     no_clip=True,
-#     # Use circles as symbols with size in centimeter units
-#     style="cc",
-#     # Set transparency level for all symbols to deal with overplotting
-#     transparency = 40,
-# )
-
-# # Add colorbar legend
-# scatter.colorbar()
-# scatter.savefig("AgBird_ScatterPlot.png")
 
 print("Program finished.")
 
