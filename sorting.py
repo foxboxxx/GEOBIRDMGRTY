@@ -204,7 +204,6 @@ otherm = magData30N90W.copy().query('2000 <= year < 2020')
 magStrength30N90W = otherm['intensity'].values.tolist()
 
 
-
 print(matplotlib.get_cachedir())
 
 #correlation tests
@@ -374,7 +373,7 @@ for x in range(len(hawkSmallList3060S)):
     percentagesHawk3060S.append((hawkSmallList3060S[x]/hawkLargeList3060S[x]) * 100)
 print("> Magnetic 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesHawk3060S)[1]))
 print("> Temperature 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesHawk3060S)[1]))
-print("> Precipitation 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesHawk3060S)[1]))
+print("> Precipitation 30S60W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesHawk3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesHawk3060S)[1]))
 
 scatterPlot(magStrength3060S, percentagesHawk3060S, "30S60W Swainson's Hawk Magnetic Strength", "30S60WShBird_M.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesHawk3060S, "5R Analysis of Swainson's Hawk 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30S60W_M.png", "tab:red", "tab:blue")
@@ -393,10 +392,19 @@ forkLargeList3060S = largeCountF.copy()['countS'].values.tolist()
 percentagesFork3060S = []
 for x in range(len(forkSmallList3060S)):
     percentagesFork3060S.append((forkSmallList3060S[x]/forkLargeList3060S[x]) * 100)
-print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
-print("> 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesFork3060S)[1]))
+print("> Magnetic 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesFork3060S)[1]))
+print("> Temperature 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesFork3060S)[1]))
+print("> Precipitation 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesFork3060S)[1]))
+
 scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Magnetic Strength", "30S60WFtBird.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPectoral3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:blue")
+
+scatterPlot(climate3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Temperature", "30S60WShBird_T.png", "Temperature (F)")
+doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_T.png", "tab:red", "tab:blue")
+
+scatterPlot(prcp3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Precipitation", "30S60WShBird_P.png", "Precipitation (in)")
+doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_P.png", "tab:red", "tab:blue")
+
 
 
 #<--------------------------------------WIP RN-------------------------------------------->
