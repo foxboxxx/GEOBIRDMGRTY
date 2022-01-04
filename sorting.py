@@ -292,6 +292,13 @@ print(str(f) + " and " + str(p))
 
 scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds Magnetic Strength", "30S60WAbBird.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_M.png", "tab:red", "tab:blue")
+
+scatterPlot(climate3060S, allBirdPercentages, "30S60W All Birds Temperature", "30S60WAbBird_T.png", "Temperature (F)")
+doubleYAxisPlotMaker(2000,2020, climate3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_T.png", "tab:red", "tab:blue")
+
+scatterPlot(prcp3060S, allBirdPercentages, "30S60W All Birds Precipitation", "30S60WAbBird_P.png", "Precipitation (in)")
+doubleYAxisPlotMaker(2000,2020, prcp3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_P.png", "tab:red", "tab:blue")
+
 #(yearMin, yearMax, data1, data2, title, dataLabel1, dataLabel2, filename, color1, color2):
 #5R Analysis of American Golden-Plover 30S60W from 2000-2020
 
