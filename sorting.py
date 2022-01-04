@@ -257,7 +257,6 @@ plotter(16,20,ax4, "2016-2020")
 # ax4.plot(x1, (smallCountMonth.loc[36:47]['count'] / (largeCountMonth.loc[36:47]['count'] + 0.01)) * 100, 'tab:red')
 for ax in fig.get_axes():
     ax.label_outer()
-
 fig.savefig("fiveDecadesPopulationDensityChanges.png")
 
 fig, ax5 = plt.subplots()
