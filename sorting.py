@@ -50,6 +50,13 @@ for i in range(0,20):
 
 print(yearlyPrcps)
 
+def histogramMaker(data):
+    # r = len(data)
+    # sb.histplot(data=data, x=np.arange(0,r))
+    # plt.savefig('###.png')
+    l = len(data)
+    sb.histplot(data, x = np.arange(0,l), y="count")
+    plt.savefig("####.png")
 
 
 def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, dataLabel2, filename, color1, color2):
@@ -80,6 +87,8 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     fig.savefig(filename)
     print(filename + " successfully uploaded.")
+
+
 
 
 # climateDataGen = climateDataGen.loc['STATION', 'LATITUDE', 'LONGITUDE', 'DATE', 'PRCP', 'TAVG', 'TMAX', 'TMIN']
@@ -166,6 +175,10 @@ smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
 largeCountMonth = monthCount(largeCount, southAmericanPlover, 2000, 2020)
 print(smallCountMonth)
 
+ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.01) * 100)
+print(ddd)
+histogramMaker(ddd)
+
 smallCountP = yearCount(smallCountP, specificPiper, 2000, 2020)
 largeCountP = yearCount(largeCountP, southAmericanPiper, 2000, 2020)
 
@@ -236,7 +249,6 @@ y1 = (smallCountMonth.loc[0:11]['count'] / (largeCountMonth.loc[0:11]['count'] +
 fig, ax = plt.subplots()
 plotter(0,20,ax, "")
 #ax.plot(x1, y1)
-
 
 
 ax.set(xlabel='Month #', ylabel='Number of Birds Spotted',
