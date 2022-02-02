@@ -50,13 +50,16 @@ for i in range(0,20):
 
 print(yearlyPrcps)
 
+
+    
 def histogramMaker(data):
     # r = len(data)
     # sb.histplot(data=data, x=np.arange(0,r))
     # plt.savefig('###.png')
     l = len(data)
-    sb.histplot(data, x = np.arange(0,l), y="count")
+    sb.barplot(x = np.arange(0,l), y = "count", data = data,)
     plt.savefig("####.png")
+
 
 
 def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, dataLabel2, filename, color1, color2):
@@ -168,19 +171,22 @@ def monthCount(smallSet, bigSet, yearMin, yearMax):
             smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'count': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSetMonth
 
-smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
+smallCountMonthP  = largeCountMonthP = smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
 smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
 largeCountMonth = monthCount(largeCount, southAmericanPlover, 2000, 2020)
 print(smallCountMonth)
 
+#<-------------IMPORTANT CODE FOR HISTOGRAM-------------------->
 ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.01) * 100)
 print(ddd)
 histogramMaker(ddd)
 
 smallCountP = yearCount(smallCountP, specificPiper, 2000, 2020)
 largeCountP = yearCount(largeCountP, southAmericanPiper, 2000, 2020)
+smallCountMonthP = monthCount(smallCountP, specificPiper, 2000, 2020)
+largeCountMonthP = monthCount(largeCountP, southAmericanPiper, 2000, 2020)
 
 smallCountH = yearCount(smallCountH, specificHawk, 2000, 2020)
 largeCountH =yearCount(largeCountH, southAmericanHawk, 2000, 2020)
@@ -219,6 +225,7 @@ magStrength30N90W = otherm['intensity'].values.tolist()
 
 print(matplotlib.get_cachedir())
 
+
 #correlation tests
 #these are the dataframes needed for the all birds correlation
 def scatterPlot(mag, per, title, file, xlabel):
@@ -237,39 +244,53 @@ def scatterPlot(mag, per, title, file, xlabel):
     plt.savefig(file)
 
 # Data for plotting
-def plotter(start, finish, pltr, label):
+def plotter(smallData, largeData, start, finish, pltr, label):
     for i in range(start, finish):
         initStart = 12 * i
         initEnd = initStart + 11
-        pltr.plot(np.arange(1,13), (smallCountMonth.loc[initStart:initEnd]['count'] / (largeCountMonth.loc[initStart:initEnd]['count'] + 0.01)) * 100, 'C' + str(i), label = str(2000 + i))
+        pltr.plot(np.arange(1,13), (smallData.loc[initStart:initEnd]['count'] / (largeData.loc[initStart:initEnd]['count'] + 0.01)) * 100, 'C' + str(i), label = str(2000 + i))
         pltr.set_title(label)
-
-x1 = np.arange(1, 13)
-y1 = (smallCountMonth.loc[0:11]['count'] / (largeCountMonth.loc[0:11]['count'] + 0.01)) * 100
-fig, ax = plt.subplots()
-plotter(0,20,ax, "")
-#ax.plot(x1, y1)
+        pltr.set_xlim(1,12)
+        pltr.set_ylim(0,100)
 
 
-ax.set(xlabel='Month #', ylabel='Number of Birds Spotted',
-       title='30S60W AgBird Monthly Plot')
-ax.grid()
-ax.legend(loc="upper left")
-fig.savefig("30S60WAgBirdMonthly.png")
+# x1 = np.arange(1, 13)
+# y1 = (smallCountMonth.loc[0:11]['count'] / (largeCountMonth.loc[0:11]['count'] + 0.01)) * 100
+# fig, ax = plt.subplots()
+# plotter(0,20,ax, "")
+# #ax.plot(x1, y1)
+# ax.set(xlabel='Month #', ylabel='Number of Birds Spotted',
+#        title='30S60W AgBird Monthly Plot')
+# ax.grid()
+# ax.legend(loc="upper left")
+# fig.savefig("30S60WAgBirdMonthly.png")
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
-fig.suptitle('Five Year Intervals')
+fig.suptitle('Five Year Intervals American Golden Plover')
 plotter(0,6,ax1, "2000-2005")
 plotter(6,11,ax2, "2006-2010")
 plotter(11,16,ax3, "2011-2015")
 plotter(16,20,ax4, "2016-2020")
+for ax in fig.get_axes():
+    ax.label_outer()
+fig.savefig("AgfiveDecadesPopulationDensityChanges.png")
+
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+fig.suptitle('Five Year Intervals Pectoral Sandpiper')
+plotter(smallCountMonthP, largeCountMonthP, 0, 6, ax1, "2000-2005")
+plotter(smallCountMonthP, largeCountMonthP, 6, 11, ax2, "2006-2010")
+plotter(smallCountMonthP, largeCountMonthP, 11, 16, ax3, "2011-2015")
+plotter(smallCountMonthP, largeCountMonthP, 16, 20, ax4, "2016-2020")
+for ax in fig.get_axes():
+    ax.label_outer()
+fig.savefig("PsfiveDecadesPopulationDensityChanges.png")
+
+
 # ax1.plot(x1, y1)
 # ax2.plot(x1, (smallCountMonth.loc[12:23]['count'] / (largeCountMonth.loc[12:23]['count'] + 0.01)) * 100, 'tab:orange')
 # ax3.plot(x1, (smallCountMonth.loc[24:35]['count'] / (largeCountMonth.loc[24:35]['count'] + 0.01)) * 100, 'tab:green')
 # ax4.plot(x1, (smallCountMonth.loc[36:47]['count'] / (largeCountMonth.loc[36:47]['count'] + 0.01)) * 100, 'tab:red')
-for ax in fig.get_axes():
-    ax.label_outer()
-fig.savefig("fiveDecadesPopulationDensityChanges.png")
+
 
 fig, ax5 = plt.subplots()
 ax5.set_title("Daily Average Temperatures in Paraguay from 2000-2020")
