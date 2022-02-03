@@ -171,7 +171,7 @@ def monthCount(smallSet, bigSet, yearMin, yearMax):
             smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'count': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSetMonth
 
-smallCountMonthP  = largeCountMonthP = smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
+smallCountMonthW = largeCountMonthW = smallCountMonthP  = largeCountMonthP = smallCountMonth = smallCount = largeCount = smallCountP = largeCountP = smallCountH = largeCountH = smallCountW = largeCountW = smallCountF = largeCountF = smallCountNAPlover = largeCountNAPlover = smallCountNAPiper = largeCountNAPiper = smallCountNARump = largeCountNARump = smallCountNAHawk = largeCountNAHawk = smallCountScreamer = largeCountScreamer = pd.DataFrame({'year':[], 'countS':[]})
 smallCount = yearCount(smallCount, specificMessing, 2000, 2020)
 largeCount = yearCount(largeCount, southAmericanPlover, 2000, 2020)
 smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
@@ -193,6 +193,8 @@ largeCountH =yearCount(largeCountH, southAmericanHawk, 2000, 2020)
 
 smallCountW = yearCount(smallCountW, specificRump, 2000, 2020)
 largeCountW = yearCount(largeCountW, southAmericanRump, 2000, 2020)
+smallCountMonthW = monthCount(smallCountW, specificRump, 2000, 2020)
+largeCountMonthW = monthCount(largeCountW, southAmericanRump, 2000, 2020)
 
 smallCountF = yearCount(smallCountF, specificForktail, 2000, 2020)
 largeCountF = yearCount(largeCountF, southAmericanForktail, 2000, 2020)
@@ -267,10 +269,10 @@ def plotter(smallData, largeData, start, finish, pltr, label):
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
 fig.suptitle('Five Year Intervals American Golden Plover')
-plotter(0,6,ax1, "2000-2005")
-plotter(6,11,ax2, "2006-2010")
-plotter(11,16,ax3, "2011-2015")
-plotter(16,20,ax4, "2016-2020")
+plotter(smallCountMonth, largeCountMonth, 0,6,ax1, "2000-2005")
+plotter(smallCountMonth, largeCountMonth, 6,11,ax2, "2006-2010")
+plotter(smallCountMonth, largeCountMonth, 11,16,ax3, "2011-2015")
+plotter(smallCountMonth, largeCountMonth, 16,20,ax4, "2016-2020")
 for ax in fig.get_axes():
     ax.label_outer()
 fig.savefig("AgfiveDecadesPopulationDensityChanges.png")
@@ -285,6 +287,15 @@ for ax in fig.get_axes():
     ax.label_outer()
 fig.savefig("PsfiveDecadesPopulationDensityChanges.png")
 
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+fig.suptitle('Five Year Intervals White-rumped Sandpiper')
+plotter(smallCountMonthW, largeCountMonthW, 0, 6, ax1, "2000-2005")
+plotter(smallCountMonthW, largeCountMonthW, 6, 11, ax2, "2006-2010")
+plotter(smallCountMonthW, largeCountMonthW, 11, 16, ax3, "2011-2015")
+plotter(smallCountMonthW, largeCountMonthW, 16, 20, ax4, "2016-2020")
+for ax in fig.get_axes():
+    ax.label_outer()
+fig.savefig("WrfiveDecadesPopulationDensityChanges.png")
 
 # ax1.plot(x1, y1)
 # ax2.plot(x1, (smallCountMonth.loc[12:23]['count'] / (largeCountMonth.loc[12:23]['count'] + 0.01)) * 100, 'tab:orange')
