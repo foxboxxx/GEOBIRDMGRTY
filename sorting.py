@@ -17,6 +17,13 @@ fullMagData3060 = pd.read_csv(r"3060fullMag.csv")
 #print(magneticData37)
 birdData = pd.read_csv(r"filteredPloverData.csv")
 magData30N90W = pd.read_csv(r'30N90Wdata.csv')
+kpIndex = pd.read_csv(r'kpindex.csv')
+
+kpy = kpIndex.query('YYY >= 2000')
+print(kpy)
+# kpd = kpd.query('#YYY >= 2000')
+print("KP Index Successfully Filtered to 2000 - 2020")
+
 
 climateDataGen = pd.read_csv(r"weatherDataNew.csv")
 print(climateDataGen)
@@ -52,13 +59,15 @@ print(yearlyPrcps)
 
 
     
-def histogramMaker(data):
-    # r = len(data)
-    # sb.histplot(data=data, x=np.arange(0,r))
-    # plt.savefig('###.png')
-    l = len(data)
-    sb.barplot(x = np.arange(0,l), y = "count", data = data,)
-    plt.savefig("####.png")
+def histogramMaker(data, title, filename):
+    r = len(data)
+    ax = sb.histplot(data=data, x = np.arange(0,r), y="count", bins = 20)
+    ax.set(xlabel='Month', ylabel='Population Density', title = title)  
+    plt.savefig(filename)
+
+    # l = len(data)
+    # sb.barplot(x = np.arange(0,l), y = "count", data = data,)
+    # plt.savefig("####.png")
 
 
 
@@ -178,23 +187,41 @@ smallCountMonth = monthCount(smallCount, specificMessing, 2000, 2020)
 largeCountMonth = monthCount(largeCount, southAmericanPlover, 2000, 2020)
 print(smallCountMonth)
 
-#<-------------IMPORTANT CODE FOR HISTOGRAM-------------------->
-ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.01) * 100)
-print(ddd)
-histogramMaker(ddd)
-
 smallCountP = yearCount(smallCountP, specificPiper, 2000, 2020)
 largeCountP = yearCount(largeCountP, southAmericanPiper, 2000, 2020)
 smallCountMonthP = monthCount(smallCountP, specificPiper, 2000, 2020)
 largeCountMonthP = monthCount(largeCountP, southAmericanPiper, 2000, 2020)
 
-smallCountH = yearCount(smallCountH, specificHawk, 2000, 2020)
-largeCountH =yearCount(largeCountH, southAmericanHawk, 2000, 2020)
-
 smallCountW = yearCount(smallCountW, specificRump, 2000, 2020)
 largeCountW = yearCount(largeCountW, southAmericanRump, 2000, 2020)
 smallCountMonthW = monthCount(smallCountW, specificRump, 2000, 2020)
 largeCountMonthW = monthCount(largeCountW, southAmericanRump, 2000, 2020)
+
+#<-------------IMPORTANT CODE FOR HISTOGRAM-------------------->
+ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.01) * 100)
+
+ag_set_1 = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(largeCountMonth)]['count'] + 0.01) * 100)
+ps_set_1 = pd.DataFrame((smallCountMonthP.loc[0:len(smallCountMonthP)]['count']) / (largeCountMonthP.loc[0:len(largeCountMonthP)]['count'] + 0.01) * 100)
+ws_set_1 = pd.DataFrame((smallCountMonthW.loc[0:len(smallCountMonthW)]['count'])/ (largeCountMonthW.loc[0:len(largeCountMonthW)]['count'] + 0.01) * 100)
+
+print("IMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANT")
+print(ag_set_1, ps_set_1, ws_set_1)
+print(ddd)
+
+histogramMaker(ddd, "Test", 'newhistotest.png')
+histogramMaker(ag_set_1, "American Golden-Plover", "2DHistogram_AgbirdSet1.png")
+histogramMaker(ps_set_1, "Pectoral Sandpiper", "2DHistogram_PsbirdSet1.png")
+histogramMaker(ws_set_1, "White-rumped Sandpiper", "2DHistogram_WsbirdSet_1.png")
+
+
+
+
+#---------------------------
+
+
+
+smallCountH = yearCount(smallCountH, specificHawk, 2000, 2020)
+largeCountH =yearCount(largeCountH, southAmericanHawk, 2000, 2020)
 
 smallCountF = yearCount(smallCountF, specificForktail, 2000, 2020)
 largeCountF = yearCount(largeCountF, southAmericanForktail, 2000, 2020)
