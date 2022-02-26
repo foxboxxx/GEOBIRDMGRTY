@@ -1,3 +1,4 @@
+from matplotlib import axes
 import pandas as pd
 import numpy as np
 import pygmt
@@ -9,6 +10,44 @@ import statsmodels.api as sm
 from scipy import stats
 import seaborn as sb
 
+d1 = pd.DataFrame(pd.read_csv(r'/Users/joe/Downloads/set.csv'))
+d2 = pd.DataFrame(pd.read_csv(r'/Users/joe/Downloads/Final DATA - Copy.csv'))
+
+# General Debugging
+# print(d1['ID'])
+# print(d2['Stellar Velocity Dispersion'])
+# print(d2['SDSS ID'])
+# print(d1['ID'])
+
+d2['SDSS ID'] = d2['SDSS ID'].astype(str)
+d2['RA'] = d2['RA'].astype(str)
+d2['DEC'] = d2['DEC'].astype(str)
+d2['Black Hole Mass'] = d2['Black Hole Mass'].astype(str)
+
+
+for x in np.arange(0, len(d2['Stellar Velocity Dispersion'])):
+    print(d2.iloc[x]['Stellar Velocity Dispersion'])
+    val = d2.iloc[x]['Stellar Velocity Dispersion']
+
+    for y in np.arange(0, len(d1['sigma_re'])):
+        if d1.iloc[y]['sigma_re'] == val:
+            indexVal = y
+            break
+    print(indexVal)
+    print(d2.at[x, 'SDSS ID'])
+    print(d1.iloc[indexVal]['ID'])
+    d2.at[x, 'SDSS ID'] = d1.iloc[indexVal]['ID']
+    d2.at[x, 'RA'] = d1.iloc[indexVal]['RA']
+    d2.at[x, 'DEC'] = d1.iloc[indexVal]['DEC']
+    d2.at[x, 'Black Hole Mass'] = d1.iloc[indexVal]['Mbh']
+    #print(d1.iloc[newval]['ID'])
+
+print(d2['Stellar Velocity Dispersion'])
+print(d2['SDSS ID'])
+        
+d2.to_csv("testdata.csv")
+
+
 print("Begininng Updating Sequence...")
 #testData = pd.read_csv(r"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1QvEdtQLKMGXxyN0QhQL46AdUdJ9iJVB-50NBHe1s_tnx2KCymG0ZYX43eB-SEjTl9Dj_5WHU8qj3/pub?output=csv")
 magneticData37 = pd.read_csv(r"magneticData37.csv")
@@ -19,9 +58,19 @@ birdData = pd.read_csv(r"filteredPloverData.csv")
 magData30N90W = pd.read_csv(r'30N90Wdata.csv')
 kpIndex = pd.read_csv(r'kpindex.csv')
 
-kpy = kpIndex.query('YYY >= 2000')
+kpy = kpIndex.query('2000 <= YYY < 2020')
 print(kpy)
-# kpd = kpd.query('#YYY >= 2000')
+
+kpIntoMonths = pd.DataFrame()
+# trouble shooting
+# print(((kpy['days'] - 24836.875)/30.4375))
+
+kpIntoMonths['month'] = ((kpy['days'] - 24836.875)/30.4375)
+kpIntoMonths['index'] = kpy['Kp']
+print(kpIntoMonths)
+
+
+print(kpIntoMonths)
 print("KP Index Successfully Filtered to 2000 - 2020")
 
 
@@ -84,7 +133,7 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
     ax1.grid(color = 'grey', linestyle = "--")
     # ax1.legend(loc="upper right")
 
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    ax2 = ax1.twinx()  
 
     ax2.set_ylabel(dataLabel2, color = color2)  # we already handled the x-label with ax1
     ln2 = ax2.plot(t, data2, color = color2, label = dataLabel2)
@@ -214,6 +263,26 @@ histogramMaker(ps_set_1, "Pectoral Sandpiper", "2DHistogram_PsbirdSet1.png")
 histogramMaker(ws_set_1, "White-rumped Sandpiper", "2DHistogram_WsbirdSet_1.png")
 
 
+fig, ax = plt.subplots()
+
+ln2 = ax.plot(kpIntoMonths['month'], kpIntoMonths['index'], color = 'blue')
+ax.tick_params(axis='y', labelcolor = 'blue')
+ax.set(ylabel = 'KpIndex')
+
+axs = ax.twinx()
+
+ln1 = axs.plot(np.arange(0, len(ws_set_1['count'])), ws_set_1['count'], color = 'red')
+axs.set(xlabel='Month #', ylabel='Bird Spotting Percentage', title='30S60W WrBird / KpIndex Monthly')
+axs.tick_params(axis='y', labelcolor = 'red')
+axs.grid(color = 'grey', linestyle = '--')
+
+lns = ln1+ln2
+labs = [l.get_label() for l in lns]
+ax.legend(lns, labs, loc="upper right")
+fig.tight_layout()
+
+# kpIntoMonths
+plt.savefig("TRIALKPINDEX4.png")
 
 
 #---------------------------
@@ -221,7 +290,7 @@ histogramMaker(ws_set_1, "White-rumped Sandpiper", "2DHistogram_WsbirdSet_1.png"
 
 
 smallCountH = yearCount(smallCountH, specificHawk, 2000, 2020)
-largeCountH =yearCount(largeCountH, southAmericanHawk, 2000, 2020)
+largeCountH = yearCount(largeCountH, southAmericanHawk, 2000, 2020)
 
 smallCountF = yearCount(smallCountF, specificForktail, 2000, 2020)
 largeCountF = yearCount(largeCountF, southAmericanForktail, 2000, 2020)
