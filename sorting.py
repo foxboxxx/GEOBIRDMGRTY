@@ -10,44 +10,6 @@ import statsmodels.api as sm
 from scipy import stats
 import seaborn as sb
 
-d1 = pd.DataFrame(pd.read_csv(r'/Users/joe/Downloads/set.csv'))
-d2 = pd.DataFrame(pd.read_csv(r'/Users/joe/Downloads/Final DATA - Copy.csv'))
-
-# General Debugging
-# print(d1['ID'])
-# print(d2['Stellar Velocity Dispersion'])
-# print(d2['SDSS ID'])
-# print(d1['ID'])
-
-d2['SDSS ID'] = d2['SDSS ID'].astype(str)
-d2['RA'] = d2['RA'].astype(str)
-d2['DEC'] = d2['DEC'].astype(str)
-d2['Black Hole Mass'] = d2['Black Hole Mass'].astype(str)
-
-
-for x in np.arange(0, len(d2['Stellar Velocity Dispersion'])):
-    print(d2.iloc[x]['Stellar Velocity Dispersion'])
-    val = d2.iloc[x]['Stellar Velocity Dispersion']
-
-    for y in np.arange(0, len(d1['sigma_re'])):
-        if d1.iloc[y]['sigma_re'] == val:
-            indexVal = y
-            break
-    print(indexVal)
-    print(d2.at[x, 'SDSS ID'])
-    print(d1.iloc[indexVal]['ID'])
-    d2.at[x, 'SDSS ID'] = d1.iloc[indexVal]['ID']
-    d2.at[x, 'RA'] = d1.iloc[indexVal]['RA']
-    d2.at[x, 'DEC'] = d1.iloc[indexVal]['DEC']
-    d2.at[x, 'Black Hole Mass'] = d1.iloc[indexVal]['Mbh']
-    #print(d1.iloc[newval]['ID'])
-
-print(d2['Stellar Velocity Dispersion'])
-print(d2['SDSS ID'])
-        
-d2.to_csv("testdata.csv")
-
-
 print("Begininng Updating Sequence...")
 #testData = pd.read_csv(r"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1QvEdtQLKMGXxyN0QhQL46AdUdJ9iJVB-50NBHe1s_tnx2KCymG0ZYX43eB-SEjTl9Dj_5WHU8qj3/pub?output=csv")
 magneticData37 = pd.read_csv(r"magneticData37.csv")
