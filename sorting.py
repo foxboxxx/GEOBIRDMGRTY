@@ -31,6 +31,23 @@ kpIntoMonths['month'] = ((kpy['days'] - 24836.875)/30.4375)
 kpIntoMonths['index'] = kpy['Kp']
 print(kpIntoMonths)
 
+i = 239
+target = kpIntoMonths.query('@i <= month <= @i + 1')
+print("---------------")
+print(target)
+print("-------------")
+
+
+kpAvg = pd.DataFrame()
+kpAvg['month'] = np.arange(0, 240)
+kpAvg['avInd'] = ""
+listWWW = []
+for i in kpAvg['month']:
+    target = kpIntoMonths.query('@i <= month <= @i + 1')
+    listWWW.append(target['index'].sum() / (len(target['index'])))
+    print(listWWW)
+kpAvg['avInd'] = listWWW
+print(kpAvg)
 
 print(kpIntoMonths)
 print("KP Index Successfully Filtered to 2000 - 2020")
@@ -68,7 +85,6 @@ for i in range(0,20):
 
 print(yearlyPrcps)
 
-
     
 def histogramMaker(data, title, filename):
     r = len(data)
@@ -79,7 +95,6 @@ def histogramMaker(data, title, filename):
     # l = len(data)
     # sb.barplot(x = np.arange(0,l), y = "count", data = data,)
     # plt.savefig("####.png")
-
 
 
 def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, dataLabel2, filename, color1, color2):
@@ -99,11 +114,12 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
 
     ax2.set_ylabel(dataLabel2, color = color2)  # we already handled the x-label with ax1
     ln2 = ax2.plot(t, data2, color = color2, label = dataLabel2)
+    ax2.set_ylim([0,100])
     ax2.tick_params(axis='y', labelcolor = color2)
     # ax2.legend(loc="upper right", bbox_to_anchor=(1, 0.90))
 
     #GOD TIER LEGEND HELPER GOD BLESS
-    lns = ln1+ln2
+    lns = ln1 + ln2
     labs = [l.get_label() for l in lns]
     ax1.legend(lns, labs, loc="upper right")
 
@@ -112,11 +128,8 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
     print(filename + " successfully uploaded.")
 
 
-
-
 # climateDataGen = climateDataGen.loc['STATION', 'LATITUDE', 'LONGITUDE', 'DATE', 'PRCP', 'TAVG', 'TMAX', 'TMIN']
 # climateDataGen = climateDataGen.query('STATION == PA000086086 & TMIN != null & TMAX != null')
-
 
 messingData = pd.read_csv(r"plovercsv.csv")
 messingData = messingData.loc[messingData['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
@@ -245,6 +258,11 @@ fig.tight_layout()
 
 # kpIntoMonths
 plt.savefig("TRIALKPINDEX4.png")
+
+print("Ag Bird: " + str(stats.pearsonr(kpAvg['avInd'], ag_set_1['count'])))
+print("Ps Bird: " + str(stats.pearsonr(kpAvg['avInd'], ps_set_1['count'])))
+print("Ws Bird: " + str(stats.pearsonr(kpAvg['avInd'], ws_set_1['count'])))
+
 
 
 #---------------------------
