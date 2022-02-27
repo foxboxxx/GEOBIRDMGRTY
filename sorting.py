@@ -31,11 +31,6 @@ kpIntoMonths['month'] = ((kpy['days'] - 24836.875)/30.4375)
 kpIntoMonths['index'] = kpy['Kp']
 print(kpIntoMonths)
 
-i = 239
-target = kpIntoMonths.query('@i <= month <= @i + 1')
-print("---------------")
-print(target)
-print("-------------")
 
 #useless
 kpAvg = pd.DataFrame()
