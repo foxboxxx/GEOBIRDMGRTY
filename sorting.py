@@ -37,7 +37,7 @@ print("---------------")
 print(target)
 print("-------------")
 
-
+#useless
 kpAvg = pd.DataFrame()
 kpAvg['month'] = np.arange(0, 240)
 kpAvg['avInd'] = ""
@@ -48,6 +48,9 @@ for i in kpAvg['month']:
     print(listWWW)
 kpAvg['avInd'] = listWWW
 print(kpAvg)
+#end of useless
+
+
 
 print(kpIntoMonths)
 print("KP Index Successfully Filtered to 2000 - 2020")
