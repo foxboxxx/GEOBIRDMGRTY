@@ -711,9 +711,9 @@ g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2)
 g.figure.subplots_adjust(hspace=-.25)
 
 # Remove axes details that don't play well with overlap
-g.set_titles("")
-g.set(yticks=[], ylabel="")
-g.despine(bottom=True, left=True)
+# g.set_titles("")
+# g.set(yticks=[], ylabel="")
+# g.despine(bottom=True, left=True)
 
 # g = sb.FacetGrid(ag_set_1, row="g", hue="g", aspect=15, height=.5, palette=pal)
 
