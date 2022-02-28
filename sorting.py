@@ -1,3 +1,5 @@
+from signal import SIG_BLOCK
+from socket import SO_BROADCAST
 from matplotlib import axes
 import pandas as pd
 import numpy as np
@@ -684,8 +686,75 @@ ax1.legend(lns, labs, loc="upper right")
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
 fig.savefig("newDoubleY-axisPlot.png")
 
+lis = list((np.arange(0,240) / 12) + 2000)
+lis = [int(x) for x in lis]
+
+ag_set_1['year'] = lis
+ddww = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+ag_set_1['month'] = ddww
+years = list(np.arange(2000,2020))
+print(ag_set_1)
 
 
+sb.set_theme(style="white")
+g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.2)
+g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2, hue ="g")
+
+
+pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+# g = sb.FacetGrid(ag_set_1, row="g", hue="g", aspect=15, height=.5, palette=pal)
+
+# sns.set_theme(style="white")
+# g = sns.FacetGrid(df_filtered, row="Language", aspect=9, height=1.2)
+# g.map_dataframe(sns.kdeplot, x="IMDB Score")
+
+g.savefig("rIDGE1.png")
+
+
+
+#[-]
+# sb.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
+
+# # Create the data
+# #rs = np.random.RandomState(1979)
+# x = ag_set_1['count']
+# g = np.tile(list(np.arange(2000,2020)), 12)
+# df = pd.DataFrame(dict(x=x, g=g))
+# m = df.g.map(ord)
+# df["x"] += m
+
+# # Initialize the FacetGrid object
+# pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+# g = sb.FacetGrid(df, row="g", hue="g", aspect=15, height=.5, palette=pal)
+
+# # Draw the densities in a few steps
+# g.map(sb.kdeplot, "x",
+#       bw_adjust=.5, clip_on=False,
+#       fill=True, alpha=1, linewidth=1.5)
+# g.map(sb.kdeplot, "x", clip_on=False, color="w", lw=2, bw_adjust=.5)
+
+# # passing color=None to refline() uses the hue mapping
+# g.refline(y=0, linewidth=2, linestyle="-", color=None, clip_on=False)
+
+
+# # Define and use a simple function to label the plot in axes coordinates
+# def label(x, color, label):
+#     ax = plt.gca()
+#     ax.text(0, .2, label, fontweight="bold", color=color,
+#             ha="left", va="center", transform=ax.transAxes)
+
+# g.map(label, "x")
+
+# # Set the subplots to overlap
+# g.figure.subplots_adjust(hspace=-.25)
+
+# # Remove axes details that don't play well with overlap
+# g.set_titles("")
+# g.set(yticks=[], ylabel="")
+# g.despine(bottom=True, left=True)
+
+# g.savefig("EE.png")
+#[=]
 
 
 #printing
@@ -1477,8 +1546,6 @@ Ecorrelation.plot(x = QQsmallCount.year, y = ((QQsmallCount.countS + QQsmallCoun
 Ecorrelation.legend(position = "jTL+o0.1c", box = True)
 Ecorrelation.savefig("AbCorrelation00203R.png",show = False)
 print("4R Analysis of All Birds % In South America (30S 60W) Successfully Updated.")
-
-
 
 
 print("Program finished.")
