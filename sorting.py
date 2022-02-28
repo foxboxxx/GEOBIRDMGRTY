@@ -697,18 +697,17 @@ print(ag_set_1)
 
 
 sb.set_theme(style="white")
-#pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
-g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.8, )
+pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.2, palette = pal)
 g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2)
 
 # Define and use a simple function to label the plot in axes coordinates
-# def label(color, label):
-#     ax = plt.gca()
-#     ax.text(0, .2, label, fontweight="bold", color=color,
-#             ha="left", va="center", transform=ax.transAxes)
+def label(color, label):
+    ax = plt.gca()
+    ax.text(0, .2, label, fontweight="bold", color=color,
+            ha="left", va="center", transform=ax.transAxes)
 
 # Set the subplots to overlap
-g.figure.subplots_adjust(hspace=-.25)
 
 # Remove axes details that don't play well with overlap
 # g.set_titles("")
@@ -717,9 +716,6 @@ g.figure.subplots_adjust(hspace=-.25)
 
 # g = sb.FacetGrid(ag_set_1, row="g", hue="g", aspect=15, height=.5, palette=pal)
 
-# sns.set_theme(style="white")
-# g = sns.FacetGrid(df_filtered, row="Language", aspect=9, height=1.2)
-# g.map_dataframe(sns.kdeplot, x="IMDB Score")
 
 g.savefig("rIDGE1.png")
 
