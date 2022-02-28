@@ -222,11 +222,11 @@ smallCountMonthW = monthCount(smallCountW, specificRump, 2000, 2020)
 largeCountMonthW = monthCount(largeCountW, southAmericanRump, 2000, 2020)
 
 #<-------------IMPORTANT CODE FOR HISTOGRAM-------------------->
-ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.01) * 100)
+ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(smallCountMonth)]['count'] + 0.0001) * 100)
 
-ag_set_1 = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(largeCountMonth)]['count'] + 0.01) * 100)
-ps_set_1 = pd.DataFrame((smallCountMonthP.loc[0:len(smallCountMonthP)]['count']) / (largeCountMonthP.loc[0:len(largeCountMonthP)]['count'] + 0.01) * 100)
-ws_set_1 = pd.DataFrame((smallCountMonthW.loc[0:len(smallCountMonthW)]['count'])/ (largeCountMonthW.loc[0:len(largeCountMonthW)]['count'] + 0.01) * 100)
+ag_set_1 = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(largeCountMonth)]['count'] + 0.0001) * 100)
+ps_set_1 = pd.DataFrame((smallCountMonthP.loc[0:len(smallCountMonthP)]['count']) / (largeCountMonthP.loc[0:len(largeCountMonthP)]['count'] + 0.0001) * 100)
+ws_set_1 = pd.DataFrame((smallCountMonthW.loc[0:len(smallCountMonthW)]['count'])/ (largeCountMonthW.loc[0:len(largeCountMonthW)]['count'] + 0.0001) * 100)
 
 print("IMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANT")
 print(ag_set_1, ps_set_1, ws_set_1)
@@ -697,11 +697,24 @@ print(ag_set_1)
 
 
 sb.set_theme(style="white")
-g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.2)
-g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2, hue ="g")
+#pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.8, )
+g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2)
 
+# Define and use a simple function to label the plot in axes coordinates
+# def label(color, label):
+#     ax = plt.gca()
+#     ax.text(0, .2, label, fontweight="bold", color=color,
+#             ha="left", va="center", transform=ax.transAxes)
 
-pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+# Set the subplots to overlap
+g.figure.subplots_adjust(hspace=-.25)
+
+# Remove axes details that don't play well with overlap
+g.set_titles("")
+g.set(yticks=[], ylabel="")
+g.despine(bottom=True, left=True)
+
 # g = sb.FacetGrid(ag_set_1, row="g", hue="g", aspect=15, height=.5, palette=pal)
 
 # sns.set_theme(style="white")
@@ -712,7 +725,7 @@ g.savefig("rIDGE1.png")
 
 
 
-#[-]
+
 # sb.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
 
 # # Create the data
@@ -754,7 +767,7 @@ g.savefig("rIDGE1.png")
 # g.despine(bottom=True, left=True)
 
 # g.savefig("EE.png")
-#[=]
+
 
 
 #printing
