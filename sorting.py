@@ -31,6 +31,7 @@ kpIntoMonths = pd.DataFrame()
 
 kpIntoMonths['month'] = ((kpy['days'] - 24836.875)/30.4375)
 kpIntoMonths['index'] = kpy['Kp']
+kpIntoMonths['year'] = kpy['YYY']
 print(kpIntoMonths)
 
 
@@ -690,8 +691,9 @@ lis = list((np.arange(0,240) / 12) + 2000)
 lis = [int(x) for x in lis]
 
 ag_set_1['year'] = lis
-ddww = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-ag_set_1['month'] = ddww
+ddww = np.array(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
+seriesN = pd.Series(ddww)
+ag_set_1['month'] = pd.concat([seriesN]*20, ignore_index = True)
 years = list(np.arange(2000,2020))
 print(ag_set_1)
 
@@ -699,13 +701,15 @@ print(ag_set_1)
 sb.set_theme(style="white")
 pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
 g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.2, palette = pal)
-g.map_dataframe(sb.lineplot, x="month", y='count', alpha=1, linewidth=2)
+g.map_dataframe(sb.lineplot, x="month", y = 'count', alpha=1, linewidth=2)
+
+
 
 # Define and use a simple function to label the plot in axes coordinates
-def label(color, label):
-    ax = plt.gca()
-    ax.text(0, .2, label, fontweight="bold", color=color,
-            ha="left", va="center", transform=ax.transAxes)
+# def label(color, label):
+#     ax = plt.gca()
+#     ax.text(0, .2, label, fontweight="bold", color=color,
+#             ha="left", va="center", transform=ax.transAxes)
 
 # Set the subplots to overlap
 
@@ -719,6 +723,20 @@ def label(color, label):
 
 g.savefig("rIDGE1.png")
 
+betaKpMonth = kpIntoMonths
+betaKpMonth.reset_index(drop=True, inplace=True)
+firstMonths = kpIntoMonths.query('0 <= month <= 12')
+print(firstMonths['month'])
+betaKpMonth['months'] = pd.concat([firstMonths['month']] * 20, ignore_index = True)
+
+print(betaKpMonth)
+
+sb.set_theme(style="white")
+pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+g = sb.FacetGrid(betaKpMonth, row = "year", aspect = 9, height = 1.2, palette = pal)
+g.map_dataframe(sb.lineplot, x="months", y = 'index', alpha=1, linewidth=2)
+
+g.savefig("rIDGE13.png")
 
 
 
