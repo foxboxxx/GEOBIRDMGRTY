@@ -1,5 +1,3 @@
-from signal import SIG_BLOCK
-from socket import SO_BROADCAST
 from matplotlib import axes
 import pandas as pd
 import numpy as np
@@ -556,6 +554,7 @@ for x in range(len(NAPloverSmallList3060S)):
     percentagesNAPlover30N90W.append((NAPloverSmallList3060S[x]/NAPloverLargeList3060S[x]) * 100)
 print("> 30N90W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAPlover30N90W, "30N90W American Golden-Plover Magnetic Strength", "30N90WAgBird.png", "Magnetic Strength (nT)")
+doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAPlover30N90W, "5R Analysis of American Golden-Plover 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AgBird30N90W_M.png", "tab:red", "tab:blue")
 
 #White-rumped Sandpiper Correlation North America
 NAWhiteSmallList3060S = smallCountNARump.copy()['countS'].values.tolist()
@@ -565,6 +564,7 @@ for x in range(len(NAWhiteSmallList3060S)):
     percentagesNAWhite30N90W.append((NAWhiteSmallList3060S[x]/NAWhiteLargeList3060S[x]) * 100)
 print("> 30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAWhite30N90W, "30N90W White-rumped Sandpiper Magnetic Strength", "30N90WWrBird.png", "Magnetic Strength (nT)")
+doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAWhite30N90W, "5R Analysis of White-rumped Sandpiper 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_WrBird30N90W_M.png", "tab:red", "tab:blue")
 
 #Pectoral Sandpiper Correlation North America
 NAPiperSmallList3060S = smallCountNAPiper.copy()['countS'].values.tolist()
@@ -574,6 +574,7 @@ for x in range(len(NAPiperSmallList3060S)):
     percentagesNAPiper30N90W.append((NAPiperSmallList3060S[x]/NAPiperLargeList3060S[x]) * 100)
 print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAPiper30N90W, "30N90W Pectoral Sandpiper Magnetic Strength", "30N90WPsBird.png", "Magnetic Strength (nT)")
+doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAPiper30N90W, "5R Analysis of Pectoral Sandpiper 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_PsBird30N90W_M.png", "tab:red", "tab:blue")
 
 #Swainson's Hawk Correlation North America
 NAHawkSmallList3060S = smallCountNAHawk.copy()['countS'].values.tolist()
@@ -583,6 +584,7 @@ for x in range(len(NAHawkSmallList3060S)):
     percentagesNAHawk30N90W.append((NAHawkSmallList3060S[x]/NAHawkLargeList3060S[x]) * 100)
 print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAHawk30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAHawk30N90W)[1]))
 scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk Magnetic Strength", "30N90WShBird.png", "Magnetic Strength (nT)")
+doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAHawk30N90W, "5R Analysis of Swainson's Hawk 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30N90W_M.png", "tab:red", "tab:blue")
 
 print("|------------------------------------------------------------------------|")#section end
 
@@ -1575,5 +1577,5 @@ Ecorrelation.savefig("AbCorrelation00203R.png",show = False)
 print("4R Analysis of All Birds % In South America (30S 60W) Successfully Updated.")
 
 
-print("Program finished.")
+print("done ")
 
