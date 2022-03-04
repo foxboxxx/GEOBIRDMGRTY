@@ -819,11 +819,12 @@ region = [subsetOne.decimalLongitude.min() - 1, subsetOne.decimalLongitude.max()
 
 finalRegion = [-90,177,-55,1]
 worldRegion = [-170,180,-60,80]
+AmericanRegion = [-170,0,-60,80]
 
 #1970-1979
 seventies = preciseBirdData.query('1970 <= year < 1980')
 seventiesFig = pygmt.Figure()
-seventiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird)- South America (1970-1980)"'])
+seventiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird) - South America (1970-1980)"'])
 seventiesFig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[1970,1979])
 seventiesFig.plot(
@@ -837,12 +838,12 @@ seventiesFig.plot(
 )
 seventiesFig.colorbar(frame='af+l"Year"')
 seventiesFig.savefig("AgBird_seventies.png",show = False)
-print("American Golden-Plover (AgBird)- South America (1970-1980) Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America (1970-1980) Successfully Updated.")
 
 #1980-1989
 eighties = preciseBirdData.query('1980 <= year < 1990')
 eightiesFig = pygmt.Figure()
-eightiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird)- South America (1970-1980)"'])
+eightiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird) - South America (1970-1980)"'])
 eightiesFig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[1980,1989])
 eightiesFig.plot(
@@ -856,12 +857,12 @@ eightiesFig.plot(
 )
 eightiesFig.colorbar(frame='af+l"Year"')
 eightiesFig.savefig("AgBird_eighties.png",show = False)
-print("American Golden-Plover (AgBird)- South America (1970-1980) Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America (1970-1980) Successfully Updated.")
 
 #1990-1999
 nineties = preciseBirdData.query('1990 <= year < 2000')
 ninetiesFig = pygmt.Figure()
-ninetiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird)- South America (1990-2000)"'])
+ninetiesFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird) - South America (1990-2000)"'])
 ninetiesFig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[1990,1999])
 ninetiesFig.plot(
@@ -875,12 +876,12 @@ ninetiesFig.plot(
 )
 ninetiesFig.colorbar(frame='af+l"Year"')
 ninetiesFig.savefig("AgBird_nineties.png",show = False)
-print("American Golden-Plover (AgBird)- South America (1990-2000) Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America (1990-2000) Successfully Updated.")
 
 #2000-2009
 twozero = preciseBirdData.query('2000 <= year < 2010')
 twozeroFig = pygmt.Figure()
-twozeroFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird)- South America (2000-2010)"'])
+twozeroFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird) - South America (2000-2010)"'])
 twozeroFig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[2000,2009])
 twozeroFig.plot(
@@ -894,12 +895,12 @@ twozeroFig.plot(
 )
 twozeroFig.colorbar(frame='af+l"Year"')
 twozeroFig.savefig("AgBird_twozero.png",show = False)
-print("American Golden-Plover (AgBird)- South America (2000-2010) Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America (2000-2010) Successfully Updated.")
 
 #2010-Present
 twoten = preciseBirdData.query('2010 <= year')
 twotenFig = pygmt.Figure()
-twotenFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird)- South America (2010-Present)"'])
+twotenFig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t"American Golden-Plover (AgBird) - South America (2010-Present)"'])
 twotenFig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[2010,2021])
 twotenFig.plot(
@@ -913,7 +914,7 @@ twotenFig.plot(
 )
 twotenFig.colorbar(frame='af+l"Year"')
 twotenFig.savefig("AgBird_twoten.png",show = False)
-print("American Golden-Plover (AgBird)- South America (2010-Present) Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America (2010-Present) Successfully Updated.")
 
 #seventies.to_csv('seventies.csv')
 #eighties.to_csv('eighties.csv')
@@ -923,7 +924,7 @@ print("American Golden-Plover (AgBird)- South America (2010-Present) Successfull
 
 #Everything
 fig = pygmt.Figure()
-fig.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird)- South America"'])
+fig.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird) - South America"'])
 fig.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="viridis", series=[subsetOne.year.min(), subsetOne.year.max()])
 fig.plot(
@@ -937,7 +938,7 @@ fig.plot(
 )
 fig.colorbar(frame='af+l"Year "')
 fig.savefig("AgBird_seventies_to_twenties.png",show = False)
-print("American Golden-Plover (AgBird)- South America Successfully Updated.")
+print("American Golden-Plover (AgBird) - South America Successfully Updated.")
 
 xList = []
 yList = []
@@ -947,7 +948,7 @@ length = len(subsetOne)
 newDf = pd.read_csv(r"pectoralSandpiperFiltered.csv", encoding='latin1')
 #newDf = newDf.query("2000 >= year >= 1970").copy()
 pSand = pygmt.Figure()
-pSand.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Pectoral Sandpiper (PsBird)- South America"'])
+pSand.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Pectoral Sandpiper (PsBird) - South America"'])
 pSand.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="plasma", series=[newDf.year.min(), newDf.year.max()])
 pSand.plot(
@@ -961,13 +962,13 @@ pSand.plot(
 )
 pSand.colorbar(frame='af+l"Year "')
 pSand.savefig("PsBird_seventies_to_twenties.png",show = False)
-print("Pectoral Sandpiper (PsBird)- South America Successfully Updated.")
+print("Pectoral Sandpiper (PsBird) - South America Successfully Updated.")
 
 #swainsonHawk
 hawkDf = pd.read_csv(r"swainsonHawkFiltered.csv")
 #hawkDf = hawkDf.query("2000 >= year >= 1970").copy()
 sHawk = pygmt.Figure()
-sHawk.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Swainsons Hawk (ShBird)- South America"'])
+sHawk.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Swainsons Hawk (ShBird) - South America"'])
 sHawk.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="inferno", series=[hawkDf.year.min(), hawkDf.year.max()])
 sHawk.plot(
@@ -981,14 +982,14 @@ sHawk.plot(
 )
 sHawk.colorbar(frame='af+l"Year "')
 sHawk.savefig("ShBird_seventies_to_twenties.png",show = False)
-print("Swainsons Hawk (ShBird)- South America Successfully Updated.")
+print("Swainsons Hawk (ShBird) - South America Successfully Updated.")
 
 
 #White Rumped Pectoral
 wRump = pd.read_csv(r"whiteRumpedFiltered.csv")
 #wRump = wRump.query("2000 >= year >= 1970").copy()
 wrp = pygmt.Figure()
-wrp.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Pectoral White-Rumped Sandpiper (WrBird)- South America"'])
+wrp.basemap(region=finalRegion, projection="M8i", frame=["a", '+t"Pectoral White-Rumped Sandpiper (WrBird) - South America"'])
 wrp.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="plasma", series=[wRump.year.min(), wRump.year.max()])
 wrp.plot(
@@ -1002,12 +1003,12 @@ wrp.plot(
 )
 wrp.colorbar(frame='af+l"Year "')
 wrp.savefig("WrBird_seventies_to_twenties.png",show = False)
-print("Pectoral White-Rumped Sandpiper (WrBird)- South America Successfully Updated.")
+print("Pectoral White-Rumped Sandpiper (WrBird) - South America Successfully Updated.")
 
 #forktailed flycatcher (control, native south american bird)
 fTailed = pd.read_csv(r"forktailedFiltered.csv")
 ftd = pygmt.Figure()
-ftd.basemap(region = finalRegion, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird)- South America"'])
+ftd.basemap(region = finalRegion, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird) - South America"'])
 ftd.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="plasma", series=[fTailed.year.min(), fTailed.year.max()])
 ftd.plot(
@@ -1021,7 +1022,7 @@ ftd.plot(
 )
 ftd.colorbar(frame='af+l"Year "')
 ftd.savefig("FtBird_seventies_to_twenties.png",show = False)
-print("Fork-tailed Flycatcher [Control] (FtBird)- South America Successfully Updated.")
+print("Fork-tailed Flycatcher [Control] (FtBird) - South America Successfully Updated.")
 
 
 #shawkworld
@@ -1030,7 +1031,7 @@ sH = sH.loc[sH['occurrenceStatus']=='PRESENT',['eventDate','individualCount','de
 sH = sH.query("year >= 1970")
 sH = sH.query("individualCount <= 10000")
 HawkFull = pygmt.Figure()
-HawkFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"Swainsons Hawk (ShBird)- World"'])
+HawkFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"Swainsons Hawk (ShBird) - World"'])
 HawkFull.coast(land="burlywood", water="lightblue", resolution="f")
 pygmt.makecpt(cmap="plasma", series=[sH.year.min(), sH.year.max()])
 HawkFull.plot(
@@ -1044,7 +1045,7 @@ HawkFull.plot(
 )
 HawkFull.colorbar(frame='af+l"Year "')
 HawkFull.savefig("ShBird_Full_Map.png",show = False)
-print("Swainsons Hawk (ShBird)- World Successfully Updated.")
+print("Swainsons Hawk (ShBird) - World Successfully Updated.")
 
 #fullWorldOfPlover
 tB = pd.read_csv(r"plovercsv.csv")
@@ -1052,7 +1053,7 @@ tB = tB.loc[tB['occurrenceStatus']=='PRESENT',['eventDate','individualCount','de
 tB = tB.query("year >= 1970")
 tB = tB.query("individualCount <= 10000")
 ploverFull = pygmt.Figure()
-ploverFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird)- World"'])
+ploverFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird) - World"'])
 ploverFull.coast(land="burlywood", water="lightblue", resolution="f")
 pygmt.makecpt(cmap="inferno", series=[tB.year.min(), tB.year.max()])
 ploverFull.plot(
@@ -1066,7 +1067,7 @@ ploverFull.plot(
 )
 ploverFull.colorbar(frame='af+l"Year "')
 ploverFull.savefig("AgBird_Full_Map.png",show = False)
-print("American Golden-Plover (AgBird)- World Successfully Updated.")
+print("American Golden-Plover (AgBird) - World Successfully Updated.")
 
 
 #fullWorldOfSandpiper
@@ -1089,7 +1090,7 @@ sandFull.plot(
 )
 sandFull.colorbar(frame='af+l"Year "')
 sandFull.savefig("PsBird_Full_Map.png",show = False)
-print("Pectoral Sandpiper (PsBird)- World Successfully Updated.")
+print("Pectoral Sandpiper (PsBird) - World Successfully Updated.")
 
 #Full World Of White-Rumped Sandpiper
 wW = pd.read_csv(r"whiteRumpedRaw.csv")
@@ -1097,7 +1098,7 @@ wW = wW.loc[wW['occurrenceStatus']=='PRESENT',['eventDate','individualCount','de
 wW = wW.query("year >= 1970")
 wW = wW.query("individualCount <= 10000")
 whiteFull = pygmt.Figure()
-whiteFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"White-Rumped Sandpiper (WrBird)- World"'])
+whiteFull.basemap(region=worldRegion, projection="M8i", frame=["a", '+t"White-Rumped Sandpiper (WrBird) - World"'])
 whiteFull.coast(land="burlywood", water="lightblue", resolution="f")
 pygmt.makecpt(cmap="plasma", series=[pW.year.min(), pW.year.max()])
 whiteFull.plot(
@@ -1111,7 +1112,100 @@ whiteFull.plot(
 )
 whiteFull.colorbar(frame='af+l"Year "')
 whiteFull.savefig("WrBird_Full_Map.png",show = False)
-print("White-Rumped Sandpiper (WrBird)- World Successfully Updated.")
+print("White-Rumped Sandpiper (WrBird) - World Successfully Updated.")
+
+#-----------------AMERICAS FOR PPT:
+#Americas Swainson's Hawk
+sH = pd.read_csv(r"swainsonHawk.csv")
+sH = sH.loc[sH['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
+sH = sH.query("year >= 1970")
+sH = sH.query("individualCount <= 10000")
+HawkFull = pygmt.Figure()
+HawkFull.basemap(region=AmericanRegion, projection="M8i", frame=["a", '+t"Swainsons Hawk (ShBird) - Americas"'])
+HawkFull.coast(land="burlywood", water="lightblue", resolution="f")
+pygmt.makecpt(cmap="plasma", series=[sH.year.min(), sH.year.max()])
+HawkFull.plot(
+    x=sH.decimalLongitude, 
+    y=sH.decimalLatitude, 
+    color = sH.year,
+    cmap=True,
+    size=0.05 + ((sH.individualCount + 1)/10000),
+    style="cc",
+    pen="black"
+)
+HawkFull.colorbar(frame='af+l"Year "')
+HawkFull.savefig("ShBird_America_Map.png",show = False)
+print("Swainsons Hawk (ShBird) - Americas Successfully Updated.")
+
+#Americas American Golden-PLover
+tB = pd.read_csv(r"plovercsv.csv")
+tB = tB.loc[tB['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
+tB = tB.query("year >= 1970")
+tB = tB.query("individualCount <= 10000")
+ploverFull = pygmt.Figure()
+ploverFull.basemap(region=AmericanRegion, projection="M8i", frame=["a", '+t"American Golden-Plover (AgBird) - Americas"'])
+ploverFull.coast(land="burlywood", water="lightblue", resolution="f")
+pygmt.makecpt(cmap="inferno", series=[tB.year.min(), tB.year.max()])
+ploverFull.plot(
+    x=tB.decimalLongitude, 
+    y=tB.decimalLatitude, 
+    color = tB.year,
+    cmap=True,
+    size=0.05 + ((tB.individualCount + 1)/10000),
+    style="cc",
+    pen="black"
+)
+ploverFull.colorbar(frame='af+l"Year "')
+ploverFull.savefig("AgBird_America_Map.png",show = False)
+print("American Golden-Plover (AgBird) - Americas Successfully Updated.")
+
+
+#Americas Pectoral Sandpiper
+pW = pd.read_csv(r"pectoralSandpiperUnfiltered.csv")
+pW = pW.loc[pW['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
+pW = pW.query("year >= 1970")
+pW = pW.query("individualCount <= 10000")
+sandFull = pygmt.Figure()
+sandFull.basemap(region=AmericanRegion, projection="M8i", frame=["a", '+t"Pectoral Sandpiper (PsBird) - Americas"'])
+sandFull.coast(land="burlywood", water="lightblue", resolution="f")
+pygmt.makecpt(cmap="plasma", series=[pW.year.min(), pW.year.max()])
+sandFull.plot(
+    x=pW.decimalLongitude, 
+    y=pW.decimalLatitude, 
+    color = pW.year,
+    cmap=True,
+    size=0.05 + ((pW.individualCount + 1)/10000),
+    style="cc",
+    pen="black"
+)
+sandFull.colorbar(frame='af+l"Year "')
+sandFull.savefig("PsBird_America_Map.png",show = False)
+print("Pectoral Sandpiper (PsBird) - Americas Successfully Updated.")
+
+#Americas White-rumped Sandpiper
+wW = pd.read_csv(r"whiteRumpedRaw.csv")
+wW = wW.loc[wW['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
+wW = wW.query("year >= 1970")
+wW = wW.query("individualCount <= 10000")
+whiteFull = pygmt.Figure()
+whiteFull.basemap(region=AmericanRegion, projection="M8i", frame=["a", '+t"White-Rumped Sandpiper (WrBird) - Americas"'])
+whiteFull.coast(land="burlywood", water="lightblue", resolution="f")
+pygmt.makecpt(cmap="plasma", series=[pW.year.min(), pW.year.max()])
+whiteFull.plot(
+    x=wW.decimalLongitude, 
+    y=wW.decimalLatitude, 
+    color = wW.year,
+    cmap=True,
+    size=0.05 + ((wW.individualCount + 1)/10000),
+    style="cc",
+    pen="black"
+)
+whiteFull.colorbar(frame='af+l"Year "')
+whiteFull.savefig("WrBird_America_Map.png",show = False)
+print("White-Rumped Sandpiper (WrBird) - Americas Successfully Updated.")
+#---------------------------------------------
+
+
 
 #allBirdsSA
 abSA = pygmt.Figure()
