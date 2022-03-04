@@ -446,6 +446,7 @@ doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesPlover3060S, "5R Analys
 
 scatterPlot(magStrength3060S, percentagesPlover3060S, "30S60W American Golden-Plover Magnetic Strength", "30S60WAgBird.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPlover3060S, "5R Analysis of American Golden-Plover 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AgBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPlover3060S, "5R Analysis of American Golden-Plover 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_AgBird30S60W_M.png", "tab:red", "tab:blue")
 
 scatterPlot(prcp3060S, percentagesPlover3060S, "30S60W American Golden-Plover Precipitation", "30S60WAgBird_P.png", "Precipitation (in)")
 doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesPlover3060S, "5R Analysis of American Golden-Plover 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_AgBird30S60W_P.png", "tab:red", "tab:blue")
@@ -461,6 +462,7 @@ print("> Temperature 30S60W White-rumped Sandpiper: " + "r value = " + str(stats
 print("> Precipitation 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesWhite3060S)[1]))
 scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Magnetic Strength", "30S60WWrBird.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_WrBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_WrBird30S60W_M.png", "tab:red", "tab:green")
 
 scatterPlot(climate3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Temperature", "30S60WWrBird_T.png", "Temperature (F)")
 doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_WrBird30S60W_T.png", "tab:red", "tab:blue")
@@ -481,6 +483,7 @@ print("> Precipitation 30S60W Pectoral Sandpiper: " + "r value = " + str(stats.p
 
 scatterPlot(magStrength3060S, percentagesPectoral3060S, "30S60W Pectoral Sandpiper Magnetic Strength", "30S60WPsBird_M.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPectoral3060S, "5R Analysis of Pectoral Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_PsBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPectoral3060S, "5R Analysis of Pectoral Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_PsBird30S60W_M.png", "tab:red", "tab:purple")
 
 scatterPlot(climate3060S, percentagesPectoral3060S, "30S60W Pectoral Sandpiper Temperature", "30S60WPsBird_T.png", "Temperature (F)")
 doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesPectoral3060S, "5R Analysis of Pectoral Sandpiper 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_PsBird30S60W_T.png", "tab:red", "tab:blue")
@@ -502,6 +505,7 @@ print("> Precipitation 30S60W Swainson's Hawk: " + "r value = " + str(stats.pear
 
 scatterPlot(magStrength3060S, percentagesHawk3060S, "30S60W Swainson's Hawk Magnetic Strength", "30S60WShBird_M.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesHawk3060S, "5R Analysis of Swainson's Hawk 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesHawk3060S, "5R Analysis of Swainson's Hawk 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_ShBird30S60W_M.png", "tab:red", "rosybrown")
 
 scatterPlot(climate3060S, percentagesHawk3060S, "30S60W Swainson's Hawk Temperature", "30S60WShBird_T.png", "Temperature (F)")
 doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesHawk3060S, "5R Analysis of Swainson's Hawk 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_ShBird30S60W_T.png", "tab:red", "tab:blue")
