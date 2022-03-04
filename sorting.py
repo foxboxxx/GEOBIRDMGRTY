@@ -591,6 +591,40 @@ scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk 
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAHawk30N90W, "5R Analysis of Swainson's Hawk 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30N90W_M.png", "tab:red", "tab:blue")
 
 print("|------------------------------------------------------------------------|")#section end
+#Custom double Y-axis plot for WESEF:
+t = np.arange(2000,2020, 1)
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Year')
+ax1.set_ylabel("Magnetic Strength (nT)", color = "tab:red")
+ax1.set_title("5R Analysis of Migratory Birds 30S60W from 2000-2020(M)")
+ln1 = ax1.plot(t, magStrength3060S, color = "tab:red", label = "Magnetic Strength (nT)")
+ax1.tick_params(axis='y', labelcolor = "tab:red")
+ax1.grid(color = 'grey', linestyle = "--")
+# ax1.legend(loc="upper right")
+
+ax2 = ax1.twinx()  
+
+ax2.set_ylabel("Population Density %", color = "tab:blue") 
+ln2 = ax2.plot(t, percentagesPlover3060S, color = "tab:cyan", label = "AgBird Population Density %")
+ln3 = ax2.plot(t, percentagesWhite3060S, color = "tab:green", label = "WrBird Population Density %")
+ln4 = ax2.plot(t, percentagesPectoral3060S, color = "tab:purple", label = "PsBird Population Density%")
+ln5 = ax2.plot(t, percentagesHawk3060S, color = "tab:orange", label = "ShBird Population Density %")
+ax2.set_ylim([0,100])
+ax2.tick_params(axis='y', labelcolor = "tab:blue")
+# ax2.legend(loc="upper right", bbox_to_anchor=(1, 0.90))
+
+#GOD TIER LEGEND HELPER GOD BLESS
+lns = ln1 + ln2 + ln3 + ln4 + ln5
+labs = [l.get_label() for l in lns]
+ax1.legend(lns, labs, loc="upper right")
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped...
+fig.savefig("WESEF_Graph_Beta.png")
+print("WESEF_Graph_Beta" + " successfully uploaded.")
+
+
+#---------------------------#
 
 # hie_data = sm.datasets.randhie.load_pandas()
 # corr_matrix = np.corrcoef(hie_data.data.T)
