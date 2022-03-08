@@ -460,7 +460,7 @@ for x in range(len(whiteSmallList3060S)):
 print("> Magnetic 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(magStrength3060S, percentagesWhite3060S)[1]))
 print("> Temperature 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(climate3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(climate3060S, percentagesWhite3060S)[1]))
 print("> Precipitation 30S60W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesWhite3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesWhite3060S)[1]))
-scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Magnetic Strength", "30S60WWrBird.png", "Magnetic Strength (nT)")
+scatterPlot(magStrength3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Magnetic Strength", "30S60WWrBird_M.png", "Magnetic Strength (nT)")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_WrBird30S60W_M.png", "tab:red", "tab:blue")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_WrBird30S60W_M.png", "tab:red", "tab:green")
 
@@ -526,7 +526,8 @@ print("> Temperature 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats
 print("> Precipitation 30S60W Fork-tailed Flycatcher: " + "r value = " + str(stats.pearsonr(prcp3060S,percentagesFork3060S)[0]) + "; p value = " + str(stats.pearsonr(prcp3060S, percentagesFork3060S)[1]))
 
 scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Magnetic Strength", "30S60WFtBird.png", "Magnetic Strength (nT)")
-doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesPectoral3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:blue")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:orange")
 
 scatterPlot(climate3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Temperature", "30S60WShBird_T.png", "Temperature (F)")
 doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_T.png", "tab:red", "tab:blue")
@@ -856,6 +857,7 @@ region = [subsetOne.decimalLongitude.min() - 1, subsetOne.decimalLongitude.max()
 #print(subsetOne.head())
 
 finalRegion = [-90,177,-55,1]
+n232n = [-90, -30, -55, 1]
 worldRegion = [-170,180,-60,80]
 AmericanRegion = [-170,0,-60,80]
 
@@ -1046,7 +1048,7 @@ print("Pectoral White-Rumped Sandpiper (WrBird) - South America Successfully Upd
 #forktailed flycatcher (control, native south american bird)
 fTailed = pd.read_csv(r"forktailedFiltered.csv")
 ftd = pygmt.Figure()
-ftd.basemap(region = finalRegion, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird) - South America"'])
+ftd.basemap(region = n232n, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird) - South America"'])
 ftd.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="plasma", series=[fTailed.year.min(), fTailed.year.max()])
 ftd.plot(
