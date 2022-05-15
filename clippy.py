@@ -1,4 +1,4 @@
-#copy and paster clippy v1
+#copy and paster clippy v1 ------------- UNRELATED TO SCIENCE RESEARCH
 import tkinter as tk
 
 # wn = tk.Tk()

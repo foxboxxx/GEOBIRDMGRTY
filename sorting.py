@@ -1,4 +1,3 @@
-from matplotlib import axes
 import pandas as pd
 import numpy as np
 import pygmt
@@ -225,16 +224,16 @@ ddd = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (lar
 
 ag_set_1 = pd.DataFrame((smallCountMonth.loc[0:len(smallCountMonth)]['count']) / (largeCountMonth.loc[0:len(largeCountMonth)]['count'] + 0.0001) * 100)
 ps_set_1 = pd.DataFrame((smallCountMonthP.loc[0:len(smallCountMonthP)]['count']) / (largeCountMonthP.loc[0:len(largeCountMonthP)]['count'] + 0.0001) * 100)
-ws_set_1 = pd.DataFrame((smallCountMonthW.loc[0:len(smallCountMonthW)]['count'])/ (largeCountMonthW.loc[0:len(largeCountMonthW)]['count'] + 0.0001) * 100)
+wr_set_1 = pd.DataFrame((smallCountMonthW.loc[0:len(smallCountMonthW)]['count'])/ (largeCountMonthW.loc[0:len(largeCountMonthW)]['count'] + 0.0001) * 100)
 
 print("IMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANTIMPORTANT")
-print(ag_set_1, ps_set_1, ws_set_1)
+print(ag_set_1, ps_set_1, wr_set_1)
 print(ddd)
 
 histogramMaker(ddd, "Test", 'newhistotest.png')
 histogramMaker(ag_set_1, "American Golden-Plover", "2DHistogram_AgbirdSet1.png")
 histogramMaker(ps_set_1, "Pectoral Sandpiper", "2DHistogram_PsbirdSet1.png")
-histogramMaker(ws_set_1, "White-rumped Sandpiper", "2DHistogram_WsbirdSet_1.png")
+histogramMaker(wr_set_1, "White-rumped Sandpiper", "2DHistogram_WsbirdSet_1.png")
 
 
 fig, ax = plt.subplots()
@@ -245,7 +244,7 @@ ax.set(ylabel = 'KpIndex')
 
 axs = ax.twinx()
 
-ln1 = axs.plot(np.arange(0, len(ws_set_1['count'])), ws_set_1['count'], color = 'red')
+ln1 = axs.plot(np.arange(0, len(wr_set_1['count'])), wr_set_1['count'], color = 'red')
 axs.set(xlabel='Month #', ylabel='Bird Spotting Percentage', title='30S60W WrBird / KpIndex Monthly')
 axs.tick_params(axis='y', labelcolor = 'red')
 axs.grid(color = 'grey', linestyle = '--')
@@ -260,7 +259,7 @@ plt.savefig("TRIALKPINDEX4.png")
 
 print("Ag Bird: " + str(stats.pearsonr(kpAvg['avInd'], ag_set_1['count'])))
 print("Ps Bird: " + str(stats.pearsonr(kpAvg['avInd'], ps_set_1['count'])))
-print("Ws Bird: " + str(stats.pearsonr(kpAvg['avInd'], ws_set_1['count'])))
+print("Ws Bird: " + str(stats.pearsonr(kpAvg['avInd'], wr_set_1['count'])))
 
 
 
@@ -721,6 +720,9 @@ ax2.tick_params(axis='y', labelcolor=color)
 # ax2.legend(loc="upper right", bbox_to_anchor=(1, 0.90))
 
 #GOD TIER LEGEND HELPER GOD BLESS
+monthList = np.array(["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"])
+seriesN = pd.Series(monthList)
+
 lns = ln1+ln2
 labs = [l.get_label() for l in lns]
 ax1.legend(lns, labs, loc="upper right")
@@ -728,39 +730,40 @@ ax1.legend(lns, labs, loc="upper right")
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
 fig.savefig("newDoubleY-axisPlot.png")
 
-lis = list((np.arange(0,240) / 12) + 2000)
-lis = [int(x) for x in lis]
+lis = lis2 = lis3 = list((np.arange(0,240) / 12) + 2000)
+lis = lis2 = lis3 = [int(x) for x in lis]
 
 ag_set_1['year'] = lis
-ddww = np.array(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
-seriesN = pd.Series(ddww)
 ag_set_1['month'] = pd.concat([seriesN]*20, ignore_index = True)
+nm = pd.Series(np.array(np.arange(0,12)))
+ag_set_1['numerical_months'] = pd.concat([nm] * 20, ignore_index = True)
 years = list(np.arange(2000,2020))
 print(ag_set_1)
+
+ps_set_1['year'] = lis2 
+ps_set_1['month'] = pd.concat([seriesN]*20, ignore_index = True)
+
+wr_set_1['year'] = lis3
+wr_set_1['month'] = pd.concat([seriesN]*20, ignore_index = True)
 
 
 sb.set_theme(style="white")
 pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
 g = sb.FacetGrid(ag_set_1, row = "year", aspect = 9, height = 1.2, palette = pal)
 g.map_dataframe(sb.lineplot, x="month", y = 'count', alpha=1, linewidth=2)
+g.savefig("ridgeAg.png")
 
+sb.set_theme(style="white")
+pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+g = sb.FacetGrid(wr_set_1, row = "year", aspect = 9, height = 1.2, palette = pal)
+g.map_dataframe(sb.lineplot, x="month", y = 'count', alpha=1, linewidth=2)
+g.savefig("ridgeWr.png")
 
-
-# Define and use a simple function to label the plot in axes coordinates
-# def label(color, label):
-#     ax = plt.gca()
-#     ax.text(0, .2, label, fontweight="bold", color=color,
-#             ha="left", va="center", transform=ax.transAxes)
-
-# Set the subplots to overlap
-
-# Remove axes details that don't play well with overlap
-# g.set_titles("")
-# g.set(yticks=[], ylabel="")
-# g.despine(bottom=True, left=True)
-
-# g = sb.FacetGrid(ag_set_1, row="g", hue="g", aspect=15, height=.5, palette=pal)
-
+sb.set_theme(style="white")
+pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
+g = sb.FacetGrid(ps_set_1, row = "year", aspect = 9, height = 1.2, palette = pal)
+g.map_dataframe(sb.lineplot, x="month", y = 'count', alpha=1, linewidth=2)
+g.savefig("ridgePs.png")
 
 g.savefig("rIDGE1.png")
 
@@ -771,13 +774,150 @@ print(firstMonths['month'])
 betaKpMonth['months'] = pd.concat([firstMonths['month']] * 20, ignore_index = True)
 
 print(betaKpMonth)
+for x in np.arange(0, len(betaKpMonth['index'])):
+    if betaKpMonth['index'][x] < 7:
+        betaKpMonth['index'][x] = 0
+print(betaKpMonth)
 
 sb.set_theme(style="white")
 pal = sb.cubehelix_palette(10, rot=-.25, light=.7)
 g = sb.FacetGrid(betaKpMonth, row = "year", aspect = 9, height = 1.2, palette = pal)
 g.map_dataframe(sb.lineplot, x="months", y = 'index', alpha=1, linewidth=2)
+g.savefig("RIDGE14.png")
 
-g.savefig("rIDGE13.png")
+newset = betaKpMonth
+newset['count'] = ag_set_1['count']
+newset['month2'] = ag_set_1['numerical_months']
+
+print(newset)
+
+# def twin_lineplot(x,y,color,**kwargs):
+#     ax = plt.twinx()
+#     sb.lineplot(x=x,y=y,color=color,**kwargs, ax=ax)
+# sb.set_theme(style = "white")
+# pal = sb.cubehelix_palette(10, rot = -0.25, light = 0.7)
+# #g = sb.FacetGrid(betaKpMonth, sharex = True row = "year", aspect = 9, height = 1.2, palette = pal)
+# g = sb.FacetGrid(newset, row="year")
+# g.map(sb.lineplot, 'month', 'index', color='b')
+# g.map(sb.lineplot, 'month2', 'count', color='g')
+
+# g.savefig("testRIDGE.png")
+
+
+#updated plots
+#psbird monthly plots
+sb.set_theme(style="dark")
+g = sb.relplot(
+    data = ps_set_1,
+    x = "month", y = "count", col = "year", hue = "year",
+    kind = "line", palette = "crest", linewidth = 4, zorder = 5,
+    col_wrap = 4, height = 2, aspect = 1.5, legend = False,
+)
+
+for year, ax1 in g.axes_dict.items():
+
+    ax1.text(.8, .85, year, transform = ax1.transAxes, fontweight="bold")
+
+    sb.lineplot(
+        data = ps_set_1, x = "month", y = "count", units="year",
+        estimator = None, color = ".7", linewidth = 1, ax = ax1,
+    )
+
+ax1.set_xticks(ax1.get_xticks()[::2])
+
+g.set_titles("")
+g.set_axis_labels("", "Percent Present")
+g.tight_layout()
+g.savefig("ps_bird_monthly_plots.png")
+
+
+#AgBird monthly
+sb.set_theme(style="dark")
+g = sb.relplot(
+    data = ag_set_1,
+    x = "month", y = "count", col = "year", hue = "year",
+    kind = "line", palette = "crest", linewidth = 4, zorder = 5,
+    col_wrap = 4, height = 2, aspect = 1.5, legend = False,
+)
+
+for year, ax1 in g.axes_dict.items():
+
+    ax1.text(.8, .85, year, transform = ax1.transAxes, fontweight="bold")
+
+    sb.lineplot(
+        data = ag_set_1, x = "month", y = "count", units="year",
+        estimator = None, color = ".7", linewidth = 1, ax = ax1,
+    )
+
+ax1.set_xticks(ax1.get_xticks()[::2])
+
+g.set_titles("")
+g.set_axis_labels("", "Percent Present")
+g.tight_layout()
+g.savefig("ag_bird_monthly_plots.png")
+
+
+#wrbird monthly
+sb.set_theme(style="dark")
+g = sb.relplot(
+    data = wr_set_1,
+    x = "month", y = "count", col = "year", hue = "year",
+    kind = "line", palette = "crest", linewidth = 4, zorder = 5,
+    col_wrap = 4, height = 2, aspect = 1.5, legend = False,
+)
+
+for year, ax1 in g.axes_dict.items():
+
+    ax1.text(.8, .85, year, transform = ax1.transAxes, fontweight="bold")
+
+    sb.lineplot(
+        data = wr_set_1, x = "month", y = "count", units="year",
+        estimator = None, color = ".7", linewidth = 1, ax = ax1,
+    )
+
+ax1.set_xticks(ax1.get_xticks()[::2])
+
+g.set_titles("")
+g.set_axis_labels("", "Percent Present")
+g.tight_layout()
+g.savefig("wr_bird_monthly_plots.png")
+
+    # ax2 = ax1.twinx()
+
+    # sb.lineplot(
+    #     data = newset, x = "month", y = "index", units="year",
+    #     estimator = None, color = ".7", linewidth = 1, ax = ax2,
+    # )
+
+print(newset)
+
+#kp index monthly
+sb.set_theme(style="dark")
+g = sb.relplot(
+    data = newset,
+    x = "months", y = "index", col = "year", hue = "year",
+    kind = "line", palette = "rocket", linewidth = 4, zorder = 5,
+    col_wrap = 4, height = 2, aspect = 1.5, legend = False,
+)
+
+for year, ax1 in g.axes_dict.items():
+
+    ax1.text(.8, .85, year, transform = ax1.transAxes, fontweight="bold")
+
+    sb.lineplot(
+        data = newset, x = "months", y = "index", units="year",
+        estimator = None, color = ".7", linewidth = 1, ax = ax1,
+    )
+
+ax1.set_xticks(ax1.get_xticks()[::1])
+
+g.set_titles("")
+g.set_axis_labels("", "KP Index")
+g.tight_layout()
+g.savefig("kp_index_monthly_plots.png")
+
+
+
 
 
 
