@@ -311,7 +311,7 @@ def scatterPlot(mag, per, title, file, xlabel):
     plt.title(title, **font)
     plt.xlabel(xlabel, **font)
     plt.ylabel("Population Density %", **font)
-    plt.grid(color='grey', linestyle = "--", linewidth=0.25, alpha=0.75)
+    plt.grid(color='grey', linestyle = "--", linewidth=0.25, alpha=0.75) 
     #plt.text(0.1, 0.9, 'text', size=15, color='purple')
     # m, b = np.polyfit(mag, per, 1)
     # plt.plot(mag, m(mag) + b)

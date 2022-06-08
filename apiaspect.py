@@ -11,7 +11,6 @@ import json
 # import pygbif
 # from pygbif import species as species
 # from pygbif import occurrences as occ
-
 # !---> EBIRD TESTING
 region = 'AR'
 token = 'a83ao4aendbm'
@@ -50,29 +49,48 @@ for x in sightingsListAR:
         if x == y: matches.append(x)
 print("Matches:\n")
 print(matches)
+print("\n")
 
 matchesAdv = []
 for inst in matches:
     instReq = requests.request("GET", "https://api.ebird.org/v2/ref/taxonomy/ebird?species={}&fmt=json".format(inst), headers = headers, data = payload)
     # print(instReq.text)
     # matchesAdv.append()
-    tempL = dict(((instReq.text)[2:(len)(instReq.text) - 2]).split(","))
+    tempL = ((instReq.text)[2:(len)(instReq.text) - 2]).split(",")
     print(tempL)
 
+findingDatasetTest = requests.request("GET", 'https://api.gbif.org/v1/dataset/search?speciesKey=2481756', headers = headers, data = payload)
+print(findingDatasetTest.text)
+# with open('doi.json', 'w') as outfile:
+#     json.dump(findingDatasetTest.json(), outfile)
 
-
-
+findingDOI = requests.request("GET", "https://api.gbif.org/v1/occurrence/download/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c")
+print(findingDOI.text)
+with open('doi.json', 'w') as outfile:
+    json.dump(findingDOI.json(), outfile)
 
 # !---> GBIF DATA TESTING
 response = requests.request("GET", urlRecents, headers = headers, data = payload)
 
-req = requests.get('https://api.gbif.org/v1/species?name=Pluvialis dominica&limit=100')
+req = requests.get('https://api.gbif.org/v1/species/match?name=Pluvialis dominica&limit=100')
+#initial
 # req = requests.get('https://api.gbif.org/v1/occurrence/download/statistics&publishingOrgKey=4fa7b334-ce0d-4e88-aaae-2e0c138d049e')
-# print(req.status_code)
-# print(req.json())
+#to file--->
 with open('gbifdata.json', 'w') as outfile:
     json.dump(req.json(), outfile)
+
+secondTest = requests.get('https://api.gbif.org/v1/occurrence/search?name=Pluvialis dominica&publishingOrgKey=4fa7b334-ce0d-4e88-aaae-2e0c138d049e&limit=1000')
+print(secondTest.text)
+# with open('gbifdata.json', 'w') as outfile:
+#     json.dump(secondTest.json(), outfile)
+
+
+
+
 
 # speciesList = requests.get('https://api.gbif.org/v1/dataset/search?country=AR')
 # print("list\n")
 # print(speciesList.json())
+
+# 10.15468/aomfnb
+#d7dddbf4-2cf0-4f39-9b2a-bb099caae36c
