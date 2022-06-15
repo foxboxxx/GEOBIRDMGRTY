@@ -84,6 +84,10 @@ print(secondTest.text)
 # with open('gbifdata.json', 'w') as outfile:
 #     json.dump(secondTest.json(), outfile)
 
+agbirdcsv = pd.read_json(secondTest.json()['results'])
+print(agbirdcsv)
+
+agbirdcsv.to_csv('apirequest.csv', sep='\t',)
 
 
 
