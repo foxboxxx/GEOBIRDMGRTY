@@ -1,3 +1,4 @@
+#repaste example from website.... used to determine how to format grd files and how grd2xyz worked.
 """
 Plotting Earth relief
 =====================

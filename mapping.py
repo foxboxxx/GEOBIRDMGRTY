@@ -2,10 +2,8 @@ import pandas as pd
 import numpy as np
 import pygmt
 import pyIGRF
-from pyIGRF import calculate
+import seaborn as sb
 
-
-# mag = igrf.igrf('2010-07-12', glat=65, glon=-148, alt_km=100)
 pygmt.show_versions()
 print(pyIGRF.igrf_value(0, 0, 0, 2020.0)[6])
 '''
@@ -23,11 +21,38 @@ The response is 7 float number about magnetic filed which is:
 # igrfDataFull = pd.read_csv(r'igrfTestNoaaWeb.csv')
 worldRegion = [-180,180,-90,90]
 
+grid = pd.read_csv('gridIgrf1980.csv')
+grid2 = pygmt.xyz2grd(data = grid, region = worldRegion, spacing = "222km")
+fig = pygmt.Figure()
+fig.basemap(region=worldRegion, projection="H15c", frame=True)
+fig.grdimage(grid=grid2, transparency=0, projection = 'H15c')
+fig.coast(shorelines = "2p,black")
+# initial contour attempt
+# fig.grdcontour(grid=grid2, projection = 'H15c', interval = 2500)
+fig.contour(
+    pen = "0.4p,white",
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
+    #contour interval
+    levels = 1000,
+    #contour interval marking
+    annotation = 5000,
+)
+fig.contour(
+    pen = "0.8p,red",
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
+    #contour interval
+    levels=5000,
+)
+fig.savefig("TESTBED.png")
+
 # mag = igrf.igrf('2010-07-12', glat=65, glon=-148, alt_km=100)
 # spacing = "111km"
-# grid = pd.read_csv('gridIgrf1980.csv')
 
-for i in np.arange(2020.5, 2025.5, 5.0):
+for i in np.arange(1900.5, 2020.5, 5.0):
     templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
     for x in np.arange(-180, 180):
         for y in np.arange(90, -90, -1):
@@ -38,31 +63,67 @@ for i in np.arange(2020.5, 2025.5, 5.0):
     templateFrame.to_csv('template.csv', index = False)
     reading = pd.read_csv('template.csv')
     print(reading)
-    frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "222km")
+    frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
     fig = pygmt.Figure()
-    fig.basemap(region=worldRegion, projection="R12c", frame=True)
+    fig.basemap(region=worldRegion, projection="H15c", frame=True)
     fig.coast(land="burlywood", water="lightblue", shorelines = True)
-    fig.grdimage(grid=frameGrid, transparency=25, projection = 'R12c')  
+    fig.grdimage(grid=frameGrid, transparency=30, projection = 'H15c')  
+    fig.contour(
+        pen = "0.2p",
+
+        x = reading['long'],
+        y = reading['lat'],
+        z = reading['intensity'],
+        #contour interval
+        levels = 1000,
+        #contour interval marking
+        annotation = 5000,
+    )
+    fig.contour(
+        pen = "0.2p,red",
+        x = reading['long'],
+        y = reading['lat'],
+        z = reading['intensity'],
+        #contour interval
+        levels = 5000,
+    )
+    fig.savefig("run2_EMF_Field{}.png".format(i))
+
+for i in np.arange(2000.5, 2021.5, 1):
+    templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
+    for x in np.arange(-180, 180):
+        for y in np.arange(90, -90, -1):
+            templateFrame = templateFrame.append({"long": x,"lat": y,"intensity": pyIGRF.igrf_value(y, x, 0, i)[6]}, ignore_index=True)
+
+    print(templateFrame)
+    # newDf = templateFrame(index = False)
+    templateFrame.to_csv('template.csv', index = False)
+    reading = pd.read_csv('template.csv')
+    print(reading)
+    frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
+    fig = pygmt.Figure()
+    fig.basemap(region=worldRegion, projection="H15c", frame=True)
+    fig.coast(land="burlywood", water="lightblue", shorelines = True)
+    fig.grdimage(grid=frameGrid, transparency=30, projection = 'H15c')  
     fig.contour(
         pen="0.2p",
-
-        x=reading['long'],
-        y=reading['lat'],
-        z=reading['intensity'],
+        x = reading['long'],
+        y = reading['lat'],
+        z = reading['intensity'],
         #contour interval
-        levels=1000,
+        levels = 1000,
         #contour interval marking
-        annotation=5000,
+        annotation = 5000,
     )
     fig.contour(
-        pen="0.2p,red",
-        x=reading['long'],
-        y=reading['lat'],
-        z=reading['intensity'],
+        pen = "0.2p,red",
+        x = reading['long'],
+        y = reading['lat'],
+        z = reading['intensity'],
         #contour interval
-        levels=5000,
+        levels = 5000,
     )
-    fig.savefig("EMF_Field{}.png".format(i))
+    fig.savefig("Closer_EMF_Field{}.png".format(i))
 
 
 grid = pd.read_csv('gridIgrf1980.csv')
@@ -72,71 +133,66 @@ grid2 = pygmt.xyz2grd(data = grid, region = worldRegion, spacing = "222km")
 fig = pygmt.Figure()
 
 #just gradient for 1980
-fig.grdimage(grid=grid2, projection = 'H15c')
+fig.grdimage(grid = grid2, projection = 'H15c')
 print(grid)
 fig.show()
 
 #just contour lines for 1980
 fig = pygmt.Figure()
-fig.grdcontour(grid=grid2)
+fig.grdcontour(grid = grid2)
 fig.show()
 
 #full map put together with previous elements
 fig = pygmt.Figure()
-fig.basemap(region=worldRegion, projection="H15c", frame=True)
-fig.coast(land="#666666", water="lightblue", shorelines = True)
-fig.grdimage(grid=grid2, transparency=25, projection = 'H15c')
+fig.basemap(region = worldRegion, projection = "H15c", frame = True)
+fig.coast(land = "#666666", water = "lightblue", shorelines = True)
+fig.grdimage(grid = grid2, transparency = 25, projection = 'H15c')
 # initial contour attempt
 # fig.grdcontour(grid=grid2, projection = 'H15c', interval = 2500)
 fig.contour(
-    pen="0.1p",
-    # pass the data as 3 1d data columns
-    x=grid['long'],
-    y=grid['lat'],
-    z=grid['intensity'],
-    # set the contours z values intervals to 1000
-    levels=1000,
-    # set the contours annotation intervals to 5000
-    annotation=5000,
+    pen = "0.1p",
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
+    levels = 1000,
+    annotation = 5000,
 )
 fig.contour(
-    pen="0.2p,red",
-    # pass the data as 3 1d data columns
-    x=grid['long'],
-    y=grid['lat'],
-    z=grid['intensity'],
-    # set the contours z values intervals to 5000
-    levels=5000,
+    pen = "0.2p,red",
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
+    levels = 5000,
 )
 fig.show()
 
 # read in the xyz file into a 1D numpy array
 
 fig = pygmt.Figure()
-fig.basemap(region=[-180, 180, -90, 90], projection="H15c", frame=True)
-fig.coast(land="#666666", water="skyblue")
+fig.basemap(region = [-180, 180, -90, 90], projection = "H15c", frame = True)
+fig.coast(land = "#666666", water = "skyblue")
 
 fig.contour(
-    pen="0.1p",
+    pen = "0.1p",
     # pass the data as 3 1d data columns
-    x=grid['long'],
-    y=grid['lat'],
-    z=grid['intensity'],
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
     # set the contours z values intervals to 1000
-    levels=1000,
+    levels = 1000,
     # set the contours annotation intervals to 5000
-    annotation=5000,
+    annotation = 5000,
 )
 
 #make index contours red
 fig.contour(
     pen="0.2p,red",
     # pass the data as 3 1d data columns
-    x=grid['long'],
-    y=grid['lat'],
-    z=grid['intensity'],
+    x = grid['long'],
+    y = grid['lat'],
+    z = grid['intensity'],
     # set the contours z values intervals to 5000
-    levels=5000,
+    levels = 5000,
 )
 
 
