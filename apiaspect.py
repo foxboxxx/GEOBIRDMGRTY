@@ -12,6 +12,12 @@ import json
 # from pygbif import species as species
 # from pygbif import occurrences as occ
 # !---> EBIRD TESTING
+print(np.random.rand(10, 12))
+a = np.random.rand(180, 360)
+f, ax = plt.subplots(figsize=(15, 15))
+ax = sb.heatmap(a, linewidths=.5, xticklabels = 1, yticklabels = 1)
+plt.show()
+
 region = 'AR'
 token = 'a83ao4aendbm'
 urlRecents = "https://api.ebird.org/v2/data/obs/{}/recent".format(region)

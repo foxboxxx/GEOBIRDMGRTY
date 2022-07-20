@@ -3,9 +3,8 @@ import numpy as np
 import pygmt
 import pyIGRF
 import seaborn as sb
+from gifmaker import gifMaker
 
-pygmt.show_versions()
-print(pyIGRF.igrf_value(0, 0, 0, 2020.0)[6])
 '''
 The response is 7 float number about magnetic filed which is:
 
@@ -21,16 +20,82 @@ The response is 7 float number about magnetic filed which is:
 # igrfDataFull = pd.read_csv(r'igrfTestNoaaWeb.csv')
 worldRegion = [-180,180,-90,90]
 
-grid = pd.read_csv('gridIgrf1980.csv')
+# <--- Trial code testing how my bird data looks when plotted via gridimage --->
+'''
+birdBench = np.genfromtxt('foo3.csv', delimiter=' ')
+birdTestData = pd.DataFrame(columns = ["long", "lat", "individualCount"])
+print(birdBench[179][359])
+for x in np.arange(-180, 179):
+    for y in np.arange(89, -90, -1):
+        birdTestData = birdTestData.append({"long": x,"lat": y,"individualCount": birdBench[y + 90][x + 180]}, ignore_index = True)
+print(birdTestData)
+birdTestData.to_csv("alpha.csv", index = False)
+birdTestData = pd.read_csv("alpha.csv")
+
+gBird = pygmt.xyz2grd(data = birdTestData, region = worldRegion, spacing = "222km")
+fig = pygmt.Figure()
+fig.basemap(region = worldRegion, projection = "H15c", frame=True)
+fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
+fig.grdimage(grid = gBird, transparency = 25, projection = 'H15c', cmap = "inferno")
+fig.show()
+fig.savefig("overall_heatmap_test_1.png")
+#  <--- END --->
+'''
+
+# <--- Pectoral Sandpiper Grid Images from 2000 - 2020 (First Trial) --->
+pectoralSandpiper = pd.read_csv(r"pectoralSandpiperUnfiltered.csv")
+
+# Standardizing the data as some types are incorrect and some parts of the data have missing values . . .
+pSandpiperHeat = pectoralSandpiper[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
+pSandpiperHeat['decimalLongitude'] = pSandpiperHeat['decimalLongitude'].fillna(0)
+pSandpiperHeat['decimalLatitude'] = pSandpiperHeat['decimalLatitude'].fillna(0)
+pSandpiperHeat['decimalLongitude'] = pSandpiperHeat['decimalLongitude'].astype(int)
+pSandpiperHeat['decimalLatitude'] = pSandpiperHeat['decimalLatitude'].astype(int)
+pSandpiperHeat['individualCount'] = pSandpiperHeat['individualCount'].fillna(1)
+pSandpiperHeat['individualCount'] = pSandpiperHeat['individualCount'].astype(int)
+pSandpiperHeat = pSandpiperHeat.dropna(subset=['year'])
+pSandpiperHeat['year'] = pSandpiperHeat['year'].astype(int)
+
+# Filtering the data to only contain Pectoral Sandpipers in South America, with an individual count of less than 1000 for any given sighting
+pSandpiperHeat = pSandpiperHeat.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+a = np.zeros(shape=(180, 360))
+
+# Nested for loops to cycle through each year to create a heat map of each
+createdPectoralImages = []
+for i in np.arange(2000, 2021):
+    tempFrame = pSandpiperHeat.query('@i == year')
+    for x in np.arange(0, tempFrame.shape[0]):
+        a[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,] = a[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,] + tempFrame.iloc[x]['individualCount']
+        print(x, " -> ", a[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,])
+
+# Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
+    tempFrame.to_csv("alpha.csv", index = False)
+    pectoralData = pd.read_csv("alpha.csv")
+
+# Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
+    gBird = pygmt.xyz2grd(data = pectoralData, region = worldRegion, spacing = "222km")
+    fig = pygmt.Figure()
+    fig.basemap(region = worldRegion, projection = "H15c", frame=["a", '+t"Pectoral Sandpiper Migratory Changes (2000 - 2020)"'])
+    fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
+    fig.grdimage(grid = gBird, transparency = 25, projection = 'H15c', cmap = "inferno")
+    fig.colorbar(frame=["x+Sightings"])
+    fig.savefig("pectoralBetaMap{}.png".format(i))
+    createdPectoralImages.append("pectoralBeta2Map{}.png".format(i))
+
+#Creating the gif of all the maps combined
+gifMaker(createdPectoralImages, "pectoralBetaGif.gif", 0.25)
+
+# <--- Initial trial run of the 1980 IGRF csv file and creating a grid image with it --->
+grid = pd.read_csv('gridIgrf1980.csv')  
 grid2 = pygmt.xyz2grd(data = grid, region = worldRegion, spacing = "222km")
 fig = pygmt.Figure()
-fig.basemap(region=worldRegion, projection="H15c", frame=True)
-fig.grdimage(grid=grid2, transparency=0, projection = 'H15c')
-fig.coast(shorelines = "2p,black")
+fig.basemap(region = worldRegion, projection = "H15c", frame=True)
+fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
+fig.grdimage(grid = grid2, transparency = 25, projection = 'H15c', cmap = "inferno")
 # initial contour attempt
 # fig.grdcontour(grid=grid2, projection = 'H15c', interval = 2500)
 fig.contour(
-    pen = "0.4p,white",
+    pen = "0.1p,black",
     x = grid['long'],
     y = grid['lat'],
     z = grid['intensity'],
@@ -40,18 +105,21 @@ fig.contour(
     annotation = 5000,
 )
 fig.contour(
-    pen = "0.8p,red",
+    pen = "0.2p,red",
     x = grid['long'],
     y = grid['lat'],
     z = grid['intensity'],
     #contour interval
     levels=5000,
 )
+fig.colorbar(frame=["x+lMagnetic Strength (nT)"])
 fig.savefig("TESTBED.png")
+# <!--- End ---!>
 
 # mag = igrf.igrf('2010-07-12', glat=65, glon=-148, alt_km=100)
 # spacing = "111km"
 
+# <--- Creating maps of Earth's magnetic field from 1900 to 2020 over 5 year intervals --->
 for i in np.arange(1900.5, 2020.5, 5.0):
     templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
     for x in np.arange(-180, 180):
@@ -65,7 +133,7 @@ for i in np.arange(1900.5, 2020.5, 5.0):
     print(reading)
     frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
     fig = pygmt.Figure()
-    fig.basemap(region=worldRegion, projection="H15c", frame=True)
+    fig.basemap(region=worldRegion, projection="H15c", frame=["a", '+t"Changes in Earths Magnetic field (1900 - 2020)"'])
     fig.coast(land="burlywood", water="lightblue", shorelines = True)
     fig.grdimage(grid=frameGrid, transparency=30, projection = 'H15c')  
     fig.contour(
@@ -88,7 +156,10 @@ for i in np.arange(1900.5, 2020.5, 5.0):
         levels = 5000,
     )
     fig.savefig("run2_EMF_Field{}.png".format(i))
+# <!--- End ---!>
 
+
+# <--- Creating maps of Earths magnetic field from 2000 to 2020 over 1 year intervals --->
 for i in np.arange(2000.5, 2021.5, 1):
     templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
     for x in np.arange(-180, 180):
@@ -102,7 +173,7 @@ for i in np.arange(2000.5, 2021.5, 1):
     print(reading)
     frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
     fig = pygmt.Figure()
-    fig.basemap(region=worldRegion, projection="H15c", frame=True)
+    fig.basemap(region=worldRegion, projection="H15c", frame=["a", '+t"Changes in Earths Magnetic field (2000 - 2020)"'])
     fig.coast(land="burlywood", water="lightblue", shorelines = True)
     fig.grdimage(grid=frameGrid, transparency=30, projection = 'H15c')  
     fig.contour(
@@ -124,7 +195,7 @@ for i in np.arange(2000.5, 2021.5, 1):
         levels = 5000,
     )
     fig.savefig("Closer_EMF_Field{}.png".format(i))
-
+# <!--- End ---!>
 
 grid = pd.read_csv('gridIgrf1980.csv')
 print(grid)
