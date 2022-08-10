@@ -7,6 +7,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pygmt
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
+
 
 goldenPlover = pd.read_csv(r"plovercsv.csv")
 goldenPlover = goldenPlover[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
@@ -23,15 +26,16 @@ goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLo
 earth2000 = np.zeros(shape=(180, 360))
 earth2020 = np.zeros(shape=(180, 360))
 
-goldenPlover2000 = goldenPlover.query('2000 == year')
+goldenPlover2000 = goldenPlover.query('2000 == year').copy()
+print(goldenPlover2000)
 for x in np.arange(0, goldenPlover2000.shape[0]):
         earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] = earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2000.iloc[x]['individualCount']
         print(x, " -> ", earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,])
 
-goldenPlover2020 = goldenPlover.query('2020 == year')
-for x in np.arange(0, goldenPlover2020.shape[0]):
-        earth2020[goldenPlover2020.iloc[x]['decimalLatitude'] + 90, goldenPlover2020.iloc[x]['decimalLongitude'] + 180,] = earth2020[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2020.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2020.iloc[x]['individualCount']
-        print(x, " -> ", earth2020[goldenPlover2020.iloc[x]['decimalLatitude'] + 90, goldenPlover2020.iloc[x]['decimalLongitude'] + 180,])
+goldenPlover2019 = goldenPlover.query('2019 == year').copy()
+for x in np.arange(0, goldenPlover2019.shape[0]):
+        earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] = earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2019.iloc[x]['individualCount']
+        print(x, " -> ", earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,])
 
 tensor2000 = torch.from_numpy(earth2000)
 tensor2020 = torch.from_numpy(earth2020)
@@ -41,5 +45,36 @@ npinterpolate = torch.lerp(tensor2000, tensor2020, 0.5).numpy()
 np.savetxt("tensor1.csv", npinterpolate, delimiter=",")
 
 # plt.imsave("tensor.png",tensor2020, )
+print(earth2020)
+xs = earth2020[:,0] # Selects all xs from the array
+ys = earth2020[:,1]  # Selects all ys from the array
+plt.scatter(x=xs, y=ys)
+
+
+
+# Cluster Identification
+
+# y_kmeans = kmeans.predict(X)
+# model = KMeans(n_clusters=5).fit(X)
+
+
+arr = np.zeros(shape = (goldenPlover2019.shape[0], 2))
+for i in np.arange(0, arr.shape[0]):
+        arr[i,0] = goldenPlover2019['decimalLatitude'].iloc[i]
+        arr[i,1] = goldenPlover2019['decimalLongitude'].iloc[i]
+xs = arr[:,0] # Selects all xs from the array
+ys = arr[:,1]  # Selects all ys from the array
+# plt.xlim(-180, 180)
+# plt.ylim(-90,90)
+
+# kmeans = KMeans(n_clusters=3)
+# kmeans.fit(arr)
+# kmeans.labels_
+
+clustering = DBSCAN(eps = 5, min_samples = 5).fit(arr)
+clustering.labels_
+
+plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
+plt.show()
 
 
