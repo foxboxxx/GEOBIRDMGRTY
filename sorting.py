@@ -135,6 +135,48 @@ messingData = messingData.loc[messingData['occurrenceStatus']=='PRESENT',['event
 pSandpiperRaw = pd.read_csv(r"pectoralSandpiperUnfiltered.csv")
 pSandpiperRaw = pSandpiperRaw.loc[pSandpiperRaw['occurrenceStatus']=='PRESENT',['eventDate','individualCount','decimalLatitude','decimalLongitude','day','month','year']].copy()
 
+# Changing the DataFrame to only include lat, lon, count, and year while debugging with print statements
+pSandpiperHeat = pSandpiperRaw[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
+# print("7/17", pSandpiperHeat)
+pSandpiperHeat['decimalLongitude'] = pSandpiperHeat['decimalLongitude'].fillna(0)
+# print("lat added", pSandpiperHeat)
+pSandpiperHeat['decimalLatitude'] = pSandpiperHeat['decimalLatitude'].fillna(0)
+# print("long added", pSandpiperHeat)
+pSandpiperHeat['decimalLongitude'] = pSandpiperHeat['decimalLongitude'].astype(int)
+# print("long turned to int", pSandpiperHeat)
+pSandpiperHeat['decimalLatitude'] = pSandpiperHeat['decimalLatitude'].astype(int)
+# print("lat turned to int", pSandpiperHeat)
+pSandpiperHeat['individualCount'] = pSandpiperHeat['individualCount'].fillna(1)
+pSandpiperHeat['individualCount'] = pSandpiperHeat['individualCount'].astype(int)
+pSandpiperHeat = pSandpiperHeat.dropna(subset=['year'])
+pSandpiperHeat['year'] = pSandpiperHeat['year'].astype(int)
+
+# Modifying the dataframe so that it only includes sightings from South America to see how the migratory patterns there specifically are changing
+pSandpiperHeat = pSandpiperHeat.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+print("7/18/22", pSandpiperHeat)
+
+a = np.zeros(shape=(180, 360))
+
+# Debug statements
+# print("a by itself", a)
+# print("a from 100 to 230", a[100,230])
+# print("number of rows (supposedly) from the dataframe", pSandpiperHeat.shape[0])
+# print("first val", pSandpiperHeat.iloc[1242]['decimalLongitude'], pSandpiperHeat.iloc[1242]['decimalLatitude'], pSandpiperHeat.iloc[1242]['individualCount'])
+
+for x in np.arange(0, pSandpiperHeat.shape[0]):
+    # print("here", x, pSandpiperHeat.iloc[x]['decimalLongitude'], pSandpiperHeat.iloc[x]['decimalLatitude'], pSandpiperHeat.iloc[x]['individualCount'])
+    a[pSandpiperHeat.iloc[x]['decimalLatitude'] + 90, pSandpiperHeat.iloc[x]['decimalLongitude'] + 180,] = a[pSandpiperHeat.iloc[x]['decimalLatitude'] + 90, pSandpiperHeat.iloc[x]['decimalLongitude'] + 180,] + pSandpiperHeat.iloc[x]['individualCount']
+    print(x, "----------> ", a[pSandpiperHeat.iloc[x]['decimalLatitude'] + 90, pSandpiperHeat.iloc[x]['decimalLongitude'] + 180,])
+
+a = a.astype(int)
+print(a)
+np.savetxt("foo3.csv", a, delimiter=" ")
+print("11 -> ", a[95,15])
+# f, ax = plt.subplots(figsize=(15, 15))
+ax = sb.heatmap(a, linewidths=.5, xticklabels = 1, yticklabels = 1)
+plt.show()
+plt.savefig('heatmapFirst.png')
+
 sHawkRaw = pd.read_csv(r"swainsonHawk.csv")
 sHawkRaw = sHawkRaw.loc[sHawkRaw['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
 
@@ -1852,4 +1894,5 @@ print("4R Analysis of All Birds % In South America (30S 60W) Successfully Update
 
 
 print("done ")
+
 
