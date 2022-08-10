@@ -87,7 +87,7 @@ print(secondTest.text)
 agbirdcsv = pd.read_json(secondTest.json()['results'])
 print(agbirdcsv)
 
-agbirdcsv.to_csv('apirequest.csv', sep='\t',)
+agbirdcsv.to_csv('apirequest.csv', sep='\t')
 
 
 
