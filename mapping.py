@@ -102,7 +102,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
             templateFrame.to_csv('template.csv', index = False)
             reading = pd.read_csv('template.csv')
             frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
-            fig.grdimage(grid=frameGrid, transparency = 50, projection = 'H15c', cmap = 'viridis')  
+            fig.grdimage(grid=frameGrid, transparency = 75, projection = 'H15c', cmap = 'jet')  
             fig.contour(
                 pen="0.2p",
                 x = reading['long'],
@@ -135,7 +135,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 # avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
 # avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
 # avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", True, 2000, 2020)
-avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", False, 2000, 2002)
+avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", True, 2000, 2002)
 exit()
 
 
