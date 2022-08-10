@@ -52,7 +52,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
     birdData['decimalLatitude'] = birdData['decimalLatitude'].fillna(0)
     birdData['decimalLongitude'] = birdData['decimalLongitude'].astype(int)
     birdData['decimalLatitude'] = birdData['decimalLatitude'].astype(int)
-    birdData['individualCount'] = birdData['individualCount'].fillna(0)
+    birdData['individualCount'] = birdData['individualCount'].fillna(1)
     birdData['individualCount'] = birdData['individualCount'].astype(int)
     birdData = birdData.dropna(subset=['year'])
     birdData['year'] = birdData['year'].astype(int)
@@ -68,18 +68,29 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
             earthFrame[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,] += tempFrame.iloc[x]['individualCount']
             print(x, " -> ", earthFrame[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,])
             templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
+        
+        #Trial Work
+        print(tempFrame)
+        trialFrame = tempFrame.groupby(['decimalLatitude', 'decimalLongitude']).sum()
+        trialFrame.drop('year', axis=1)
+        trialFrame = trialFrame.reset_index()
+        print(trialFrame)
+        # trialFrame.to_csv("beta.csv", index = False)
+        # trialFrameF = pd.read_csv("beta.csv")
+        # print(trialFrameF)
 
     # Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
         # print(tempFrame)
         # print(tempFrame['individualCount'].sum())
         tempFrame['individualCount'] = (tempFrame['individualCount'] / tempFrame['individualCount'].sum()) * 100
         tempFrame.to_csv("alpha.csv", index = False)
+
         # print(tempFrame)
         # print(tempFrame['individualCount'].sum())
         birdDataF = pd.read_csv("alpha.csv")
         np.savetxt("foo.csv", earthFrame, delimiter=",")
 
-        # print(birdDataF)
+        print(birdDataF)
 
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
         gBird = pygmt.xyz2grd(data = birdDataF, region = worldRegion, spacing = "222km")
@@ -135,7 +146,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 # avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
 # avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
 # avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", True, 2000, 2020)
-avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", True, 2000, 2002)
+avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", False, 2000, 2002)
 exit()
 
 
