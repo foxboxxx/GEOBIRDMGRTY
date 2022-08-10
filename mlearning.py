@@ -44,6 +44,10 @@ print(torch.lerp(tensor2000, tensor2020, 0.5))
 npinterpolate = torch.lerp(tensor2000, tensor2020, 0.5).numpy()
 np.savetxt("tensor1.csv", npinterpolate, delimiter=",")
 
+plt.scatter(npinterpolate)
+plt.show()
+plt.cla()
+
 # plt.imsave("tensor.png",tensor2020, )
 print(earth2020)
 xs = earth2020[:,0] # Selects all xs from the array
@@ -75,6 +79,23 @@ clustering = DBSCAN(eps = 5, min_samples = 5).fit(arr)
 clustering.labels_
 
 plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
-plt.show()
+# plt.show()
 
+
+for i in np.arange(2000, 2020):
+        plt.cla()
+        temp = goldenPlover.query('@i == year').copy()
+        a = np.zeros(shape = (temp.shape[0], 2))
+        for x in np.arange(0, a.shape[0]):
+                a[x,0] = temp['decimalLatitude'].iloc[x]
+                a[x,1] = temp['decimalLongitude'].iloc[x]
+        xs = a[:,0] # Selects all xs from the array
+        ys = a[:,1]  # Selects all ys from the array
+
+        clustering = DBSCAN(eps = 5, min_samples = 5).fit(a)
+        clustering.labels_ 
+        plt.title("American Golden Plover Cluster ID Test {}".format(i))
+        plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
+        plt.savefig("AmericanGoldenPloverClusterIDTest{}".format(i))
+        print("{} Complete.".format(i))
 
