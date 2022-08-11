@@ -1,0 +1,22 @@
+name: pygmt
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - gmt
+  - pip
+  - python
+  - pandas
+  - xarray
+  - packaging
+  - numpy
+  - ipykernel
+  - seaborn
+  - requests
+  - cartopy
+  - pyqt
+  - pyigrf
+  - imageio
+  - pygmt
+  - scikit-learn
+prefix: C:\Users\subze\miniconda3\envs\pygmt
