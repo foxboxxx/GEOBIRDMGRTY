@@ -143,8 +143,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
 # Method d
 
-avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2013, 2014)
-exit()
+avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2000, 2020)
 avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
 avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
 avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", True, 2000, 2020)
