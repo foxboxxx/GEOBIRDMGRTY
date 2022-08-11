@@ -106,7 +106,8 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
             templateFrame.to_csv('template.csv', index = False)
             reading = pd.read_csv('template.csv')
             frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
-            fig.grdimage(grid=frameGrid, transparency = 75, projection = 'H15c', cmap = 'jet')  
+            customColors = pygmt.makecpt(cmap="thermal")
+            fig.grdimage(grid=frameGrid, transparency = 50, projection = 'H15c', cmap = customColors)  
             fig.contour(
                 pen="0.2p",
                 x = reading['long'],
@@ -125,12 +126,12 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
                 #contour interval
                 levels = 5000,
             )
-            fig.colorbar(
-                cmap="jet",
-                position="JMR+o1c/0c+w7c/0.5c+n+mc",
-                frame=["x+lMagnetic Strength", "y+lm"],
+            # fig.colorbar(
+            #     cmap="jet",
+            #     position="JMR+o1c/0c+w7c/0.5c+n+mc",
+            #     frame=["x+lMagnetic Strength", "y+lm"],
                 
-            )
+            # )
         fig.savefig("{} {} {}.png".format(birdName, i, mag))
 
         listOfImages.append("{} {} {}.png".format(birdName, i,mag))
