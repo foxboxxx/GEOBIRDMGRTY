@@ -141,7 +141,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
     gifMaker(listOfImages, "{}from{}to{}_{}.gif".format(birdName, minYear, maxYear, mag), 0.25)
     # <!--- End ---!>
 
-# Method
+# Method d
 
 avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2013, 2014)
 exit()
