@@ -84,16 +84,14 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         # Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
         secondaryBirdFrame.to_csv("beta.csv", index = False)
         standardizedDataFrame = pd.read_csv("beta.csv")
-
+    
+    
+        fig = pygmt.Figure()
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
         gBird = pygmt.xyz2grd(data = standardizedDataFrame, region = worldRegion, spacing = "222km")
-        print(gBird)
-        fig = pygmt.Figure()
         fig.basemap(region = worldRegion, projection = "H15c", frame=["a", '+t{} Migratory Changes ({} - {})'.format(birdName, minYear, maxYear)])
         fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
-        pygmt.makecpt(cmap="inferno", series=[0, 50])
-        fig.grdimage(grid = gBird, transparency = 10, projection = 'H15c', nan_transparent = True)
-        fig.colorbar(frame=["x+Sightings"])
+
 
     # Magnetic Data
         if includeMagnetism == True:
@@ -106,8 +104,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
             templateFrame.to_csv('template.csv', index = False)
             reading = pd.read_csv('template.csv')
             frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
-            customColors = pygmt.makecpt(cmap="thermal")
-            fig.grdimage(grid=frameGrid, transparency = 50, projection = 'H15c', cmap = customColors)  
+            fig.grdimage(grid=frameGrid, transparency = 35, projection = 'H15c', cmap = 'thermal')  
             fig.contour(
                 pen="0.2p",
                 x = reading['long'],
@@ -132,6 +129,10 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
             #     frame=["x+lMagnetic Strength", "y+lm"],
                 
             # )
+        pygmt.makecpt(cmap="inferno", series=[0, 50])
+        fig.grdimage(grid = gBird, transparency = 10, projection = 'H15c', nan_transparent = True)
+        fig.colorbar(frame=["x+Sightings"])
+        
         fig.savefig("{} {} {}.png".format(birdName, i, mag))
 
         listOfImages.append("{} {} {}.png".format(birdName, i,mag))
