@@ -63,43 +63,36 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
     # Nested for loops to cycle through each year to create a heat map of each
     for i in np.arange(minYear, maxYear, 1):
-        tempFrame = birdData.query('@i == year')
-        for x in np.arange(0, tempFrame.shape[0]):
-            earthFrame[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,] += tempFrame.iloc[x]['individualCount']
-            print(x, " -> ", earthFrame[tempFrame.iloc[x]['decimalLatitude'] + 90, tempFrame.iloc[x]['decimalLongitude'] + 180,])
+        tempBirdFrame = birdData.query('@i == year')
+        for x in np.arange(0, tempBirdFrame.shape[0]):
+            earthFrame[tempBirdFrame.iloc[x]['decimalLatitude'] + 90, tempBirdFrame.iloc[x]['decimalLongitude'] + 180,] += tempBirdFrame.iloc[x]['individualCount']
+            print(x, " -> ", earthFrame[tempBirdFrame.iloc[x]['decimalLatitude'] + 90, tempBirdFrame.iloc[x]['decimalLongitude'] + 180,])
             templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
         
         #Trial Work
-        print(tempFrame)
-        trialFrame = tempFrame.groupby(['decimalLatitude', 'decimalLongitude']).sum()
-        trialFrame.drop('year', axis=1)
-        trialFrame = trialFrame.reset_index()
-        print(trialFrame)
-        # trialFrame.to_csv("beta.csv", index = False)
-        # trialFrameF = pd.read_csv("beta.csv")
-        # print(trialFrameF)
-
-    # Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
-        # print(tempFrame)
-        # print(tempFrame['individualCount'].sum())
-        tempFrame['individualCount'] = (tempFrame['individualCount'] / tempFrame['individualCount'].sum()) * 100
-        tempFrame.to_csv("alpha.csv", index = False)
-
-        # print(tempFrame)
-        # print(tempFrame['individualCount'].sum())
-        birdDataF = pd.read_csv("alpha.csv")
-        np.savetxt("foo.csv", earthFrame, delimiter=",")
-
-        print(birdDataF)
+        tempBirdFrame.drop('year', axis = 1, inplace = True)        
+        print(tempBirdFrame)
+        
+        secondaryBirdFrame = tempBirdFrame.groupby(['decimalLongitude', 'decimalLatitude'], as_index = False).agg(
+                {'individualCount' : sum})
+        
+        # debugging of the trialframe and having it groupby
+        print("Trial Frame:\n", secondaryBirdFrame)
+        print("Sum of Individual Count:", secondaryBirdFrame['individualCount'].sum(), "\n")
+        secondaryBirdFrame['individualCount'] = (secondaryBirdFrame['individualCount'] / secondaryBirdFrame['individualCount'].sum()) * 100
+        
+        # Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
+        secondaryBirdFrame.to_csv("beta.csv", index = False)
+        standardizedDataFrame = pd.read_csv("beta.csv")
 
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
-        gBird = pygmt.xyz2grd(data = birdDataF, region = worldRegion, spacing = "222km")
+        gBird = pygmt.xyz2grd(data = standardizedDataFrame, region = worldRegion, spacing = "222km")
         print(gBird)
         fig = pygmt.Figure()
         fig.basemap(region = worldRegion, projection = "H15c", frame=["a", '+t{} Migratory Changes ({} - {})'.format(birdName, minYear, maxYear)])
         fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
         pygmt.makecpt(cmap="inferno", series=[0, 50])
-        fig.grdimage(grid = gBird, transparency = 25, projection = 'H15c')
+        fig.grdimage(grid = gBird, transparency = 10, projection = 'H15c', nan_transparent = True)
         fig.colorbar(frame=["x+Sightings"])
 
     # Magnetic Data
@@ -132,6 +125,12 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
                 #contour interval
                 levels = 5000,
             )
+            fig.colorbar(
+                cmap="jet",
+                position="JMR+o1c/0c+w7c/0.5c+n+mc",
+                frame=["x+lMagnetic Strength", "y+lm"],
+                
+            )
         fig.savefig("{} {} {}.png".format(birdName, i, mag))
 
         listOfImages.append("{} {} {}.png".format(birdName, i,mag))
@@ -142,14 +141,12 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
 # Method
 
-# avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2000, 2020)
-# avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
-# avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
-# avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", True, 2000, 2020)
-avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", False, 2000, 2002)
+avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2013, 2014)
 exit()
-
-
+avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
+avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
+avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", True, 2000, 2020)
+avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", False, 2000, 2020)
 avianHeatmap('swainsonHawk.csv', "Swainsons Hawk", True, 2000, 2020)
 avianHeatmap('whiteRumpedRaw.csv', "White-rumped Sandpiper", False, 2000, 2020)
 avianHeatmap('whiteRumpedRaw.csv', "White-rumped Sandpiper", True, 2000, 2020)
