@@ -5,6 +5,28 @@ import pyIGRF
 import seaborn as sb
 from gifmaker import gifMaker
 
+# Print iterations progress
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
 '''
 The response is 7 float number about magnetic filed which is:
 
@@ -66,19 +88,19 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         tempBirdFrame = birdData.query('@i == year')
         for x in np.arange(0, tempBirdFrame.shape[0]):
             earthFrame[tempBirdFrame.iloc[x]['decimalLatitude'] + 90, tempBirdFrame.iloc[x]['decimalLongitude'] + 180,] += tempBirdFrame.iloc[x]['individualCount']
-            print(x, " -> ", earthFrame[tempBirdFrame.iloc[x]['decimalLatitude'] + 90, tempBirdFrame.iloc[x]['decimalLongitude'] + 180,])
-            templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
+            # print(x, " -> ", earthFrame[tempBirdFrame.iloc[x]['decimalLatitude'] + 90, tempBirdFrame.iloc[x]['decimalLongitude'] + 180,])
+        templateFrame = pd.DataFrame(columns = ["long", "lat", "intensity"])
         
         #Trial Work
         tempBirdFrame.drop('year', axis = 1, inplace = True)        
-        print(tempBirdFrame)
+        # print(tempBirdFrame)
         
         secondaryBirdFrame = tempBirdFrame.groupby(['decimalLongitude', 'decimalLatitude'], as_index = False).agg(
                 {'individualCount' : sum})
         
         # debugging of the trialframe and having it groupby
-        print("Trial Frame:\n", secondaryBirdFrame)
-        print("Sum of Individual Count:", secondaryBirdFrame['individualCount'].sum(), "\n")
+        # print("Trial Frame:\n", secondaryBirdFrame)
+        # print("Sum of Individual Count:", secondaryBirdFrame['individualCount'].sum(), "\n")
         secondaryBirdFrame['individualCount'] = (secondaryBirdFrame['individualCount'] / secondaryBirdFrame['individualCount'].sum()) * 100
         
         # Converting DataFrame to csv and then back to DataFrame to standardize the delimiters and have everything work well for pygmt
@@ -89,22 +111,27 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         fig = pygmt.Figure()
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
         gBird = pygmt.xyz2grd(data = standardizedDataFrame, region = worldRegion, spacing = "222km")
-        fig.basemap(region = worldRegion, projection = "H15c", frame=["a", '+t{} Migratory Changes ({} - {})'.format(birdName, minYear, maxYear)])
+        fig.basemap(region = worldRegion, projection = "Cyl_stere/15c", frame=["a", '+t{} Migratory Changes ({} - {})'.format(birdName, minYear, maxYear)])
         fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
 
 
     # Magnetic Data
         if includeMagnetism == True:
             mag = "Magnetic Field"
+            templateFrame = pd.DataFrame(columns = ['long', 'lat', 'intensity'])
             for k in np.arange(-180, 180):
                 for j in np.arange(90, -90, -1):
-                    templateFrame = templateFrame.append({"long": k,"lat": j,"intensity": pyIGRF.igrf_value(j, k, 0, i)[6]}, ignore_index=True)
+                    # templateFrame = templateFrame.append({"long": k,"lat": j,"intensity": pyIGRF.igrf_value(j, k, 0, i)[6]}, ignore_index=True)
+                    # Concat replacement for depreciated code:
+                    mgdf = pd.DataFrame({"long": k, "lat": j, "intensity": pyIGRF.igrf_value(j, k, 0, i)[6]}, index=[0])
+                    templateFrame = pd.concat([templateFrame, mgdf],)
+                    printProgressBar(templateFrame.shape[0], 360*180, prefix = '{} {} Magnetic Field Render: '.format(birdName, i), suffix = 'Complete', length = 50)
 
     # Magnetism Aspect
             templateFrame.to_csv('template.csv', index = False)
             reading = pd.read_csv('template.csv')
             frameGrid = pygmt.xyz2grd(data = reading, region = worldRegion, spacing = "277.5km")
-            fig.grdimage(grid=frameGrid, transparency = 35, projection = 'H15c', cmap = 'thermal')  
+            fig.grdimage(grid=frameGrid, transparency = 35, projection = 'Cyl_stere/15c', cmap = 'thermal')  
             fig.contour(
                 pen="0.2p",
                 x = reading['long'],
@@ -123,15 +150,15 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
                 #contour interval
                 levels = 5000,
             )
-            # fig.colorbar(
+            fig.colorbar(
             #     cmap="jet",
-            #     position="JMR+o1c/0c+w7c/0.5c+n+mc",
-            #     frame=["x+lMagnetic Strength", "y+lm"],
+                # frame=["x+lMagnetic Strength", "y+lnT"],
+                position="JMR+o1c/0c+w7c/0.5c+n+mc",
                 
-            # )
-        pygmt.makecpt(cmap="inferno", series=[0, 50])
-        fig.grdimage(grid = gBird, transparency = 10, projection = 'H15c', nan_transparent = True)
-        fig.colorbar(frame=["x+Sightings"])
+            )
+        pygmt.makecpt(cmap = "inferno", series = [0, 50])
+        fig.grdimage(grid = gBird, transparency = 10, projection = 'Cyl_stere/15c', nan_transparent = True)
+        fig.colorbar(frame = ["x+lSighting Density", "y+l%"])
         
         fig.savefig("{} {} {}.png".format(birdName, i, mag))
 
@@ -141,8 +168,11 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
     gifMaker(listOfImages, "{}from{}to{}_{}.gif".format(birdName, minYear, maxYear, mag), 0.25)
     # <!--- End ---!>
 
-# Method d
+# Method 
 
+# Test
+# avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2013, 2014)
+# exit()
 avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2000, 2020)
 avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
 avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)
