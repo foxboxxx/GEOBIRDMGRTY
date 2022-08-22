@@ -4,6 +4,7 @@ import pygmt
 import pyIGRF
 import seaborn as sb
 from gifmaker import gifMaker
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -107,13 +108,12 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         secondaryBirdFrame.to_csv("beta.csv", index = False)
         standardizedDataFrame = pd.read_csv("beta.csv")
     
-    
         fig = pygmt.Figure()
+
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
         gBird = pygmt.xyz2grd(data = standardizedDataFrame, region = worldRegion, spacing = "222km")
         fig.basemap(region = worldRegion, projection = "Cyl_stere/15c", frame=["a", '+t{} Migratory Changes ({} - {})'.format(birdName, minYear, maxYear)])
         fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
-
 
     # Magnetic Data
         if includeMagnetism == True:
@@ -161,7 +161,37 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         fig.colorbar(frame = ["x+lSighting Density", "y+l%"])
         
         fig.savefig("{} {} {}.png".format(birdName, i, mag))
+        
+        img = Image.open("{} {} {}.png".format(birdName, i, mag))
+        shift = 0
+        if includeMagnetism == True:
+            # Magnetic Strength Label
+            font = ImageFont.truetype('Helvetica.ttf', 55)
+            txt = Image.new("L",(600, 100))
+            d = ImageDraw.Draw(txt)
+            d.text((0, 0), "Magnetic Strength", font = font, fill = 255)
+            w = txt.rotate(90, expand = 1)
+            img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (2080, 350), w)
+            
+            # Nanotesla Label
+            font = ImageFont.truetype('Helvetica.ttf', 45)
+            txt2 = Image.new("L",(600, 100))
+            d = ImageDraw.Draw(txt2)
+            d.text((0, 0), "nT", font = font, fill = 255)
+            w = txt2.rotate(0, expand = 1)
+            img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (2165, 260), w)
+            shift = 50
 
+        # Year Label
+        font = ImageFont.truetype('Helvetica.ttf', 55)
+        txt3 = Image.new("L",(600, 100))
+        d = ImageDraw.Draw(txt3)
+        d.text((0, 0), "Year = {}".format(i), font = font, fill = 255)
+        w = txt3.rotate(0, expand = 1)
+        img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (1980 + shift, 1515), w)
+
+        img.save("{} {} {}.png".format(birdName, i, mag))
+        
         listOfImages.append("{} {} {}.png".format(birdName, i,mag))
 
     #Creating the gif of all the maps combined
@@ -170,9 +200,10 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
 # Method 
 
-# Test
+# Testbed
 # avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2013, 2014)
 # exit()
+
 avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2000, 2020)
 avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)
 avianHeatmap('pectoralSandpiperUnfiltered.csv', "Pectoral Sandpiper", False, 2000, 2020)

@@ -11,7 +11,9 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from gifmaker import gifMaker
 
-listOfBirds = ['plovercsv.csv', 'pectoralSandpiperUnfiltered.csv', 'swainsonHawk.csv', 'whiteRumpedRaw.csv', 'forktailedUnfiltered.csv' ]
+
+        
+        
 goldenPlover = pd.read_csv(r"plovercsv.csv")
 goldenPlover = goldenPlover[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
 goldenPlover['decimalLongitude'] = goldenPlover['decimalLongitude'].fillna(0)
@@ -104,3 +106,48 @@ for i in np.arange(2000, 2020):
 gifMaker(testImages, "Test Image.gif", 0.2)
 # def clusterID(minYear, maxYear, birdData, birdName,)
 
+
+
+# Cluster Code (not specific to American Golden Plover) including all migratory birds
+listOfBirds = ['plovercsv.csv', 'pectoralSandpiperUnfiltered.csv', 'swainsonHawk.csv', 'whiteRumpedRaw.csv', 'forktailedUnfiltered.csv',]
+listOfNames = ['American Golden Plover', 'Pectoral Sandpiper', 'Swainson\'s Hawk', 'White-Rumped Sandpiper', 'Fork-tailed Flycatcher']
+def clusterID(minYear, maxYear, birdList, birdNames):
+        for idx, x in enumerate(birdList):
+                testImages = []
+                birdDataFrame = pd.read_csv("{}".format(x))
+                birdDataFrame = birdDataFrame[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
+                birdDataFrame['decimalLongitude'] = birdDataFrame['decimalLongitude'].fillna(0)
+                birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].fillna(0)
+                birdDataFrame['decimalLongitude'] = birdDataFrame['decimalLongitude'].astype(int)
+                birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].astype(int)
+                birdDataFrame['individualCount'] = birdDataFrame['individualCount'].fillna(1)
+                birdDataFrame['individualCount'] = birdDataFrame['individualCount'].astype(int)
+                birdDataFrame = birdDataFrame.dropna(subset=['year'])
+                birdDataFrame['year'] = birdDataFrame['year'].astype(int)
+                birdDataFrame = birdDataFrame.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+                for y in np.arange(minYear, maxYear):
+                        plt.cla()
+                        temp = birdDataFrame.query('@y == year').copy()
+                        a = np.zeros(shape = (temp.shape[0], 2))
+                        for j in np.arange(0, a.shape[0]):
+                                a[j,0] = temp['decimalLatitude'].iloc[j]
+                                a[j,1] = temp['decimalLongitude'].iloc[j]
+                        xs = a[:,0] # Selects all xs from the array
+                        ys = a[:,1]  # Selects all ys from the array
+
+                        # Code that identifies the clustering using the DBSCAN algorithm
+                        clustering = DBSCAN(eps = 4, min_samples = 15).fit(a)
+                        clustering.labels_ 
+                        
+                        # Plotting Code
+                        plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))                       
+                        plt.ylim([-95, -30])
+                        plt.xlim([-60,15])
+                        plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
+                        plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
+                        
+                        print("{} {} Complete.".format(birdNames[idx], y))
+                        testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
+                gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
+
+clusterID(2000, 2020, listOfBirds, listOfNames)
