@@ -9,6 +9,7 @@ import pygmt
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
+from gifmaker import gifMaker
 
 
 goldenPlover = pd.read_csv(r"plovercsv.csv")
@@ -44,8 +45,8 @@ print(torch.lerp(tensor2000, tensor2020, 0.5))
 npinterpolate = torch.lerp(tensor2000, tensor2020, 0.5).numpy()
 np.savetxt("tensor1.csv", npinterpolate, delimiter=",")
 
-plt.scatter(npinterpolate)
-plt.show()
+# plt.scatter(npinterpolate)
+# plt.show()
 plt.cla()
 
 # plt.imsave("tensor.png",tensor2020, )
@@ -81,7 +82,7 @@ clustering.labels_
 plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
 # plt.show()
 
-
+testImages = []
 for i in np.arange(2000, 2020):
         plt.cla()
         temp = goldenPlover.query('@i == year').copy()
@@ -96,6 +97,10 @@ for i in np.arange(2000, 2020):
         clustering.labels_ 
         plt.title("American Golden Plover Cluster ID Test {}".format(i))
         plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
-        plt.savefig("AmericanGoldenPloverClusterIDTest{}".format(i))
+        plt.savefig("AmericanGoldenPloverClusterIDTest{}.png".format(i))
         print("{} Complete.".format(i))
+        testImages.append("AmericanGoldenPloverClusterIDTest{}.png".format(i))
+
+gifMaker(testImages, "Test Image.gif", 0.2)
+# def clusterID(minYear, maxYear, birdData, birdName,)
 
