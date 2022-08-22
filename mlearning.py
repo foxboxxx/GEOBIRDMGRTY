@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from gifmaker import gifMaker
 
-
+listOfBirds = ['plovercsv.csv', 'pectoralSandpiperUnfiltered.csv', 'swainsonHawk.csv', 'whiteRumpedRaw.csv', 'forktailedUnfiltered.csv' ]
 goldenPlover = pd.read_csv(r"plovercsv.csv")
 goldenPlover = goldenPlover[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
 goldenPlover['decimalLongitude'] = goldenPlover['decimalLongitude'].fillna(0)
