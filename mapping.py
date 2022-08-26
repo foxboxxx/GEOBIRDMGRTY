@@ -5,6 +5,7 @@ import pyIGRF
 import seaborn as sb
 from gifmaker import gifMaker
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+from sorting import lineBreak
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):

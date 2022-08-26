@@ -116,6 +116,6 @@ graphMaker(5, 1970, 2021, 22000, 26000, 0, 100, "AgBird", "plovercsv.csv", 10000
 graphMaker(5, 2000, 2021, 22000, 26000, 0, 100, "Southern_Screamer", "unfilteredSouthernScreamer.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
 mapMaker(2000,2020,"AgBird", "plovercsv.csv",-90, 177,-55,1)
 mapMaker(1970,2020,"AgBird", "plovercsv.csv",-150, -60,0,60)
-mapMaker(1970, 2020, "SsBird", "unfilteredSouthernScreamer.csv", -90,177,-55,1)
+mapMaker(1970, 2020, "SsBird"'https://www.api.gbif.org/v1/species/match?name={}&limit=10'.format(sciNameList[0]), "unfilteredSouthernScreamer.csv", -90,177,-55,1)
 graphMaker(5,2000,2020,22000,26000,0,100,"SsBird", "unfilteredSouthernScreamer.csv", 1000, "3060fullmag.csv", "South_America", -30, -60, -60, 0, -90, -30)
 

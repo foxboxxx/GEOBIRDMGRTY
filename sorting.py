@@ -9,6 +9,10 @@ import statsmodels.api as sm
 from scipy import stats
 import seaborn as sb
 
+def lineBreak(num):
+    for i in np.arange(0, num):
+        print("\n")
+
 print("Begininng Updating Sequence...")
 #testData = pd.read_csv(r"https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1QvEdtQLKMGXxyN0QhQL46AdUdJ9iJVB-50NBHe1s_tnx2KCymG0ZYX43eB-SEjTl9Dj_5WHU8qj3/pub?output=csv")
 magneticData37 = pd.read_csv(r"magneticData37.csv")

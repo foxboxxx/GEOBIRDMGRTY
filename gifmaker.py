@@ -1,5 +1,6 @@
 import imageio
 import numpy as np
+from sorting import lineBreak
 
 def gifMaker(filenames, gifName, duration):
     images = []

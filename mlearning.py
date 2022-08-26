@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from gifmaker import gifMaker
+from sorting import lineBreak
 
 
         
