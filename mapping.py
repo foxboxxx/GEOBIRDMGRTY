@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pygmt
 import pyIGRF
-import seaborn as sb
+# import seaborn as sb
 from gifmaker import gifMaker
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from sorting import lineBreak

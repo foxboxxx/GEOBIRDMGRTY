@@ -3,8 +3,8 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import pandas as pd
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
+# import torch.nn as nn
+# import torch.nn.functional as F
 import pygmt
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans

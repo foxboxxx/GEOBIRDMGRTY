@@ -8,6 +8,7 @@ from scipy import stats
 import seaborn as sb
 import requests
 import json
+import io
 # from sorting import lineBreak
 
 # import pygbif
@@ -21,6 +22,45 @@ import json
 # f, ax = plt.subplots(figsize=(15, 15))
 # ax = sb.heatmap(a, linewidths=.5, xticklabels = 1, yticklabels = 1)
 # plt.show()
+
+def match_species(spList, 
+                  nameCol = "scientificName", 
+                  speciesApi = "http://api.gbif.org/v1/species/match?verbose=true&name="):
+    matched_species = []
+    for species in spList.index:
+        name = spList.loc[species, nameCol]
+        match = requests.get(speciesApi + name)
+        print(match)
+        
+        if match.ok:
+            match_result = match.json()
+            match_result['inputName'] = spList.loc[species, nameCol]
+                    
+        if "alternatives" in match_result:
+                match_result["has_alternatives"] = True
+                for alt in match_result["alternatives"]:
+                    alt["inputName"] = spList.loc[species, nameCol]
+                    alt["is_alternative"] = True
+                    matched_species.append(alt)  # add alternative
+                match_result.pop('alternatives')
+
+        matched_species.append(match_result)
+    result = pd.DataFrame(matched_species)
+    taxon_keys = ['acceptedUsageKey', 'usageKey', 'kingdomKey', 'phylumKey','classKey', 'orderKey', 'familyKey', 'genusKey', 'speciesKey']
+    result[taxon_keys] = result[taxon_keys].fillna(0).astype(int)
+    result = result.fillna("NULL")
+    return result
+
+def create_download_given_query(username, password, download_query, api = "http://api.gbif.org/v1/"):
+    headers = {'Content-Type': 'application/json'}
+    download_request = requests.post(api + "occurrence/download/request", data = json.dumps(download_query), auth = (username, password), headers = headers)
+    if download_request.ok:
+        print("Request Good")
+    else:
+        print(download_request)
+        print("request bad")
+    return download_request
+
 
 region = 'AR'
 token = 'a83ao4aendbm'
@@ -61,6 +101,7 @@ print("Matches:\n")
 print(matches)
 print("\n")
 
+# identifying the scientific names of the birds that I indentified
 sciNameList = []
 matchesAdv = []
 for inst in matches:
@@ -70,13 +111,15 @@ for inst in matches:
     tempL = ((instReq.text)[2:(len)(instReq.text) - 2]).split(",")
     sciName = tempL[0]; sciName = sciName[10:].strip("\"")
     sciNameList.append(sciName)
-    print( sciName)
+    print(sciName)
 
+# Testing specific species for whether or not the API works
 findingDatasetTest = requests.request("GET", 'https://api.gbif.org/v1/dataset/search?speciesKey=2481756', headers = headers, data = payload)
 # print("2", findingDatasetTest.text)
 # with open('doi.json', 'w') as outfile:
 #     json.dump(findingDatasetTest.json(), outfile)
 
+# Finds the DOi of the requested species using the link below
 findingDOI = requests.request("GET", "https://api.gbif.org/v1/occurrence/download/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c")
 # print("3", findingDOI.text)
 with open('doi.json', 'w') as outfile:
@@ -84,28 +127,41 @@ with open('doi.json', 'w') as outfile:
 
 # !---> GBIF DATA TESTING
 
-# Secondary Testing:
-
-# dfSciList = pd.DataFrame(index = sciNameList,  columns =['Scientific Names'])
-# dfSciList.to_csv('sciNames.csv',)
-# print(dfSciList)
+# print('https://api.gbif.org/v1/species/match?name={}&limit=10'.format(sciNameList[0]))
+# req = requests.get('https://api.gbif.org/v1/species/match?name={}&limit=10'.format(sciNameList[0]))
+# with open('gbifplaceholder.json', 'w') as outfile:
+#     json.dump(req.json(), outfile)  
 
 username = 'joerob'
 password = 'jr90050253'
 
 spList = pd.read_csv('scinames.csv', encoding = 'latin-1')
+print(spList["Scientific Names"])
+print(spList.index)
+taxon_keys = match_species(spList, "Scientific Names")
+print("done")
 
-print('https://api.gbif.org/v1/species/match?name={}&limit=10'.format(sciNameList[0]))
-req = requests.get('https://api.gbif.org/v1/species/match?name={}&limit=10'.format(sciNameList[0]))
-with open('gbifplaceholder.json', 'w') as outfile:
-    json.dump(req.json(), outfile)
+key_list = taxon_keys.loc[(taxon_keys["matchType"]=="EXACT") & (taxon_keys["status"]=="ACCEPTED")].usageKey.tolist()
 
-taxon_keys = ['acceptedUsageKey', 'usageKey', 'kingdomKey', 'phylumKey','classKey', 'orderKey', 'familyKey', 'genusKey', 'speciesKey']
-download_query = {["creator"] : "", ["notificationAddresses"] : [""], ["sendNotification"] : False, ["format"] : "SIMPLE_CSV", ["predicate"] : {
+download_query = {}
+download_query["creator"] = "joerob"
+download_query["notificationAddresses"] = ["robertazzijoseph@gmail.com"]
+download_query["sendNotification"] = False # if set to be True, don't forget to add a notificationAddresses above
+download_query["format"] = "SIMPLE_CSV"
+download_query["predicate"] = {
     "type": "in",
     "key": "TAXON_KEY",
     "values": key_list
-}}
+}
+
+create_download_given_query(username, password, download_query)
+
+
+# download_query = {["creator"] : "", ["notificationAddresses"] : [""], ["sendNotification"] : False, ["format"] : "SIMPLE_CSV", ["predicate"] : {
+#     "type": "in",
+#     "key": "TAXON_KEY",
+#     "values": key_list
+# }}
 
 
 # <------------->
