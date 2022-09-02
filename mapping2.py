@@ -112,7 +112,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
     # Using the DataFrame made previously and converting the information to a grd file to create a grid image (or heat map) on the globe of migratory population densities
         gBird = pygmt.xyz2grd(data = standardizedDataFrame, region = worldRegion, spacing = "222km")
-        fig.basemap(region = worldRegion, projection = "Cyl_stere/15c", frame=["a", '+tWhite-rumped Sandpiper (2000 - 2020)'])
+        fig.basemap(region = worldRegion, projection = "Cyl_stere/15c", frame=["a", '+t '])
         fig.coast(land = "burlywood", water = "lightblue", shorelines = "0.5p,black")
 
     # Magnetic Data
@@ -188,16 +188,9 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
         d = ImageDraw.Draw(txt3)
         d.text((0, 0), "Year = {}".format(i), font = font, fill = 255)
         w = txt3.rotate(0, expand = 1)
-        img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (1615 + shift, 1475), w)
+        img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (1980 + shift, 1515), w)
 
-        # Title 
-        # font = ImageFont.truetype('Helvetica.ttf', 55)
-        # txt4 = Image.new("L",(1500, 100))
-        # d = ImageDraw.Draw(txt4)
-        # d.text((0, 0), "{}".format(birdName) + " Migratory Changes (2000 - 2020)", font = font, fill = 255)
-        # w = txt4.rotate(0, expand = 1)
-        # img.paste(ImageOps.colorize(w, (0,0,0), (0,0,0)), (800 + shift, 50), w)
-        # img.save("{} {} {}.png".format(birdName, i, mag))
+        img.save("{} {} {}.png".format(birdName, i, mag))
         
         listOfImages.append("{} {} {}.png".format(birdName, i,mag))
 

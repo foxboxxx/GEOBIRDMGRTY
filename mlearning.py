@@ -10,10 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from gifmaker import gifMaker
-from sorting import lineBreak
 
-
-        
         
 goldenPlover = pd.read_csv(r"plovercsv.csv")
 goldenPlover = goldenPlover[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
