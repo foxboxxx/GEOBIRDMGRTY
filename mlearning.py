@@ -7,8 +7,10 @@ import torch
 # import torch.nn.functional as F
 import pygmt
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
+# from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
+# from sklearn.cluster import MeanShift
+from sklearn import metrics
 from gifmaker import gifMaker
 
         
@@ -136,7 +138,8 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         # Code that identifies the clustering using the DBSCAN algorithm
                         clustering = DBSCAN(eps = 4, min_samples = 15).fit(a)
                         clustering.labels_ 
-                        
+                        print(metrics.silhouette_score(clustering, clustering['labels']))
+
                         # Plotting Code
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))                       
                         plt.ylim([-95, -30])

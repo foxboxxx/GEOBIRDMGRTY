@@ -162,8 +162,6 @@ for chunks in np.arange(0, 48):
     for species in iterations:
         # Filtering data down to the bare bones
         filt = data.query('species == @species')
-        print(filt)
-        filt.to_csv("filt.csv")
         filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
         familyName = str(filt['family'].unique()[0])
         # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
