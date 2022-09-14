@@ -54,6 +54,7 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
 def yearCount(smallSet, bigSet, yearMin, yearMax):
     for i in np.arange(yearMin, yearMax):
         smallSet = smallSet.append(pd.DataFrame({'year': i, 'countS': bigSet.query('year == @i')['individualCount'].sum()}, index = [0]), ignore_index = True)
+
     return smallSet
 
 def monthCount(smallSet, bigSet, yearMin, yearMax):
