@@ -228,22 +228,6 @@ finalDf.to_csv("birdAnalysis.csv")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #     filt = data.query('species == @species')
 #     filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
 
