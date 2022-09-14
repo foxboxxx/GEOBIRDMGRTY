@@ -153,7 +153,7 @@ finalDf = pd.DataFrame(columns=['species', 'family',
                                 '2018SA', '2018A',
                                 '2019SA', '2019A',])
 
-chunksize = 1 * (5 ** 7)
+chunksize = 5 * (10 ** 6)
 for chunks in np.arange(0, 48):
     print("Chunks:", str(chunks))
     print("Rows Skipped:", str(chunks * chunksize))
