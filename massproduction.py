@@ -153,11 +153,11 @@ finalDf = pd.DataFrame(columns=['species', 'family',
                                 '2018SA', '2018A',
                                 '2019SA', '2019A',])
 
-chunksize = 1 * (10 ** 7)
-for chunks in np.arange(0, 24):
+chunksize = 1 * (5 ** 7)
+for chunks in np.arange(0, 48):
     print("Chunks:", str(chunks))
     print("Rows Skipped:", str(chunks * chunksize))
-    data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [1, chunksize * chunks], nrows = chunksize, )
+    data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [i for i in range(1, chunks * chunksize)], nrows = chunksize, )
     iterations = data['species'].unique()
     for species in iterations:
         # Filtering data down to the bare bones
@@ -177,23 +177,23 @@ for chunks in np.arange(0, 24):
         currentBird = pd.DataFrame([[species, familyName, smallCount['countS'][0], largeCount['countS'][0],
                                                           smallCount['countS'][1], largeCount['countS'][1], 
                                                           smallCount['countS'][2], largeCount['countS'][2],
-                                                          smallCount['countS'][3], largeCount['countS'][0], 
-                                                          smallCount['countS'][4], largeCount['countS'][0], 
-                                                          smallCount['countS'][5], largeCount['countS'][0], 
-                                                          smallCount['countS'][6], largeCount['countS'][0], 
-                                                          smallCount['countS'][7], largeCount['countS'][0], 
-                                                          smallCount['countS'][8], largeCount['countS'][0], 
-                                                          smallCount['countS'][9], largeCount['countS'][0], 
-                                                          smallCount['countS'][10], largeCount['countS'][0], 
-                                                          smallCount['countS'][11], largeCount['countS'][0], 
-                                                          smallCount['countS'][12], largeCount['countS'][0], 
-                                                          smallCount['countS'][13], largeCount['countS'][0], 
-                                                          smallCount['countS'][14], largeCount['countS'][0], 
-                                                          smallCount['countS'][15], largeCount['countS'][0], 
-                                                          smallCount['countS'][16], largeCount['countS'][0], 
-                                                          smallCount['countS'][17], largeCount['countS'][0], 
-                                                          smallCount['countS'][18], largeCount['countS'][0], 
-                                                          smallCount['countS'][19], largeCount['countS'][0]]], 
+                                                          smallCount['countS'][3], largeCount['countS'][3], 
+                                                          smallCount['countS'][4], largeCount['countS'][4], 
+                                                          smallCount['countS'][5], largeCount['countS'][5], 
+                                                          smallCount['countS'][6], largeCount['countS'][6], 
+                                                          smallCount['countS'][7], largeCount['countS'][7], 
+                                                          smallCount['countS'][8], largeCount['countS'][8], 
+                                                          smallCount['countS'][9], largeCount['countS'][9], 
+                                                          smallCount['countS'][10], largeCount['countS'][10], 
+                                                          smallCount['countS'][11], largeCount['countS'][11], 
+                                                          smallCount['countS'][12], largeCount['countS'][12], 
+                                                          smallCount['countS'][13], largeCount['countS'][13], 
+                                                          smallCount['countS'][14], largeCount['countS'][14], 
+                                                          smallCount['countS'][15], largeCount['countS'][15], 
+                                                          smallCount['countS'][16], largeCount['countS'][16], 
+                                                          smallCount['countS'][17], largeCount['countS'][17], 
+                                                          smallCount['countS'][18], largeCount['countS'][18], 
+                                                          smallCount['countS'][19], largeCount['countS'][19]]], 
                                                                                                     columns=['species', 'family', 
                                                                                                                 '2000SA', '2000A', 
                                                                                                                 '2001SA', '2001A',
