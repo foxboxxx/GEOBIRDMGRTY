@@ -153,8 +153,8 @@ finalDf = pd.DataFrame(columns=['species', 'family',
                                 '2018SA', '2018A',
                                 '2019SA', '2019A',])
 
-chunksize = 1 * (10 ** 7)
-for chunks in np.arange(0, 24):
+chunksize = 1 * (5 ** 7)
+for chunks in np.arange(0, 48):
     print("Chunks:", str(chunks))
     print("Rows Skipped:", str(chunks * chunksize))
     data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [1, chunksize * chunks], nrows = chunksize, )
