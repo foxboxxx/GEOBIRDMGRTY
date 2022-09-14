@@ -37,7 +37,7 @@ for i in range(0,20):
         if string1[:4] == str(2000 + i) and cdf1.iloc[j]['PRCP'] >= 0:
             total += cdf1.iloc[j]['PRCP']
             count += 1
-    yearlyPrcps.loc[len(yearlyPrcps.index)] = [2000 + i, (total/count)] 
+    yearlyPrcps.loc[len(yearlyPrcps.index)] = [2000 + i, (total/count)]
 CLMTempData = yearlyTemps['average'].values.tolist()
 CLMPrcpData = yearlyPrcps['average'].values.tolist()
 
@@ -45,13 +45,14 @@ CLMPrcpData = yearlyPrcps['average'].values.tolist()
 finalDf = pd.DataFrame(columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value', 'temp r-value', 'temp p-value'])
 
 # Bird Data
-file = pd.read_csv('plovercsv.csv')
+file = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', error_bad_lines=False)
 iterations = file['species'].unique()
 
 for species in iterations:
 
     # Converting Raw File to dataframes
-    rawFile = file.loc[file['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].query('species == @species').copy()
+    rawFile = file.query('species == @species')
+    rawFile = rawFile.loc[rawFile['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
     familyName = str(rawFile['family'].unique()[0])
 
     # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
