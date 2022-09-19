@@ -9,6 +9,7 @@ from scipy import stats
 import seaborn as sb
 import xlsxwriter
 from functions import lineBreak, histogramMaker, doubleYAxisPlotMaker, yearCount, monthCount, scatterPlot, plotter
+import gc
 
 # Magnetic Data
 SAAMagData = pd.read_csv(r"3060intensity.csv").query('2000 <= year < 2020')
@@ -153,76 +154,80 @@ finalDf = pd.DataFrame(columns=['species', 'family',
                                 '2018SA', '2018A',
                                 '2019SA', '2019A',])
 
-chunksize = 5 * (10 ** 6)
-for chunks in np.arange(0, 48):
-    print("Chunks:", str(chunks))
-    print("Rows Skipped:", str(chunks * chunksize))
-    data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [i for i in range(1, chunks * chunksize)], nrows = chunksize, )
-    iterations = data['species'].unique()
-    for species in iterations:
-        # Filtering data down to the bare bones
-        filt = data.query('species == @species')
-        filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
-        familyName = str(filt['family'].unique()[0])
-        # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
-        smallerRegion = filt.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000').copy()
-        largerRegion = filt.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-        # Formatting it by year (2000 - 2020 for now)
-        smallCount = largeCount = pd.DataFrame({'year':[], 'countS':[]})
-        smallCount = yearCount(smallCount, smallerRegion, 2000, 2020 )
-        largeCount = yearCount(largeCount, largerRegion, 2000, 2020)
-        # Storing data in final dataframe
-        currentBird = pd.DataFrame([[species, familyName, smallCount['countS'][0], largeCount['countS'][0],
-                                                          smallCount['countS'][1], largeCount['countS'][1], 
-                                                          smallCount['countS'][2], largeCount['countS'][2],
-                                                          smallCount['countS'][3], largeCount['countS'][3], 
-                                                          smallCount['countS'][4], largeCount['countS'][4], 
-                                                          smallCount['countS'][5], largeCount['countS'][5], 
-                                                          smallCount['countS'][6], largeCount['countS'][6], 
-                                                          smallCount['countS'][7], largeCount['countS'][7], 
-                                                          smallCount['countS'][8], largeCount['countS'][8], 
-                                                          smallCount['countS'][9], largeCount['countS'][9], 
-                                                          smallCount['countS'][10], largeCount['countS'][10], 
-                                                          smallCount['countS'][11], largeCount['countS'][11], 
-                                                          smallCount['countS'][12], largeCount['countS'][12], 
-                                                          smallCount['countS'][13], largeCount['countS'][13], 
-                                                          smallCount['countS'][14], largeCount['countS'][14], 
-                                                          smallCount['countS'][15], largeCount['countS'][15], 
-                                                          smallCount['countS'][16], largeCount['countS'][16], 
-                                                          smallCount['countS'][17], largeCount['countS'][17], 
-                                                          smallCount['countS'][18], largeCount['countS'][18], 
-                                                          smallCount['countS'][19], largeCount['countS'][19]]], 
-                                                                                                    columns=['species', 'family', 
-                                                                                                                '2000SA', '2000A', 
-                                                                                                                '2001SA', '2001A',
-                                                                                                                '2002SA', '2002A', 
-                                                                                                                '2003SA', '2003A',
-                                                                                                                '2004SA', '2004A', 
-                                                                                                                '2005SA', '2005A',
-                                                                                                                '2006SA', '2006A',
-                                                                                                                '2007SA', '2007A',
-                                                                                                                '2008SA', '2008A',
-                                                                                                                '2009SA', '2009A',
-                                                                                                                '2010SA', '2010A',
-                                                                                                                '2011SA', '2011A',
-                                                                                                                '2012SA', '2012A',
-                                                                                                                '2013SA', '2013A',
-                                                                                                                '2014SA', '2014A',
-                                                                                                                '2015SA', '2015A',
-                                                                                                                '2016SA', '2016A',
-                                                                                                                '2017SA', '2017A',
-                                                                                                                '2018SA', '2018A',
-                                                                                                                '2019SA', '2019A',])
-        print(currentBird)
-        if str(currentBird['species'][0]) not in finalDf['species'].unique():
-            finalDf = pd.concat([finalDf, currentBird])
-        else:
-            speciesName = str(currentBird['species'][0])
-            for x in np.arange(2, currentBird.shape[0] + 1):
-                y = finalDf[finalDf['species'] == speciesName].index[0]
-                finalDf.iat[y,x] = finalDf.iloc[y,x] + currentBird.iloc[0][x]
 
-finalDf.to_csv("birdAnalysis.csv")
+chunksize = 5 * (10 ** 6)
+iterr = 0
+with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chunksize = chunksize, sep = '\t', on_bad_lines='skip') as reader:
+    for chunk in reader:
+        # data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [i for i in range(1, (chunks * chunksize))], nrows = chunksize, )
+        iterr = iterr + 1
+        print("Chunk # ", iterr)
+        iterations = chunk['species'].unique()
+        for species in iterations:
+            # Filtering data down to the bare bones
+            filt = chunk.query('species == @species')
+            filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
+            familyName = str(filt['family'].unique()[0])
+            # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
+            smallerRegion = filt.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000').copy()
+            largerRegion = filt.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+            # Formatting it by year (2000 - 2020 for now)
+            smallCount = largeCount = pd.DataFrame({'year':[], 'countS':[]})
+            smallCount = yearCount(smallCount, smallerRegion, 2000, 2020 )
+            largeCount = yearCount(largeCount, largerRegion, 2000, 2020)
+            # Storing data in final dataframe
+            currentBird = pd.DataFrame([[species, familyName, smallCount['countS'][0], largeCount['countS'][0],
+                                                            smallCount['countS'][1], largeCount['countS'][1], 
+                                                            smallCount['countS'][2], largeCount['countS'][2],
+                                                            smallCount['countS'][3], largeCount['countS'][3], 
+                                                            smallCount['countS'][4], largeCount['countS'][4], 
+                                                            smallCount['countS'][5], largeCount['countS'][5], 
+                                                            smallCount['countS'][6], largeCount['countS'][6], 
+                                                            smallCount['countS'][7], largeCount['countS'][7], 
+                                                            smallCount['countS'][8], largeCount['countS'][8], 
+                                                            smallCount['countS'][9], largeCount['countS'][9], 
+                                                            smallCount['countS'][10], largeCount['countS'][10], 
+                                                            smallCount['countS'][11], largeCount['countS'][11], 
+                                                            smallCount['countS'][12], largeCount['countS'][12], 
+                                                            smallCount['countS'][13], largeCount['countS'][13], 
+                                                            smallCount['countS'][14], largeCount['countS'][14], 
+                                                            smallCount['countS'][15], largeCount['countS'][15], 
+                                                            smallCount['countS'][16], largeCount['countS'][16], 
+                                                            smallCount['countS'][17], largeCount['countS'][17], 
+                                                            smallCount['countS'][18], largeCount['countS'][18], 
+                                                            smallCount['countS'][19], largeCount['countS'][19]]], 
+                                                                                                        columns=['species', 'family', 
+                                                                                                                    '2000SA', '2000A', 
+                                                                                                                    '2001SA', '2001A',
+                                                                                                                    '2002SA', '2002A', 
+                                                                                                                    '2003SA', '2003A',
+                                                                                                                    '2004SA', '2004A', 
+                                                                                                                    '2005SA', '2005A',
+                                                                                                                    '2006SA', '2006A',
+                                                                                                                    '2007SA', '2007A',
+                                                                                                                    '2008SA', '2008A',
+                                                                                                                    '2009SA', '2009A',
+                                                                                                                    '2010SA', '2010A',
+                                                                                                                    '2011SA', '2011A',
+                                                                                                                    '2012SA', '2012A',
+                                                                                                                    '2013SA', '2013A',
+                                                                                                                    '2014SA', '2014A',
+                                                                                                                    '2015SA', '2015A',
+                                                                                                                    '2016SA', '2016A',
+                                                                                                                    '2017SA', '2017A',
+                                                                                                                    '2018SA', '2018A',
+                                                                                                                    '2019SA', '2019A',])
+            print(currentBird)
+            if str(currentBird['species'][0]) not in finalDf['species'].unique():
+                finalDf = pd.concat([finalDf, currentBird])
+            else:
+                speciesName = str(currentBird['species'][0])
+                for x in np.arange(2, currentBird.shape[0] + 1):
+                    y = finalDf[finalDf['species'] == speciesName].index[0]
+                    finalDf.iat[y,x] = (finalDf.iloc[y][x] + currentBird.iloc[0][x])
+            # gc.collect()
+
+        finalDf.to_csv("birdAnalysis22.csv")
 
     
 
