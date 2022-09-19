@@ -1,4 +1,5 @@
 from multiprocessing import current_process
+from re import T
 import pandas as pd
 import numpy as np
 import pygmt
@@ -13,6 +14,7 @@ import gc
 
 # Magnetic Data
 SAAMagData = pd.read_csv(r"3060intensity.csv").query('2000 <= year < 2020')
+
 
 # Climate Data
 climateDataGen = pd.read_csv(r"weatherDataNew.csv")
@@ -43,7 +45,7 @@ CLMTempData = yearlyTemps['average'].values.tolist()
 CLMPrcpData = yearlyPrcps['average'].values.tolist()
 
 # Creating DataFrame for analysis
-finalDf = pd.DataFrame(columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value', 'temp r-value', 'temp p-value'])
+exportedDf = pd.DataFrame(columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value', 'temp r-value', 'temp p-value'])
 
 
 # # Bird Data First Iteration
@@ -157,26 +159,30 @@ finalDf = pd.DataFrame(columns=['species', 'family',
 
 chunksize = 5 * (10 ** 6)
 iterr = 0
-with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chunksize = chunksize, sep = '\t', on_bad_lines='skip') as reader:
+with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', chunksize = chunksize, on_bad_lines = 'skip') as reader:
     for chunk in reader:
         # data = pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep = '\t', skiprows = [i for i in range(1, (chunks * chunksize))], nrows = chunksize, )
         iterr = iterr + 1
         print("Chunk # ", iterr)
         iterations = chunk['species'].unique()
         for species in iterations:
+            
             # Filtering data down to the bare bones
             filt = chunk.query('species == @species')
             filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
             familyName = str(filt['family'].unique()[0])
+            
             # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
             smallerRegion = filt.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000').copy()
             largerRegion = filt.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+            
             # Formatting it by year (2000 - 2020 for now)
             smallCount = largeCount = pd.DataFrame({'year':[], 'countS':[]})
             smallCount = yearCount(smallCount, smallerRegion, 2000, 2020 )
             largeCount = yearCount(largeCount, largerRegion, 2000, 2020)
+            
             # Storing data in final dataframe
-            currentBird = pd.DataFrame([[species, familyName, smallCount['countS'][0], largeCount['countS'][0],
+            dataB = [[species, familyName, smallCount['countS'][0], largeCount['countS'][0],
                                                             smallCount['countS'][1], largeCount['countS'][1], 
                                                             smallCount['countS'][2], largeCount['countS'][2],
                                                             smallCount['countS'][3], largeCount['countS'][3], 
@@ -195,40 +201,92 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chun
                                                             smallCount['countS'][16], largeCount['countS'][16], 
                                                             smallCount['countS'][17], largeCount['countS'][17], 
                                                             smallCount['countS'][18], largeCount['countS'][18], 
-                                                            smallCount['countS'][19], largeCount['countS'][19]]], 
-                                                                                                        columns=['species', 'family', 
-                                                                                                                    '2000SA', '2000A', 
-                                                                                                                    '2001SA', '2001A',
-                                                                                                                    '2002SA', '2002A', 
-                                                                                                                    '2003SA', '2003A',
-                                                                                                                    '2004SA', '2004A', 
-                                                                                                                    '2005SA', '2005A',
-                                                                                                                    '2006SA', '2006A',
-                                                                                                                    '2007SA', '2007A',
-                                                                                                                    '2008SA', '2008A',
-                                                                                                                    '2009SA', '2009A',
-                                                                                                                    '2010SA', '2010A',
-                                                                                                                    '2011SA', '2011A',
-                                                                                                                    '2012SA', '2012A',
-                                                                                                                    '2013SA', '2013A',
-                                                                                                                    '2014SA', '2014A',
-                                                                                                                    '2015SA', '2015A',
-                                                                                                                    '2016SA', '2016A',
-                                                                                                                    '2017SA', '2017A',
-                                                                                                                    '2018SA', '2018A',
-                                                                                                                    '2019SA', '2019A',])
-            print(currentBird)
+                                                            smallCount['countS'][19], largeCount['countS'][19]]]
+            currentBird = pd.DataFrame(dataB, columns = ['species', 'family', 
+                                                        '2000SA', '2000A', 
+                                                        '2001SA', '2001A',
+                                                        '2002SA', '2002A', 
+                                                        '2003SA', '2003A',
+                                                        '2004SA', '2004A', 
+                                                        '2005SA', '2005A',
+                                                        '2006SA', '2006A',
+                                                        '2007SA', '2007A',
+                                                        '2008SA', '2008A',
+                                                        '2009SA', '2009A',
+                                                        '2010SA', '2010A',
+                                                        '2011SA', '2011A',
+                                                        '2012SA', '2012A',
+                                                        '2013SA', '2013A',
+                                                        '2014SA', '2014A',
+                                                        '2015SA', '2015A',
+                                                        '2016SA', '2016A',
+                                                        '2017SA', '2017A',
+                                                        '2018SA', '2018A',
+                                                        '2019SA', '2019A',])
+            print("#1", currentBird)
             if str(currentBird['species'][0]) not in finalDf['species'].unique():
-                finalDf = pd.concat([finalDf, currentBird])
-            else:
+                finalDf = pd.concat([finalDf, currentBird], ignore_index = True)
+                
+            elif str(currentBird['species'][0]) in finalDf['species'].unique():
+                print("#1.5", currentBird.iloc[0][1])
                 speciesName = str(currentBird['species'][0])
-                for x in np.arange(2, currentBird.shape[0] + 1):
+                print("#2", len(currentBird))
+                print("#3", currentBird.shape[1])
+                for x in np.arange(2, currentBird.shape[1]):
                     y = finalDf[finalDf['species'] == speciesName].index[0]
+                    print("#5", y, speciesName, species)
                     finalDf.iat[y,x] = (finalDf.iloc[y][x] + currentBird.iloc[0][x])
-            # gc.collect()
+            finalDf.to_csv("mbirdanalysis5.csv")  
+            # finalDf.to_csv("mbirdanalysis1.csv")
+            # exit()
+        print(finalDf)    
+        #finalDf.to_csv("mbirdanalysis3.csv")
 
-        finalDf.to_csv("birdAnalysis22.csv")
 
+
+file = pd.read_csv(r'mbirdanalysis5.csv')
+sbird = file['species'].unique()
+
+for birds in sbird:
+    
+    percentages = pd.DataFrame(columns = ['percentages'])
+    x = file[file['species'] == birds].index[0]
+    familyName = file.loc[x]['family']
+    print(file.iloc[x][42])
+    for i in np.arange(3,43,2):
+        if file.iat[x,(i + 1)] != 0:
+            percentages.loc[i] = ((file.iat[x,i] / file.iat[x,(i + 1)]) * 100)
+        elif file.iat[x,(i + 1)] == 0:
+            percentages.loc[i] = 0
+        
+# Dataframe for pearson correlation tests
+
+    magRVal = float(stats.pearsonr(SAAMagData['intensity'],percentages)[0])
+    magPVal = float(stats.pearsonr(SAAMagData['intensity'], percentages)[1])
+    tempRVal = float(stats.pearsonr(CLMTempData,percentages)[0])
+    tempPVal = float(stats.pearsonr(CLMTempData, percentages)[1])
+    prcpRVal = float(stats.pearsonr(CLMPrcpData,percentages)[0])
+    prcpPVal = float(stats.pearsonr(CLMPrcpData, percentages)[1])
+
+    print("Magnetic r-value: " + str(magRVal))
+    print("Magnetic p-value: " + str(magPVal))
+    print("Temperature r-value: " + str(tempRVal))
+    print("Temperature p-value: " + str(tempPVal))
+    print("Precipitation r-value: " + str(prcpRVal))
+    print("Precipitation p-value: " + str(prcpPVal))
+
+    currentBirdAnalysis = pd.DataFrame([[birds, familyName, magRVal, magPVal, prcpRVal, prcpPVal, tempRVal, tempPVal]], columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value','temp r-value', 'temp p-value'])
+    exportedDf = pd.concat([exportedDf, currentBirdAnalysis])
+
+print(exportedDf)
+writer = pd.ExcelWriter('migratoryDataNightly.xlsx', engine='xlsxwriter')
+exportedDf.to_excel(writer, sheet_name='Sheet1')
+workbook  = writer.book
+worksheet = writer.sheets['Sheet1']
+(max_row, max_col) = exportedDf.shape
+# Conditional Formatting (needs more editing)
+# worksheet.conditional_format(3, 1, max_row, max_col, {'type': '3_color_scale'})
+writer.save()
     
 
 
