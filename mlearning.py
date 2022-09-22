@@ -7,7 +7,7 @@ import torch
 # import torch.nn.functional as F
 import pygmt
 import matplotlib.pyplot as plt
-# from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 # from sklearn.cluster import MeanShift
 from sklearn import metrics
@@ -137,8 +137,19 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
                         # Code that identifies the clustering using the DBSCAN algorithm
                         clustering = DBSCAN(eps = 4, min_samples = 15).fit(a)
-                        clustering.labels_ 
-                        print(metrics.silhouette_score(clustering, clustering['labels']))
+                        clustering.labels_
+                        clusterLabels = clustering.labels_ 
+                        unique_labels = set(clusterLabels)
+                        num_clusters = len(set(clusterLabels))
+                        print(num_clusters)
+                        # print(metrics.silhouette_score(clustering, clustering['labels']))
+
+                        #kmeans things
+                        clusteringKMeans = KMeans(n_clusters = 3)
+                        # cLMean = clusteringKMeans.labels_
+                        clusteringKMeans.fit(a)
+                        print(clusteringKMeans.fit(a).cluster_centers_)
+
 
                         # Plotting Code
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))                       
@@ -149,6 +160,17 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         
                         print("{} {} Complete.".format(birdNames[idx], y))
                         testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
+
+                        # Plotting Code (KMEANS CENTROIDS)
+                        plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
+                        plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
+                        plt.ylim([-95, -30])
+                        plt.xlim([-60,15])
+                        # plt.scatter(x = xs, y = ys, s = 50, c = cLMean)
+                        plt.savefig("{}kmeanCentroid{}.png".format(birdNames[idx],y))
+                        print("{} {} Complete.".format(birdNames[idx], y))
                 gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
+                # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 
+
 
 clusterID(2000, 2020, listOfBirds, listOfNames)

@@ -372,14 +372,14 @@ print(str(f) + " and " + str(p))
 # print(str(fvalue) + " and " + str(pvalue))
 # print(str(fvalue2) + " and " + str(pvalue2))
 
-scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds Magnetic Strength", "30S60WAbBird.png", "Magnetic Strength (nT)", "tab:blue")
-doubleYAxisPlotMaker(2000,2020, magStrength3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_M.png", "tab:red", "tab:blue")
+scatterPlot(magStrength3060S, allBirdPercentages, "30S60W All Birds Magnetic Strength", "30S60WAbBird.png", "Magnetic Strength (nT)", "darkslategrey")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_M.png", "tab:red", "darkslategrey")
 
-scatterPlot(climate3060S, allBirdPercentages, "30S60W All Birds Temperature", "30S60WAbBird_T.png", "Temperature (F)", "tab:blue")
-doubleYAxisPlotMaker(2000,2020, climate3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_T.png", "tab:red", "tab:blue")
+scatterPlot(climate3060S, allBirdPercentages, "30S60W All Birds Temperature", "30S60WAbBird_T.png", "Temperature (F)", "darkslategrey")
+doubleYAxisPlotMaker(2000,2020, climate3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_T.png", "tab:red", "darkslategrey")
 
-scatterPlot(prcp3060S, allBirdPercentages, "30S60W All Birds Precipitation", "30S60WAbBird_P.png", "Precipitation (in)", "tab:blue")
-doubleYAxisPlotMaker(2000,2020, prcp3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_P.png", "tab:red", "tab:blue")
+scatterPlot(prcp3060S, allBirdPercentages, "30S60W All Birds Precipitation", "30S60WAbBird_P.png", "Precipitation (in)", "darkslategrey")
+doubleYAxisPlotMaker(2000,2020, prcp3060S, allBirdPercentages, "5R Analysis of All Birds 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_AbBird30S60W_P.png", "tab:red", "darkslategrey")
 
 #(yearMin, yearMax, data1, data2, title, dataLabel1, dataLabel2, filename, color1, color2):
 #5R Analysis of American Golden-Plover 30S60W from 2000-2020
@@ -540,7 +540,7 @@ percentagesNAPlover30N90W = []
 for x in range(len(NAPloverSmallList3060S)):
     percentagesNAPlover30N90W.append((NAPloverSmallList3060S[x]/NAPloverLargeList3060S[x]) * 100)
 print("> 30N90W American Golden-Plover: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPlover30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPlover30N90W)[1]))
-scatterPlot(magStrength30N90W, percentagesNAPlover30N90W, "30N90W American Golden-Plover Magnetic Strength", "30N90WAgBird.png", "Magnetic Strength (nT)")
+scatterPlot(magStrength30N90W, percentagesNAPlover30N90W, "30N90W American Golden-Plover Magnetic Strength", "30N90WAgBird.png", "Magnetic Strength (nT)", "tab:blue")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAPlover30N90W, "5R Analysis of American Golden-Plover 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_AgBird30N90W_M.png", "tab:red", "tab:blue")
 
 #White-rumped Sandpiper Correlation North America
@@ -550,7 +550,7 @@ percentagesNAWhite30N90W = []
 for x in range(len(NAWhiteSmallList3060S)):
     percentagesNAWhite30N90W.append((NAWhiteSmallList3060S[x]/NAWhiteLargeList3060S[x]) * 100)
 print("> 30N90W White-rumped Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAWhite30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAWhite30N90W)[1]))
-scatterPlot(magStrength30N90W, percentagesNAWhite30N90W, "30N90W White-rumped Sandpiper Magnetic Strength", "30N90WWrBird.png", "Magnetic Strength (nT)")
+scatterPlot(magStrength30N90W, percentagesNAWhite30N90W, "30N90W White-rumped Sandpiper Magnetic Strength", "30N90WWrBird.png", "Magnetic Strength (nT)", "tab:green")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAWhite30N90W, "5R Analysis of White-rumped Sandpiper 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_WrBird30N90W_M.png", "tab:red", "tab:blue")
 
 #Pectoral Sandpiper Correlation North America
@@ -560,7 +560,7 @@ percentagesNAPiper30N90W = []
 for x in range(len(NAPiperSmallList3060S)):
     percentagesNAPiper30N90W.append((NAPiperSmallList3060S[x]/NAPiperLargeList3060S[x]) * 100)
 print("> 30N90W Pectoral Sandpiper: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAPiper30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAPiper30N90W)[1]))
-scatterPlot(magStrength30N90W, percentagesNAPiper30N90W, "30N90W Pectoral Sandpiper Magnetic Strength", "30N90WPsBird.png", "Magnetic Strength (nT)", "tab:blue")
+scatterPlot(magStrength30N90W, percentagesNAPiper30N90W, "30N90W Pectoral Sandpiper Magnetic Strength", "30N90WPsBird.png", "Magnetic Strength (nT)", "tab:purple")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAPiper30N90W, "5R Analysis of Pectoral Sandpiper 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_PsBird30N90W_M.png", "tab:red", "tab:blue")
 
 #Swainson's Hawk Correlation North America
@@ -570,7 +570,7 @@ percentagesNAHawk30N90W = []
 for x in range(len(NAHawkSmallList3060S)):
     percentagesNAHawk30N90W.append((NAHawkSmallList3060S[x]/NAHawkLargeList3060S[x]) * 100)
 print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStrength30N90W,percentagesNAHawk30N90W)[0]) + "; p value = " + str(stats.pearsonr(magStrength30N90W, percentagesNAHawk30N90W)[1]))
-scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk Magnetic Strength", "30N90WShBird.png", "Magnetic Strength (nT)", "tab:blue")
+scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk Magnetic Strength", "30N90WShBird.png", "Magnetic Strength (nT)", "rosybrown")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAHawk30N90W, "5R Analysis of Swainson's Hawk 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30N90W_M.png", "tab:red", "tab:blue")
 
 print("|------------------------------------------------------------------------|")#section end
