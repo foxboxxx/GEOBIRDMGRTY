@@ -32,6 +32,8 @@ def doubleYAxisPlotMaker(yearMin, yearMax, data1, data2, title, dataLabel1, data
     ln1 = ax1.plot(t, data1, color= color1, label = dataLabel1)
     ax1.tick_params(axis='y', labelcolor = color1)
     ax1.grid(color = 'grey', linestyle = "--")
+    plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
+
     # ax1.legend(loc="upper right")
 
     ax2 = ax1.twinx()  
@@ -65,14 +67,15 @@ def monthCount(smallSet, bigSet, yearMin, yearMax):
             smallSetMonth = smallSetMonth.append(pd.DataFrame({'month': j, 'count': bigSet.query('year == @i & month == @j')['individualCount'].sum()}, index = [0]), ignore_index = True)
     return smallSetMonth
 
-def scatterPlot(mag, per, title, file, xlabel):
+def scatterPlot(mag, per, title, file, xlabel, colori):
     font = {'fontname':'Helvetica', 'style':'italic'}
     plt.clf()
-    sb.regplot(mag, per, 'o')
+    sb.regplot(mag, per, 'o',color = colori)
     plt.title(title, **font)
     plt.xlabel(xlabel, **font)
     plt.ylabel("Population Density %", **font)
-    plt.grid(color='grey', linestyle = "--", linewidth=0.25, alpha=0.75) 
+    plt.grid(color='grey', linestyle = "--", linewidth=0.25, alpha=0.75)
+    plt.ylim(0,100) 
     #plt.text(0.1, 0.9, 'text', size=15, color='purple')
     # m, b = np.polyfit(mag, per, 1)
     # plt.plot(mag, m(mag) + b)
