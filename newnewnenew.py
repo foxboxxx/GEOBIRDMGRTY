@@ -26,9 +26,9 @@ import pygmt
 # fig.savefig("map.jpg")
 
 
-with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chunksize=(1*(10**6)), sep = '\t') as reader:
-    for chunk in reader:
-        print('done')
+# with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chunksize=(1*(10**6)), sep = '\t') as reader:
+#     for chunk in reader:
+#         print('done')
 
 
 
@@ -45,3 +45,13 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', chun
     
 # # )
 # fig.savefig("map3.jpg")
+
+worldRegion = [-170,0,-60,60]
+ndf = pd.DataFrame([[-30,-60], [40, -90]], columns = ["de", "dl"])
+print(ndf)
+
+whiteFull = pygmt.Figure()
+whiteFull.basemap(region = 'g', projection="G-50/20/12c", frame=["a", '+t"Points of Interest (P1 & P2)"'])
+whiteFull.coast(land="gray", water="white", resolution="f", frame = 'g')
+whiteFull.plot(x=ndf.dl, y=ndf.de, style="a0.5c", color="yellow", pen="black")
+whiteFull.savefig("markings.png",show = False)
