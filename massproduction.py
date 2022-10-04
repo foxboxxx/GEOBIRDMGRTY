@@ -307,7 +307,13 @@ for birds in sbird:
     print("Precipitation r-value: " + str(prcpRVal))
     print("Precipitation p-value: " + str(prcpPVal))
 
-    currentBirdAnalysis = pd.DataFrame([[birds, familyName, magRVal, magPVal, prcpRVal, prcpPVal, tempRVal, tempPVal]], columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value','temp r-value', 'temp p-value'])
+    currentBirdAnalysis = pd.DataFrame([[birds, familyName, magRVal, magPVal, prcpRVal, prcpPVal, tempRVal, tempPVal,winterSA, winterNA, winterE,
+                                                            springSA, springNA, springE, 
+                                                            summerSA, summerNA, summerE,
+                                                            fallSA, fallNA, fallE,]], columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value','temp r-value', 'temp p-value','WinterSA', 'WinterNA', 'WinterElse',
+                                                        'SpringSA', 'SpringNA', 'SpringElse',
+                                                        'SummerSA', 'SummerNA', 'SummerElse', 
+                                                        'FallSA', 'FallNA', 'FallElse',])
     exportedDf = pd.concat([exportedDf, currentBirdAnalysis])
 
 print(exportedDf)
@@ -322,7 +328,7 @@ writer.save()
     
 
 
-
+    
 #     filt = data.query('species == @species')
 #     filt = filt.loc[filt['occurrenceStatus'] == 'PRESENT', ['species', 'family', 'eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
 
