@@ -1,5 +1,5 @@
 from multiprocessing import current_process
-from re import T
+# from re import T
 import pandas as pd
 import numpy as np
 import pygmt
@@ -12,6 +12,7 @@ import xlsxwriter
 from functions import lineBreak, histogramMaker, doubleYAxisPlotMaker, yearCount, monthCount, scatterPlot, plotter
 import gc
 
+print("Working...")
 # Magnetic Data
 SAAMagData = pd.read_csv(r"3060intensity.csv").query('2000 <= year < 2020')
 
@@ -154,7 +155,12 @@ finalDf = pd.DataFrame(columns=['species', 'family',
                                 '2016SA', '2016A',
                                 '2017SA', '2017A',
                                 '2018SA', '2018A',
-                                '2019SA', '2019A',])
+                                '2019SA', '2019A',
+                                'WinterSA', 'WinterNA', 'WinterElse',
+                                'SpringSA', 'SpringNA', 'SpringElse',
+                                'SummerSA', 'SummerNA', 'SummerElse', 
+                                'FallSA', 'FallNA', 'FallElse',
+                                ])
 
 
 chunksize = 5 * (10 ** 6)
@@ -175,6 +181,23 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep 
             # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
             smallerRegion = filt.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000').copy()
             largerRegion = filt.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+            naRegion = filt.query('0 <= decimalLatitude <= 70 & -135 <= decimalLongitude <= -60 & individualCount < 1000').copy()
+            # Migratory Determination
+            winterSA = (largerRegion.query('month <= 2 | month == 12').copy()).shape[0]
+            winterNA = (naRegion.query('month <= 2 | month == 12').copy()).shape[0]
+            winterE = ((filt.query('month <= 2 | month == 12').copy()).shape[0]) - (winterSA + winterNA)
+            
+            springSA = (largerRegion.query('3 <= month <= 5').copy()).shape[0]
+            springNA = (naRegion.query('3 <= month <= 5').copy()).shape[0]
+            springE = ((filt.query('3 <= month <= 5').copy()).shape[0]) - (springSA + springNA)
+            
+            summerSA = (largerRegion.query('6 <= month <= 8').copy()).shape[0]
+            summerNA = (naRegion.query('6 <= month <= 8').copy()).shape[0]
+            summerE = ((filt.query('6 <= month <= 8').copy()).shape[0]) - (summerSA + summerNA)
+            
+            fallSA = (largerRegion.query('9 <= month <= 11').copy()).shape[0]
+            fallNA = (naRegion.query('9 <= month <= 11').copy()).shape[0]
+            fallE = ((filt.query('9 <= month <= 11').copy()).shape[0]) - (fallSA + fallNA)                   
             
             # Formatting it by year (2000 - 2020 for now)
             smallCount = largeCount = pd.DataFrame({'year':[], 'countS':[]})
@@ -201,7 +224,11 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep 
                                                             smallCount['countS'][16], largeCount['countS'][16], 
                                                             smallCount['countS'][17], largeCount['countS'][17], 
                                                             smallCount['countS'][18], largeCount['countS'][18], 
-                                                            smallCount['countS'][19], largeCount['countS'][19]]]
+                                                            smallCount['countS'][19], largeCount['countS'][19],
+                                                            winterSA, winterNA, winterE,
+                                                            springSA, springNA, springE, 
+                                                            summerSA, summerNA, summerE,
+                                                            fallSA, fallNA, fallE,]]
             currentBird = pd.DataFrame(dataB, columns = ['species', 'family', 
                                                         '2000SA', '2000A', 
                                                         '2001SA', '2001A',
@@ -222,7 +249,12 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep 
                                                         '2016SA', '2016A',
                                                         '2017SA', '2017A',
                                                         '2018SA', '2018A',
-                                                        '2019SA', '2019A',])
+                                                        '2019SA', '2019A',
+                                                        'WinterSA', 'WinterNA', 'WinterElse',
+                                                        'SpringSA', 'SpringNA', 'SpringElse',
+                                                        'SummerSA', 'SummerNA', 'SummerElse', 
+                                                        'FallSA', 'FallNA', 'FallElse',
+                                                        ])
             print("#1", currentBird)
             if str(currentBird['species'][0]) not in finalDf['species'].unique():
                 finalDf = pd.concat([finalDf, currentBird], ignore_index = True)
