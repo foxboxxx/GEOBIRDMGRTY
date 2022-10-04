@@ -125,7 +125,10 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].astype(int)
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].fillna(1)
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].astype(int)
+                
+                # birdDataFrame = birdDataFrame.dropna(subset=['individualCount'])
                 birdDataFrame = birdDataFrame.dropna(subset=['year'])
+                
                 birdDataFrame['year'] = birdDataFrame['year'].astype(int)
                 birdDataFrame = birdDataFrame.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
                 for y in np.arange(minYear, maxYear):
@@ -152,6 +155,9 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         # cLMean = clusteringKMeans.labels_
                         clusteringKMeans.fit(a)
                         print(clusteringKMeans.fit(a).cluster_centers_)
+                        
+                        # Mean-shift testing
+                        
 
 
                         # Plotting Code
@@ -166,6 +172,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
                         # Plotting Code (KMEANS CENTROIDS)
                         plt.cla()
+
                         plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
                         plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
                         plt.ylim([-95, -30])
@@ -175,6 +182,8 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         print("{} {} Complete.".format(birdNames[idx], y))
                 gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
                 # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 
+                # plt.scatter(x = xs, y = ys, s = 50, c = clusteringKMeans.labels_)
+
 
 
 clusterID(2000, 2020, listOfBirds, listOfNames)
