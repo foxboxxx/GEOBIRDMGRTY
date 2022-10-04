@@ -26,6 +26,9 @@ goldenPlover = goldenPlover.dropna(subset=['year'])
 goldenPlover['year'] = goldenPlover['year'].astype(int)
 goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 
+for index, row in goldenPlover.iterrows():
+
+
 earth2000 = np.zeros(shape=(180, 360))
 earth2020 = np.zeros(shape=(180, 360))
 
@@ -162,6 +165,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
 
                         # Plotting Code (KMEANS CENTROIDS)
+                        plt.cla()
                         plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
                         plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
                         plt.ylim([-95, -30])

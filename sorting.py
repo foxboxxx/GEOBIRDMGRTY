@@ -504,7 +504,7 @@ print("> Precipitation 30S60W Fork-tailed Flycatcher: " + "r value = " + str(sta
 scatterPlot(magStrength3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Magnetic Strength", "30S60WFtBird_M.png", "Magnetic Strength (nT)", "tab:orange")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:blue")
 doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "WESEF_DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:orange")
-doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "STS_DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "tab:orange")
+doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "STS_DOUBLEAXIS_FtBird30S60W_M.png", "tab:red", "darkorange")
 
 
 scatterPlot(climate3060S, percentagesFork3060S, "30S60W Fork-tailed Flycatcher Temperature", "30S60WFtBird_T.png", "Temperature (F)", "tab:orange")
