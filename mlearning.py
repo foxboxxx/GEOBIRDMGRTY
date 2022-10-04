@@ -27,7 +27,7 @@ goldenPlover['year'] = goldenPlover['year'].astype(int)
 goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 
 for index, row in goldenPlover.iterrows():
-
+        print("work in progress")
 
 earth2000 = np.zeros(shape=(180, 360))
 earth2020 = np.zeros(shape=(180, 360))
