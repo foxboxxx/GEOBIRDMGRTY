@@ -154,7 +154,7 @@ sScreamerRaw = sScreamerRaw.loc[sScreamerRaw['occurrenceStatus']=='PRESENT', ['e
 southAmericanScreamer = sScreamerRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 specificScreamer = sScreamerRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 
-southAmericanPlover = messingData.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanPlover = messingData.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 northAmericanPlover = messingData.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificMessing = messingData.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
@@ -162,7 +162,7 @@ specificMessing2 = messingData.query('-26 >= decimalLatitude >= -34 & -56 >= dec
 specificMessing3 = messingData.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
 
 
-southAmericanPiper = pSandpiperRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanPiper = pSandpiperRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 northAmericanPiper = pSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificPiper = pSandpiperRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
@@ -170,7 +170,7 @@ specificPiper2 = pSandpiperRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= de
 specificPiper3 = pSandpiperRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
 
 
-southAmericanHawk = sHawkRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanHawk = sHawkRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 northAmericanHawk = pSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificHawk = sHawkRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
@@ -178,7 +178,7 @@ specificHawk2 = sHawkRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= decimalL
 specificHawk3 = sHawkRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
 
 
-southAmericanRump = wSandpiperRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanRump = wSandpiperRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 northAmericanRump = wSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 
@@ -187,7 +187,7 @@ specificRump2 = wSandpiperRaw.query('-26 >= decimalLatitude >= -33 &  -57 >= dec
 specificRump3 = wSandpiperRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLongitude >= -95 & individualCount < 1000')
 
 
-southAmericanForktail = fTailedRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanForktail = fTailedRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 specificForktail = fTailedRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 
 
@@ -517,7 +517,7 @@ doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesFork3060S, "5R Analysis of
 doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "STS_DOUBLEAXIS_FtBird30S60W_P.png", "tab:red", "tab:orange")
 
 
-
+exit()
 
 #<--------------------------------------WIP RN-------------------------------------------->
 # toto = magData3060.copy().query('year >= 2005 & year < 2020')

@@ -61,7 +61,6 @@ ys = earth2020[:,1]  # Selects all ys from the array
 plt.scatter(x=xs, y=ys)
 
 
-
 # Cluster Identification
 
 # y_kmeans = kmeans.predict(X)
@@ -130,7 +129,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 birdDataFrame = birdDataFrame.dropna(subset=['year'])
                 
                 birdDataFrame['year'] = birdDataFrame['year'].astype(int)
-                birdDataFrame = birdDataFrame.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+                birdDataFrame = birdDataFrame.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
                 for y in np.arange(minYear, maxYear):
                         plt.cla()
                         temp = birdDataFrame.query('@y == year').copy()
@@ -141,45 +140,52 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         xs = a[:,0] # Selects all xs from the array
                         ys = a[:,1]  # Selects all ys from the array
 
+
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 4, min_samples = 15).fit(a)
+                        clustering = DBSCAN(eps = 1, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
-                        num_clusters = len(set(clusterLabels))
-                        print(num_clusters)
+                        # num_clusters = len(set(clusterLabels))
+                        # print(num_clusters)
+                        n_clusters_ = len(set(clusterLabels)) - (1 if -1 in clusterLabels else 0)
+                        n_noise_ = list(clusterLabels).count(-1)
+                        print('Estimated number of clusters: %d' % n_clusters_)
+                        print('Estimated number of noise points: %d' % n_noise_)
+                        labels, counts = np.unique(clusterLabels[clusterLabels>=0], return_counts=True)
+                        print("Top Three Clusters: ",labels[np.argsort(-counts)[:3]])
                         # print(metrics.silhouette_score(clustering, clustering['labels']))
 
-                        #kmeans things
-                        clusteringKMeans = KMeans(n_clusters = 3)
-                        # cLMean = clusteringKMeans.labels_
-                        clusteringKMeans.fit(a)
-                        print(clusteringKMeans.fit(a).cluster_centers_)
+                        #kmeans Identification
+                        # clusteringKMeans = KMeans(n_clusters = 3)
+                        # # cLMean = clusteringKMeans.labels_
+                        # clusteringKMeans.fit(a)
+                        # print(clusteringKMeans.fit(a).cluster_centers_)
                         
                         # Mean-shift testing
                         
 
-
-                        # Plotting Code
+                        # Plotting Code (DBSCAN)
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))                       
+                        plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
                         plt.ylim([-95, -30])
                         plt.xlim([-60,15])
-                        plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
                         
                         print("{} {} Complete.".format(birdNames[idx], y))
                         testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
 
                         # Plotting Code (KMEANS CENTROIDS)
-                        plt.cla()
+                        # plt.cla()
 
-                        plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
-                        plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
-                        plt.ylim([-95, -30])
-                        plt.xlim([-60,15])
-                        # plt.scatter(x = xs, y = ys, s = 50, c = cLMean)
-                        plt.savefig("{}kmeanCentroid{}.png".format(birdNames[idx],y))
-                        print("{} {} Complete.".format(birdNames[idx], y))
+                        # plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
+                        # plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
+                        # plt.ylim([-95, -30])
+                        # plt.xlim([-60,15])
+                        # # plt.scatter(x = xs, y = ys, s = 50, c = cLMean)
+                        # plt.savefig("{}kmeanCentroid{}.png".format(birdNames[idx],y))
+                        # print("{} {} Complete.".format(birdNames[idx], y))
+
                 gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
                 # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 
                 # plt.scatter(x = xs, y = ys, s = 50, c = clusteringKMeans.labels_)
