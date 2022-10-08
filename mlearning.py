@@ -12,54 +12,60 @@ from sklearn.cluster import DBSCAN
 # from sklearn.cluster import MeanShift
 from sklearn import metrics
 from gifmaker import gifMaker
+from sklearn.datasets import make_blobs
+from sklearn.preprocessing import StandardScaler
+
+from geopy.distance import great_circle
+from shapely.geometry import MultiPoint
 
         
 goldenPlover = pd.read_csv(r"plovercsv.csv")
 goldenPlover = goldenPlover[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
 goldenPlover['decimalLongitude'] = goldenPlover['decimalLongitude'].fillna(0)
 goldenPlover['decimalLatitude'] = goldenPlover['decimalLatitude'].fillna(0)
-goldenPlover['decimalLongitude'] = goldenPlover['decimalLongitude'].astype(int)
-goldenPlover['decimalLatitude'] = goldenPlover['decimalLatitude'].astype(int)
+goldenPlover['decimalLongitude'] = goldenPlover['decimalLongitude'].astype(float)
+goldenPlover['decimalLatitude'] = goldenPlover['decimalLatitude'].astype(float)
 goldenPlover['individualCount'] = goldenPlover['individualCount'].fillna(1)
 goldenPlover['individualCount'] = goldenPlover['individualCount'].astype(int)
 goldenPlover = goldenPlover.dropna(subset=['year'])
 goldenPlover['year'] = goldenPlover['year'].astype(int)
 goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 
-for index, row in goldenPlover.iterrows():
-        print("work in progress")
+##############################################tensor flow
+# for index, row in goldenPlover.iterrows():
+#         print("work in progress")
 
-earth2000 = np.zeros(shape=(180, 360))
-earth2020 = np.zeros(shape=(180, 360))
+# earth2000 = np.zeros(shape=(180, 360))
+# earth2020 = np.zeros(shape=(180, 360))
 
-goldenPlover2000 = goldenPlover.query('2000 == year').copy()
-print(goldenPlover2000)
-for x in np.arange(0, goldenPlover2000.shape[0]):
-        earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] = earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2000.iloc[x]['individualCount']
-        print(x, " -> ", earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,])
+# goldenPlover2000 = goldenPlover.query('2000 == year').copy()
+# print(goldenPlover2000)
+# for x in np.arange(0, goldenPlover2000.shape[0]):
+#         earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] = earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2000.iloc[x]['individualCount']
+#         print(x, " -> ", earth2000[goldenPlover2000.iloc[x]['decimalLatitude'] + 90, goldenPlover2000.iloc[x]['decimalLongitude'] + 180,])
 
-goldenPlover2019 = goldenPlover.query('2019 == year').copy()
-for x in np.arange(0, goldenPlover2019.shape[0]):
-        earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] = earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2019.iloc[x]['individualCount']
-        print(x, " -> ", earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,])
+# goldenPlover2019 = goldenPlover.query('2019 == year').copy()
+# for x in np.arange(0, goldenPlover2019.shape[0]):
+#         earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] = earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,] + goldenPlover2019.iloc[x]['individualCount']
+#         print(x, " -> ", earth2020[goldenPlover2019.iloc[x]['decimalLatitude'] + 90, goldenPlover2019.iloc[x]['decimalLongitude'] + 180,])
 
-tensor2000 = torch.from_numpy(earth2000)
-tensor2020 = torch.from_numpy(earth2020)
+# tensor2000 = torch.from_numpy(earth2000)
+# tensor2020 = torch.from_numpy(earth2020)
 
-print(torch.lerp(tensor2000, tensor2020, 0.5))
-npinterpolate = torch.lerp(tensor2000, tensor2020, 0.5).numpy()
-np.savetxt("tensor1.csv", npinterpolate, delimiter=",")
+# print(torch.lerp(tensor2000, tensor2020, 0.5))
+# npinterpolate = torch.lerp(tensor2000, tensor2020, 0.5).numpy()
+# np.savetxt("tensor1.csv", npinterpolate, delimiter=",")
 
-# plt.scatter(npinterpolate)
-# plt.show()
-plt.cla()
+# # plt.scatter(npinterpolate)
+# # plt.show()
+# plt.cla()
 
-# plt.imsave("tensor.png",tensor2020, )
-print(earth2020)
-xs = earth2020[:,0] # Selects all xs from the array
-ys = earth2020[:,1]  # Selects all ys from the array
-plt.scatter(x=xs, y=ys)
-
+# # plt.imsave("tensor.png",tensor2020, )
+# print(earth2020)
+# xs = earth2020[:,0] # Selects all xs from the array
+# ys = earth2020[:,1]  # Selects all ys from the array
+# plt.scatter(x=xs, y=ys)
+#####################################################################
 
 # Cluster Identification
 
@@ -67,24 +73,24 @@ plt.scatter(x=xs, y=ys)
 # model = KMeans(n_clusters=5).fit(X)
 
 
-arr = np.zeros(shape = (goldenPlover2019.shape[0], 2))
-for i in np.arange(0, arr.shape[0]):
-        arr[i,0] = goldenPlover2019['decimalLatitude'].iloc[i]
-        arr[i,1] = goldenPlover2019['decimalLongitude'].iloc[i]
-xs = arr[:,0] # Selects all xs from the array
-ys = arr[:,1]  # Selects all ys from the array
-# plt.xlim(-180, 180)
-# plt.ylim(-90,90)
+# arr = np.zeros(shape = (goldenPlover2019.shape[0], 2))
+# for i in np.arange(0, arr.shape[0]):
+#         arr[i,0] = goldenPlover2019['decimalLatitude'].iloc[i]
+#         arr[i,1] = goldenPlover2019['decimalLongitude'].iloc[i]
+# xs = arr[:,0] # Selects all xs from the array
+# ys = arr[:,1]  # Selects all ys from the array
+# # plt.xlim(-180, 180)
+# # plt.ylim(-90,90)
 
-# kmeans = KMeans(n_clusters=3)
-# kmeans.fit(arr)
-# kmeans.labels_
+# # kmeans = KMeans(n_clusters=3)
+# # kmeans.fit(arr)
+# # kmeans.labels_
 
-clustering = DBSCAN(eps = 5, min_samples = 5).fit(arr)
-clustering.labels_
+# clustering = DBSCAN(eps = 5, min_samples = 5).fit(arr)
+# clustering.labels_
 
-plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
-# plt.show()
+# plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
+# # plt.show()
 
 testImages = []
 for i in np.arange(2000, 2020):
@@ -107,7 +113,6 @@ for i in np.arange(2000, 2020):
 
 gifMaker(testImages, "Test Image.gif", 0.2)
 # def clusterID(minYear, maxYear, birdData, birdName,)
-
 
 
 # Cluster Code (not specific to American Golden Plover) including all migratory birds
@@ -139,22 +144,51 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                                 a[j,1] = temp['decimalLongitude'].iloc[j]
                         xs = a[:,0] # Selects all xs from the array
                         ys = a[:,1]  # Selects all ys from the array
+                        latlon = temp[['decimalLatitude', 'decimalLongitude']].to_numpy()
+                        # print(latlon)
+                        # print("A", a)
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 1, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 1, min_samples = 30).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
-                        # num_clusters = len(set(clusterLabels))
-                        # print(num_clusters)
+                        #print(unique_labels)
+                        num_clusters = len(set(clusterLabels))
+                        print(num_clusters)
                         n_clusters_ = len(set(clusterLabels)) - (1 if -1 in clusterLabels else 0)
                         n_noise_ = list(clusterLabels).count(-1)
                         print('Estimated number of clusters: %d' % n_clusters_)
                         print('Estimated number of noise points: %d' % n_noise_)
                         labels, counts = np.unique(clusterLabels[clusterLabels>=0], return_counts=True)
-                        print("Top Three Clusters: ",labels[np.argsort(-counts)[:3]])
+                        print("Top Three Clusters: ", labels[np.argsort(-counts)[:3]])
+                        print("1,2,3", labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]])
                         # print(metrics.silhouette_score(clustering, clustering['labels']))
+                        
+                        kms_per_radian = 6371.0088
+                        epsilon = 1.5 / kms_per_radian
+                        db = DBSCAN(eps=epsilon, min_samples=15, algorithm='ball_tree', metric='haversine').fit(np.radians(latlon))
+                        cluster_labels = db.labels_
+                        clusterList = cluster_labels.tolist()
+                        print(clusterList)
+                        
+
+                        num_clusters = len(set(cluster_labels))
+                        clusters = pd.Series([latlon[cluster_labels == n] for n in range(num_clusters)])
+                        print('Number of clusters: {}'.format(num_clusters))
+                        
+###################################################################################
+                        # PROBABLY USELESS... KEEP JUST IN CASE
+                        def get_centermost_point(cluster):
+                                centroid = (MultiPoint(cluster).centroid.x, MultiPoint(cluster).centroid.y)
+                                centermost_point = min(cluster, key=lambda point: great_circle(point, centroid).m)
+                                return tuple(centermost_point)
+                        # centermost_points = clusters.map(get_centermost_point)
+                        # centermost_points = get_centermost_point(clusters[1])
+                        # print(centermost_points)
+##################################################################################
+                        
 
                         #kmeans Identification
                         # clusteringKMeans = KMeans(n_clusters = 3)
@@ -166,18 +200,33 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         
 
                         # Plotting Code (DBSCAN)
-                        plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))                       
-                        plt.scatter(x = xs, y = ys, s = 50, c = clustering.labels_)
+                        one,two, = labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]], #labels[np.argsort(-counts)[2]]
+                        for i in range(len(clusterList)):
+                                # Noise
+                                if clusterList[i] == -1:
+                                        clusterList[i] = 'black'
+                                # Largest Cluster
+                                if clusterList[i] == one:
+                                        clusterList[i] = 'blue'
+                                # Second Largest Cluster
+                                if clusterList[i] == two:
+                                        clusterList[i] = 'red'
+                                # Third Largest Cluster
+                                # if clusterList[i] == three:
+                                #         clusterList[i] = 'red'
+                                        
+                        plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))
+                        plt.scatter(x = xs, y = ys, s = 15, c = clusterList)
                         plt.ylim([-95, -30])
                         plt.xlim([-60,15])
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
                         
                         print("{} {} Complete.".format(birdNames[idx], y))
                         testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
-
+                        
+                        
                         # Plotting Code (KMEANS CENTROIDS)
                         # plt.cla()
-
                         # plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
                         # plt.title("{} KMean Centroids {}".format(birdNames[idx], y))                       
                         # plt.ylim([-95, -30])
@@ -185,6 +234,9 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         # # plt.scatter(x = xs, y = ys, s = 50, c = cLMean)
                         # plt.savefig("{}kmeanCentroid{}.png".format(birdNames[idx],y))
                         # print("{} {} Complete.".format(birdNames[idx], y))
+                        
+                        
+                        #New test
 
                 gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
                 # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 

@@ -46,7 +46,7 @@ CLMTempData = yearlyTemps['average'].values.tolist()
 CLMPrcpData = yearlyPrcps['average'].values.tolist()
 
 # Creating DataFrame for analysis
-exportedDf = pd.DataFrame(columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value', 'temp r-value', 'temp p-value'])
+exportedDf = pd.DataFrame(columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value', 'temp r-value', 'temp p-value',])
 
 
 # # Bird Data First Iteration
@@ -180,7 +180,7 @@ with pd.read_csv(r'X:\additionalmigratorydata\0000831-220831081235567.csv', sep 
             
             # Breaking up the data into two regions, one within range of the South Atlantic Anomaly and one covering the entirety of South America
             smallerRegion = filt.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000').copy()
-            largerRegion = filt.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+            largerRegion = filt.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
             naRegion = filt.query('0 <= decimalLatitude <= 70 & -135 <= decimalLongitude <= -60 & individualCount < 1000').copy()
             # Migratory Determination
             winterSA = (largerRegion.query('month <= 2 | month == 12').copy()).shape[0]
@@ -307,17 +307,11 @@ for birds in sbird:
     print("Precipitation r-value: " + str(prcpRVal))
     print("Precipitation p-value: " + str(prcpPVal))
 
-    currentBirdAnalysis = pd.DataFrame([[birds, familyName, magRVal, magPVal, prcpRVal, prcpPVal, tempRVal, tempPVal,winterSA, winterNA, winterE,
-                                                            springSA, springNA, springE, 
-                                                            summerSA, summerNA, summerE,
-                                                            fallSA, fallNA, fallE,]], columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value','temp r-value', 'temp p-value','WinterSA', 'WinterNA', 'WinterElse',
-                                                        'SpringSA', 'SpringNA', 'SpringElse',
-                                                        'SummerSA', 'SummerNA', 'SummerElse', 
-                                                        'FallSA', 'FallNA', 'FallElse',])
+    currentBirdAnalysis = pd.DataFrame([[birds, familyName, magRVal, magPVal, prcpRVal, prcpPVal, tempRVal, tempPVal,]], columns=['species', 'family', 'mag r-value', 'mag p-value', 'prcp r-value', 'prcp p-value','temp r-value', 'temp p-value',])
     exportedDf = pd.concat([exportedDf, currentBirdAnalysis])
 
 print(exportedDf)
-writer = pd.ExcelWriter('migratoryDataNightly.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter('migratoryDataDAILY.xlsx', engine='xlsxwriter')
 exportedDf.to_excel(writer, sheet_name='Sheet1')
 workbook  = writer.book
 worksheet = writer.sheets['Sheet1']
