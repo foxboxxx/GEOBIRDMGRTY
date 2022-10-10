@@ -1,4 +1,7 @@
 import os
+from xml.etree.ElementTree import ProcessingInstruction
+
+from functions import getDistanceFromLatLonInKm
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import pandas as pd
 import numpy as np
@@ -14,6 +17,7 @@ from sklearn import metrics
 from gifmaker import gifMaker
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
+import math
 
 from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
@@ -30,6 +34,7 @@ goldenPlover['individualCount'] = goldenPlover['individualCount'].astype(int)
 goldenPlover = goldenPlover.dropna(subset=['year'])
 goldenPlover['year'] = goldenPlover['year'].astype(int)
 goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+print(goldenPlover)
 
 ##############################################tensor flow
 # for index, row in goldenPlover.iterrows():
@@ -125,8 +130,8 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 birdDataFrame = birdDataFrame[['decimalLongitude', 'decimalLatitude', 'individualCount', 'year']]
                 birdDataFrame['decimalLongitude'] = birdDataFrame['decimalLongitude'].fillna(0)
                 birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].fillna(0)
-                birdDataFrame['decimalLongitude'] = birdDataFrame['decimalLongitude'].astype(int)
-                birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].astype(int)
+                birdDataFrame['decimalLongitude'] = birdDataFrame['decimalLongitude'].astype(float)
+                birdDataFrame['decimalLatitude'] = birdDataFrame['decimalLatitude'].astype(float)
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].fillna(1)
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].astype(int)
                 
@@ -135,7 +140,9 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 
                 birdDataFrame['year'] = birdDataFrame['year'].astype(int)
                 birdDataFrame = birdDataFrame.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+                l21, l22, l23, B31, B32, B33 = [], [], [], [], [], []
                 for y in np.arange(minYear, maxYear):
+                        year = y
                         plt.cla()
                         temp = birdDataFrame.query('@y == year').copy()
                         a = np.zeros(shape = (temp.shape[0], 2))
@@ -150,7 +157,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 2, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 4, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
@@ -166,18 +173,18 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         #print("1,2,3", labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]])
                         # print(metrics.silhouette_score(clustering, clustering['labels']))
                         
-                        kms_per_radian = 6371.0088
-                        epsilon = 4 / kms_per_radian
-                        db = DBSCAN(eps=epsilon, min_samples=15, algorithm='ball_tree', metric='haversine').fit(np.radians(latlon))
-                        cluster_labels = db.labels_
-                        clusterList = cluster_labels.tolist()
-                        print(clusterList)
-                        
+################################################################################## OLD DEGREE TO KM.
+                        # kms_per_radian = 6371.0088
+                        # epsilon = 4 / kms_per_radian
+                        # db = DBSCAN(eps=epsilon, min_samples=15, algorithm='ball_tree', metric='haversine').fit(np.radians(latlon))
+                        # cluster_labels = db.labels_
+                        # clusterList = cluster_labels.tolist()
+                        # print(clusterList)
 
-                        num_clusters = len(set(cluster_labels))
-                        clusters = pd.Series([latlon[cluster_labels == n] for n in range(num_clusters)])
-                        print('Number of clusters: {}'.format(num_clusters))
-                        
+                        # num_clusters = len(set(cluster_labels))
+                        # clusters = pd.Series([latlon[cluster_labels == n] for n in range(num_clusters)])
+                        # print('Number of clusters: {}'.format(num_clusters))
+###################################################################################     
 ###################################################################################
                         # PROBABLY USELESS... KEEP JUST IN CASE
                         def get_centermost_point(cluster):
@@ -201,18 +208,34 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
                         # Plotting Code (DBSCAN)
                         clusterLabels = clusterLabels.tolist()
+                        print(latlon)
+                        index_list = [index for (index, num) in enumerate(clusterLabels) if num == 0]
+                        testfil = [latlon[i] for i in index_list]
+                        meanN = [sum(x)/len(x) for x in zip(*testfil)]
+                        print(testfil)
+                        print(meanN)
 
                         numC = len(set(clusterLabels))
                         print(numC)
                         print(clusterLabels)
                         if numC > 1: 
                                 one = labels[np.argsort(-counts)[0]]
+                                indOne = [index for (index, num) in enumerate(clusterLabels) if num == one]
+                                oneList = [latlon[i] for i in indOne]
+                                meanOne = [sum(x)/len(x) for x in zip(*oneList)]
+                                l21.append([year, meanOne])
                         if numC > 2: 
                                 two = labels[np.argsort(-counts)[1]]
+                                indTwo = [index for (index, num) in enumerate(clusterLabels) if num == two]
+                                twoList = [latlon[i] for i in indTwo]
+                                meanTwo = [sum(x)/len(x) for x in zip(*twoList)]
+                                l22.append([year, meanTwo])
                         if numC > 3: 
                                 three = labels[np.argsort(-counts)[2]]
-                        #one, two, three = labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]], labels[np.argsort(-counts)[2]]
-
+                                indThree = [index for (index, num) in enumerate(clusterLabels) if num == three]
+                                threeList = [latlon[i] for i in indThree]
+                                meanThree = [sum(x)/len(x) for x in zip(*threeList)]
+                                l23.append([year, meanThree])
                         
                         for i in range(len(clusterLabels)):
                                 # Noise
@@ -241,15 +264,21 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))
-                        plt.scatter(x = xs, y = ys, s = 50, c = clusterLabels)
+                        plt.scatter(x = xs, y = ys, s = 15, c = clusterLabels)
                         plt.ylim([-95, -30])
                         plt.xlim([-60,15])
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
                         
                         print("{} {} Complete.".format(birdNames[idx], y))
-                        testImages.append("{}ClusterIDTest{}.png".format(birdNames[idx],y))
+                        testImages.append(f"{birdNames[idx]}ClusterIDTest{y}.png")
                         
-                        
+
+                        # print(l21)
+                        # l21 = np.add(l21, [30,60])
+                        # print(l21)
+                        # dist21 = math.sqrt(((l21[0])**2) + ((l21[1])**2))
+                        # print(dist21)
+
                         # Plotting Code (KMEANS CENTROIDS)
                         # plt.cla()
                         # plt.scatter(clusteringKMeans.cluster_centers_[:, 0], clusteringKMeans.cluster_centers_[:, 1], s=100, c='black')
@@ -261,9 +290,42 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         # print("{} {} Complete.".format(birdNames[idx], y))
                         
                         
-                        #New test
+                        #New tes
 
+                # Distance Plotting
+                print(l21)
+                print(l22)
+                print(l23)
+                
+                for elem in l21:
+                        points = elem[1]
+                        dist21 = getDistanceFromLatLonInKm(points[0], points[1], -30, -60)
+                        B31.append([elem[0], dist21])
+                print(f"bb:{B31}")
+                for elem in l21:
+                        newb = np.add(elem[1], [30,60])
+                        dist21 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
+                        B32.append([elem[0], dist21])
+                print(f"cc:{B32}")
+                # for elem in l22:
+                #         newb = np.add(elem[1], [30,60])
+                #         dist22 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
+                #         B32.append([elem[0], dist22])     
+                # for elem in l23:
+                #         newb = np.add(elem[1], [30,60])
+                #         dist23 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
+                #         B33.append([elem[0], dist23])    
+                       
+                plt.cla()
+                print(f"YEARS:{B31[0]}")
+                zip(*B31)
+                plt.plot(*zip(*B31))
+                plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
+                # plt.plot(np.arange(2000,2020), B32)
+                # plt.plot(np.arange(2000,2020), B33)
+                plt.savefig(f"_{birdNames[idx]}Cluster")
                 gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
+
                 # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 
                 # plt.scatter(x = xs, y = ys, s = 50, c = clusteringKMeans.labels_)
 

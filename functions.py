@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib as matplotlib
 from scipy import stats
 import seaborn as sb
+import math
 
 def lineBreak(num):
     for i in np.arange(0, num):
@@ -92,3 +93,15 @@ def plotter(smallData, largeData, start, finish, pltr, label):
         pltr.set_title(label)
         pltr.set_xlim(1,12)
         pltr.set_ylim(0,100)
+
+def deg2rad(deg):
+  return deg * (math.pi/180)
+
+def getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2):
+    R = 6371; # Radius of the earth in km
+    dLat = deg2rad(lat2 - lat1);  # deg2rad below
+    dLon = deg2rad(lon2 - lon1); 
+    a = math.sin(dLat/2)**2 + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a)); 
+    d = R * c; # Distance in km
+    return d
