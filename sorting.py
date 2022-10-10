@@ -151,6 +151,8 @@ sScreamerRaw = sScreamerRaw.loc[sScreamerRaw['occurrenceStatus']=='PRESENT', ['e
 
 #controlOne = messingData[ (messingData['decimalLatitude'] >= 0) & ((messingData['decimalLongitude'] <= -90) & messingData['decimalLongitude'] >= -30)].index
 #controlTwo = messingData[ (messingData['decimalLatitude'] >= -59) & (messingData['decimalLongitude'] <= -61) & (messingData['decimalLongitude'] >= -29) & (messingData['decimalLongitude'] <= -31)].index
+messingData, pSandpiperRaw, sHawkRaw, wSandpiperRaw, fTailedRaw = messingData.dropna(subset=['individualCount']), pSandpiperRaw.dropna(subset=['individualCount']), sHawkRaw.dropna(subset=['individualCount']), wSandpiperRaw.dropna(subset=['individualCount']), fTailedRaw.dropna(subset=['individualCount'])
+
 southAmericanScreamer = sScreamerRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 specificScreamer = sScreamerRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 
@@ -171,7 +173,7 @@ specificPiper3 = pSandpiperRaw.query('25 <= decimalLatitude <= 35 & -85 >= decim
 
 
 southAmericanHawk = sHawkRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-northAmericanHawk = pSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
+northAmericanHawk = sHawkRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificHawk = sHawkRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
 specificHawk2 = sHawkRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= decimalLongitude >= -64 & individualCount < 1000')
