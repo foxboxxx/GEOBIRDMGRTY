@@ -150,7 +150,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 1, min_samples = 30).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 2, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
@@ -163,11 +163,11 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         print('Estimated number of noise points: %d' % n_noise_)
                         labels, counts = np.unique(clusterLabels[clusterLabels>=0], return_counts=True)
                         print("Top Three Clusters: ", labels[np.argsort(-counts)[:3]])
-                        print("1,2,3", labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]])
+                        #print("1,2,3", labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]])
                         # print(metrics.silhouette_score(clustering, clustering['labels']))
                         
                         kms_per_radian = 6371.0088
-                        epsilon = 1.5 / kms_per_radian
+                        epsilon = 4 / kms_per_radian
                         db = DBSCAN(eps=epsilon, min_samples=15, algorithm='ball_tree', metric='haversine').fit(np.radians(latlon))
                         cluster_labels = db.labels_
                         clusterList = cluster_labels.tolist()
@@ -200,23 +200,48 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         
 
                         # Plotting Code (DBSCAN)
-                        one,two, = labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]], #labels[np.argsort(-counts)[2]]
-                        for i in range(len(clusterList)):
+                        clusterLabels = clusterLabels.tolist()
+
+                        numC = len(set(clusterLabels))
+                        print(numC)
+                        print(clusterLabels)
+                        if numC > 1: 
+                                one = labels[np.argsort(-counts)[0]]
+                        if numC > 2: 
+                                two = labels[np.argsort(-counts)[1]]
+                        if numC > 3: 
+                                three = labels[np.argsort(-counts)[2]]
+                        #one, two, three = labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]], labels[np.argsort(-counts)[2]]
+
+                        
+                        for i in range(len(clusterLabels)):
                                 # Noise
-                                if clusterList[i] == -1:
-                                        clusterList[i] = 'black'
+                                if clusterLabels[i] == -1:
+                                        clusterLabels[i] = 'black'
+                                        continue
+
                                 # Largest Cluster
-                                if clusterList[i] == one:
-                                        clusterList[i] = 'blue'
+                                if numC > 1:
+                                        if clusterLabels[i] == one:
+                                                clusterLabels[i] = 'green'
+                                                continue
+
                                 # Second Largest Cluster
-                                if clusterList[i] == two:
-                                        clusterList[i] = 'red'
+                                if numC > 2: 
+                                        if clusterLabels[i] == two:
+                                                clusterLabels[i] = 'yellow'
+                                                continue
+
                                 # Third Largest Cluster
-                                # if clusterList[i] == three:
-                                #         clusterList[i] = 'red'
-                                        
+                                if numC > 3: 
+                                        if clusterLabels[i] == three:
+                                                clusterLabels[i] = 'red'
+                                                continue
+                                clusterLabels[i] = 'pink' 
+
+
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))
-                        plt.scatter(x = xs, y = ys, s = 15, c = clusterList)
+                        plt.scatter(x = xs, y = ys, s = 50, c = clusterLabels)
                         plt.ylim([-95, -30])
                         plt.xlim([-60,15])
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
