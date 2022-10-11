@@ -151,13 +151,17 @@ sScreamerRaw = sScreamerRaw.loc[sScreamerRaw['occurrenceStatus']=='PRESENT', ['e
 
 #controlOne = messingData[ (messingData['decimalLatitude'] >= 0) & ((messingData['decimalLongitude'] <= -90) & messingData['decimalLongitude'] >= -30)].index
 #controlTwo = messingData[ (messingData['decimalLatitude'] >= -59) & (messingData['decimalLongitude'] <= -61) & (messingData['decimalLongitude'] >= -29) & (messingData['decimalLongitude'] <= -31)].index
+ms1, ms2, ms3, ms4, ms5 = messingData.shape[0], pSandpiperRaw.shape[0], sHawkRaw.shape[0], wSandpiperRaw.shape[0], fTailedRaw.shape[0]
+input("Press Enter to continue...")
 messingData, pSandpiperRaw, sHawkRaw, wSandpiperRaw, fTailedRaw = messingData.dropna(subset=['individualCount']), pSandpiperRaw.dropna(subset=['individualCount']), sHawkRaw.dropna(subset=['individualCount']), wSandpiperRaw.dropna(subset=['individualCount']), fTailedRaw.dropna(subset=['individualCount'])
+print((1 - (messingData.shape[0]/ms1))*100, (1 - (pSandpiperRaw.shape[0]/ms2))*100, (1 - (sHawkRaw.shape[0]/ms3))*100, (1 - (wSandpiperRaw.shape[0]/ms4))*100, (1 - (fTailedRaw.shape[0]/ms5))*100)
+input("Press Enter to continue...")
 
-southAmericanScreamer = sScreamerRaw.query('0 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+southAmericanScreamer = sScreamerRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 specificScreamer = sScreamerRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 
 southAmericanPlover = messingData.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-northAmericanPlover = messingData.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
+northAmericanPlover = messingData.query('8 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificMessing = messingData.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 specificMessing2 = messingData.query('-26 >= decimalLatitude >= -34 & -56 >= decimalLongitude >= -64 & individualCount < 1000')
@@ -165,7 +169,7 @@ specificMessing3 = messingData.query('25 <= decimalLatitude <= 35 & -85 >= decim
 
 
 southAmericanPiper = pSandpiperRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-northAmericanPiper = pSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
+northAmericanPiper = pSandpiperRaw.query('8 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificPiper = pSandpiperRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
 specificPiper2 = pSandpiperRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= decimalLongitude >= -64 & individualCount < 1000')
@@ -173,7 +177,7 @@ specificPiper3 = pSandpiperRaw.query('25 <= decimalLatitude <= 35 & -85 >= decim
 
 
 southAmericanHawk = sHawkRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-northAmericanHawk = sHawkRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
+northAmericanHawk = sHawkRaw.query('8 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 specificHawk = sHawkRaw.query('-25 >= decimalLatitude >= -35 &  -55 >= decimalLongitude >= -65 & individualCount < 1000')
 specificHawk2 = sHawkRaw.query('-26 >= decimalLatitude >= -33 &  -56 >= decimalLongitude >= -64 & individualCount < 1000')
@@ -181,7 +185,7 @@ specificHawk3 = sHawkRaw.query('25 <= decimalLatitude <= 35 & -85 >= decimalLong
 
 
 southAmericanRump = wSandpiperRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
-northAmericanRump = wSandpiperRaw.query('0 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
+northAmericanRump = wSandpiperRaw.query('8 <= decimalLatitude <= 50 & -120 <= decimalLongitude <= -60 & individualCount < 1000')
 
 
 specificRump = wSandpiperRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')

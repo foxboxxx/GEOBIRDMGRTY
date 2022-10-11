@@ -135,7 +135,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].fillna(1)
                 birdDataFrame['individualCount'] = birdDataFrame['individualCount'].astype(int)
                 
-                # birdDataFrame = birdDataFrame.dropna(subset=['individualCount'])
+                birdDataFrame = birdDataFrame.dropna(subset=['individualCount'])
                 birdDataFrame = birdDataFrame.dropna(subset=['year'])
                 
                 birdDataFrame['year'] = birdDataFrame['year'].astype(int)
@@ -157,7 +157,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 4, min_samples = 15).fit(a, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 1, min_samples = 15).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
@@ -166,8 +166,8 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         print(num_clusters)
                         n_clusters_ = len(set(clusterLabels)) - (1 if -1 in clusterLabels else 0)
                         n_noise_ = list(clusterLabels).count(-1)
-                        print('Estimated number of clusters: %d' % n_clusters_)
-                        print('Estimated number of noise points: %d' % n_noise_)
+                        print(f'Estimated number of clusters: {n_clusters_}')
+                        print(f'Estimated number of noise points: {n_noise_}')
                         labels, counts = np.unique(clusterLabels[clusterLabels>=0], return_counts=True)
                         print("Top Three Clusters: ", labels[np.argsort(-counts)[:3]])
                         #print("1,2,3", labels[np.argsort(-counts)[0]], labels[np.argsort(-counts)[1]])
@@ -242,19 +242,16 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                                 if clusterLabels[i] == -1:
                                         clusterLabels[i] = 'black'
                                         continue
-
                                 # Largest Cluster
                                 if numC > 1:
                                         if clusterLabels[i] == one:
                                                 clusterLabels[i] = 'green'
                                                 continue
-
                                 # Second Largest Cluster
                                 if numC > 2: 
                                         if clusterLabels[i] == two:
                                                 clusterLabels[i] = 'yellow'
                                                 continue
-
                                 # Third Largest Cluster
                                 if numC > 3: 
                                         if clusterLabels[i] == three:
@@ -301,12 +298,20 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         points = elem[1]
                         dist21 = getDistanceFromLatLonInKm(points[0], points[1], -30, -60)
                         B31.append([elem[0], dist21])
+                for elem in l22:
+                        points = elem[1]
+                        dist22 = getDistanceFromLatLonInKm(points[0], points[1], -30, -60)
+                        B32.append([elem[0], dist22])
+                for elem in l23:
+                        points = elem[1]
+                        dist23 = getDistanceFromLatLonInKm(points[0], points[1], -30, -60)
+                        B33.append([elem[0], dist23])
                 print(f"bb:{B31}")
-                for elem in l21:
-                        newb = np.add(elem[1], [30,60])
-                        dist21 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
-                        B32.append([elem[0], dist21])
-                print(f"cc:{B32}")
+                # for elem in l21:
+                #         newb = np.add(elem[1], [30,60])
+                #         dist21 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
+                #         B32.append([elem[0], dist21])
+                # print(f"cc:{B32}")
                 # for elem in l22:
                 #         newb = np.add(elem[1], [30,60])
                 #         dist22 = math.sqrt(((newb[0])**2) + ((newb[1])**2))
@@ -319,7 +324,12 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 plt.cla()
                 print(f"YEARS:{B31[0]}")
                 zip(*B31)
-                plt.plot(*zip(*B31))
+                zip(*B32)
+                zip(*B33)
+                plt.plot(*zip(*B31), color = "green")
+                plt.plot(*zip(*B32), color = "yellow")
+                plt.plot(*zip(*B33), color = "red")
+
                 plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
                 # plt.plot(np.arange(2000,2020), B32)
                 # plt.plot(np.arange(2000,2020), B33)
