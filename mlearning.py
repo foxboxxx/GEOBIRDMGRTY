@@ -18,6 +18,7 @@ from gifmaker import gifMaker
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 import math
+import seaborn as sb
 
 from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
@@ -33,7 +34,7 @@ goldenPlover['individualCount'] = goldenPlover['individualCount'].fillna(1)
 goldenPlover['individualCount'] = goldenPlover['individualCount'].astype(int)
 goldenPlover = goldenPlover.dropna(subset=['year'])
 goldenPlover['year'] = goldenPlover['year'].astype(int)
-goldenPlover = goldenPlover.query('5 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+goldenPlover = goldenPlover.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
 print(goldenPlover)
 
 ##############################################tensor flow
@@ -157,7 +158,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 1, min_samples = 15).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 1, min_samples = 5).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
@@ -166,7 +167,9 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         print(num_clusters)
                         n_clusters_ = len(set(clusterLabels)) - (1 if -1 in clusterLabels else 0)
                         n_noise_ = list(clusterLabels).count(-1)
+                        
                         print(f'Estimated number of clusters: {n_clusters_}')
+
                         print(f'Estimated number of noise points: {n_noise_}')
                         labels, counts = np.unique(clusterLabels[clusterLabels>=0], return_counts=True)
                         print("Top Three Clusters: ", labels[np.argsort(-counts)[:3]])
@@ -257,7 +260,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                                         if clusterLabels[i] == three:
                                                 clusterLabels[i] = 'red'
                                                 continue
-                                clusterLabels[i] = 'pink' 
+                                clusterLabels[i] = 'blue' 
 
 
                         plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))
@@ -322,19 +325,61 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 #         B33.append([elem[0], dist23])    
                        
                 plt.cla()
-                print(f"YEARS:{B31[0]}")
+                # print(f"YEARS:{B31[0]}")
+                # input("ENTER.")
+                lis1, lis2, lis3 = list(zip(*B31)),list(zip(*B32)),list(zip(*B33))
+
+                # input("ENTER.")
+                frameOfDistance1 = pd.DataFrame(columns = ['year', 'dist', 'Cluster Size'])
+                frameOfDistance1['year'] = lis1[0]
+                frameOfDistance1['dist'] = lis1[1]
+                frameOfDistance1['Cluster Size'][0:len(lis1[0])] = "1st Largest"
+                frameOfDistance2 = pd.DataFrame(columns = ['year', 'dist', 'Cluster Size'])
+                frameOfDistance2['year'] = lis2[0]
+                frameOfDistance2['dist'] = lis2[1]
+                frameOfDistance2['Cluster Size'][0:len(lis2[0])] = "2nd Largest"
+                frameOfDistance3 = pd.DataFrame(columns = ['year', 'dist', 'Cluster Size'])
+                frameOfDistance3['year'] = lis3[0]
+                frameOfDistance3['dist'] = lis3[1]
+                frameOfDistance3['Cluster Size'][0:len(lis3[0])] = "3rd Largest"
+                
+                frameOfDistanceFinal = pd.concat([frameOfDistance1, frameOfDistance2, frameOfDistance3], ignore_index= True)
+                print(frameOfDistanceFinal)
+
+                # input("ENTER.")
                 zip(*B31)
                 zip(*B32)
                 zip(*B33)
-                plt.plot(*zip(*B31), color = "green")
-                plt.plot(*zip(*B32), color = "yellow")
-                plt.plot(*zip(*B33), color = "red")
+                # plt.plot(*zip(*B31), color = "green")
+                # plt.plot(*zip(*B32), color = "yellow")
+                # plt.plot(*zip(*B33), color = "red")
+                # print(*zip(*B31))
+                # ax = sb.lineplot(*zip(*B31), color = "#261C2C")
+                # ax = sb.lineplot(*zip(*B32), color = "#3E2C41")
+                # ax = sb.lineplot(*zip(*B33), color = "#5C527F")
 
+                # plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
+                # ax.set(xlabel="Year", ylabel="Distance from SAA (km)")
+                # plt.title(f"{birdNames[idx]} Cluster Distance Analysis (2000 - 2020)")
+                # plt.show()
+                
+                #New test with hues
+                #sb.set_theme(style='darkgrid')
+                plt.cla()
+                ax = sb.lineplot(data = frameOfDistanceFinal, x = "year", y = "dist", hue = "Cluster Size", palette="mako", legend='full')
                 plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
+                plt.yticks([0, 1000, 2000, 3000, 4000, 5000])
+                ax.set(xlabel="Year", ylabel="Distance from SAA (km)")
+                ax.grid(color = 'grey', linestyle = "--")
+                plt.title(f"{birdNames[idx]} Cluster Distance Analysis (2000 - 2020)")
+                sb.move_legend(ax, "upper right")
+                #plt.show()
+                
+                
                 # plt.plot(np.arange(2000,2020), B32)
                 # plt.plot(np.arange(2000,2020), B33)
                 plt.savefig(f"_{birdNames[idx]}Cluster")
-                gifMaker(testImages, "{}Clusters.gif".format(birdNames[idx]), 0.2)
+                gifMaker(testImages, f"{birdNames[idx]}Clusters.gif", 0.2)
 
                 # centroid_of_cluster_0 = np.mean(points_of_cluster_0, axis=0) 
                 # plt.scatter(x = xs, y = ys, s = 50, c = clusteringKMeans.labels_)
