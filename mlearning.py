@@ -19,6 +19,7 @@ from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 import math
 import seaborn as sb
+from matplotlib.lines import Line2D
 
 from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
@@ -243,28 +244,34 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         for i in range(len(clusterLabels)):
                                 # Noise
                                 if clusterLabels[i] == -1:
-                                        clusterLabels[i] = 'black'
+                                        clusterLabels[i] = 'grey'
                                         continue
                                 # Largest Cluster
                                 if numC > 1:
                                         if clusterLabels[i] == one:
-                                                clusterLabels[i] = 'green'
+                                                clusterLabels[i] = '#a83e44'
                                                 continue
                                 # Second Largest Cluster
                                 if numC > 2: 
                                         if clusterLabels[i] == two:
-                                                clusterLabels[i] = 'yellow'
+                                                clusterLabels[i] = '#201e1e'
                                                 continue
                                 # Third Largest Cluster
                                 if numC > 3: 
                                         if clusterLabels[i] == three:
-                                                clusterLabels[i] = 'red'
+                                                clusterLabels[i] = '#4a68c3'
                                                 continue
-                                clusterLabels[i] = 'blue' 
+                                clusterLabels[i] = 'green' 
 
 
-                        plt.title("{} Cluster ID Test {}".format(birdNames[idx], y))
-                        plt.scatter(x = xs, y = ys, s = 15, c = clusterLabels)
+                        plt.title(f"{birdNames[idx]} DBSCAN Clustering - {y}")
+                        ax1 = sb.scatterplot(x = xs, y = ys, s = 100, c = clusterLabels)
+                        plt.legend(labels=['legendEntry1', 'legendEntry2', 'legendEntry3'])
+                        custom_lines = [Line2D([0], [0],marker='o', color="#a83e44", label='Scatter', lw = 0),Line2D([0], [0],marker='o',color="#201e1e", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="#4a68c3", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="green", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="grey", label='Scatter', lw = 0)]
+                        ax1.legend(custom_lines, ['1st Largest', '2nd Largest', '3rd Largest', 'Additional', 'Noise'], title = "Cluster Identification", )
+                        sb.move_legend(ax1, "upper right")
+                        ax1.set(xlabel="Latitude", ylabel="Longitude")
+                        ax1.grid(color = 'grey', linestyle = "--")
                         plt.ylim([-95, -30])
                         plt.xlim([-60,15])
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
@@ -366,7 +373,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                 #New test with hues
                 #sb.set_theme(style='darkgrid')
                 plt.cla()
-                ax = sb.lineplot(data = frameOfDistanceFinal, x = "year", y = "dist", hue = "Cluster Size", palette="mako", legend='full')
+                ax = sb.lineplot(data = frameOfDistanceFinal, x = "year", y = "dist", hue = "Cluster Size", palette="icefire_r", legend='full')
                 plt.xticks([2000, 2003, 2006, 2009, 2012, 2015, 2018])
                 plt.yticks([0, 1000, 2000, 3000, 4000, 5000])
                 ax.set(xlabel="Year", ylabel="Distance from SAA (km)")
