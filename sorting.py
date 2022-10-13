@@ -523,7 +523,7 @@ doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesFork3060S, "5R Analysis of
 doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesFork3060S, "5R Analysis of Fork-tailed Flycatcher 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "STS_DOUBLEAXIS_FtBird30S60W_P.png", "tab:red", "tab:orange")
 
 
-exit()
+
 
 #<--------------------------------------WIP RN-------------------------------------------->
 # toto = magData3060.copy().query('year >= 2005 & year < 2020')
@@ -579,6 +579,7 @@ print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStreng
 scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk Magnetic Strength", "30N90WShBird.png", "Magnetic Strength (nT)", "rosybrown")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAHawk30N90W, "5R Analysis of Swainson's Hawk 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30N90W_M.png", "tab:red", "tab:blue")
 
+exit()
 print("|------------------------------------------------------------------------|")#section end
 #Custom double Y-axis plot for WESEF:
 t = np.arange(2000,2020, 1)

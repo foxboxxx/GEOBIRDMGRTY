@@ -159,7 +159,7 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         # Code that identifies the clustering using the DBSCAN algorithm
-                        clustering = DBSCAN(eps = 1, min_samples = 5).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
+                        clustering = DBSCAN(eps = 3.5, min_samples = 5).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
@@ -265,17 +265,18 @@ def clusterID(minYear, maxYear, birdList, birdNames):
 
 
                         plt.title(f"{birdNames[idx]} DBSCAN Clustering - {y}")
-                        ax1 = sb.scatterplot(x = xs, y = ys, s = 100, c = clusterLabels)
+
+                        ax1 = sb.scatterplot(x = ys, y = xs, s = 100, c = clusterLabels)
                         plt.legend(labels=['legendEntry1', 'legendEntry2', 'legendEntry3'])
                         custom_lines = [Line2D([0], [0],marker='o', color="#a83e44", label='Scatter', lw = 0),Line2D([0], [0],marker='o',color="#201e1e", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="#4a68c3", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="green", label='Scatter', lw = 0), Line2D([0], [0], marker='o',color="grey", label='Scatter', lw = 0)]
                         ax1.legend(custom_lines, ['1st Largest', '2nd Largest', '3rd Largest', 'Additional', 'Noise'], title = "Cluster Identification", )
                         sb.move_legend(ax1, "upper right")
-                        ax1.set(xlabel="Latitude", ylabel="Longitude")
+                        ax1.set(xlabel="Longitude (°)", ylabel="Latitude (°)")
                         ax1.grid(color = 'grey', linestyle = "--")
-                        plt.ylim([-95, -30])
-                        plt.xlim([-60,15])
+                        plt.ylim([-60, 25])
+                        plt.xlim([-90,-30])
                         plt.savefig("{}ClusterIDTest{}.png".format(birdNames[idx],y))
-                        
+                        # input("D")
                         print("{} {} Complete.".format(birdNames[idx], y))
                         testImages.append(f"{birdNames[idx]}ClusterIDTest{y}.png")
                         
