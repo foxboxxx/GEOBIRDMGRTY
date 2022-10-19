@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 # rawMagData = "3060fullmag.csv"
 # filteredMagData = pd.read_csv(rawMagData)
 # print(filteredMagData)
@@ -29,6 +30,25 @@ import numpy as np
 
 # print(df)
 
-data = [[1, 2, 2], [1, 2, 1], [1, 1, 1]]
-average = [sum(x)/len(x) for x in zip(*data)]
-print(average)
+# data = [[1, 2, 2], [1, 2, 1], [1, 1, 1]]
+# average = [sum(x)/len(x) for x in zip(*data)]
+# print(average)
+
+kps = pd.read_csv(r"kpindex.csv")
+kps = kps.query('YYY >= 2000').copy()
+print(kps)
+li = []
+for x in np.arange(2000,2020,1):
+  l = [x]
+  for y in np.arange(0, 7,1):
+    l.append((kps.query('@y <= Kp < @y + 1 & YYY == @x'))['Kp'].sum())
+    print(l)
+  val = x - 2000
+  li.append(l)
+df = pd.DataFrame(li, columns = ['Year', '0 - 1', '1 - 2', '2 - 3', '3 - 4', '4 - 5', '5 - 6', '6 - 7'])
+
+plt.plot(df["Year"], df["6 - 7"], c = "red")
+plt.plot(df["Year"], df["5 - 6"], c = "blue")
+plt.plot(df["Year"], df["4 - 5"], c = "green")
+plt.show()
+
