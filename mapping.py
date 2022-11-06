@@ -209,7 +209,7 @@ def avianHeatmap(birdData, birdName, includeMagnetism, minYear, maxYear):
 
 # Testbed
 avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2013, 2014)
-exit()
+
 
 avianHeatmap('plovercsv.csv', "American Golden Plover", False, 2000, 2020)
 avianHeatmap('plovercsv.csv', "American Golden Plover", True, 2000, 2020)

@@ -2,15 +2,15 @@ from multiprocessing import current_process
 # from re import T
 import pandas as pd
 import numpy as np
-import pygmt
-import datetime
+# import pygmt
+# import datetime
 import matplotlib.pyplot as plt
 import matplotlib as matplotlib
 from scipy import stats
 import seaborn as sb
-import xlsxwriter
+# import xlsxwriter
 from functions import lineBreak, histogramMaker, doubleYAxisPlotMaker, yearCount, monthCount, scatterPlot, plotter
-import gc
+# import gc
 
 print("Working...")
 # Magnetic Data

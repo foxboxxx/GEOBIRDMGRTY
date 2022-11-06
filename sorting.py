@@ -194,6 +194,10 @@ specificRump3 = wSandpiperRaw.query('25 <= decimalLatitude <= 35 & -85 >= decima
 
 
 southAmericanForktail = fTailedRaw.query('8 > decimalLatitude >= -60 & -90 <= decimalLongitude <= -30 & individualCount < 1000')
+print(southAmericanForktail['individualCount'].sum())
+print(fTailedRaw['individualCount'].sum())
+exit()
+
 specificForktail = fTailedRaw.query('-25 >= decimalLatitude >= -35 & -55 >= decimalLongitude >= -65 & individualCount < 1000')
 
 
@@ -579,7 +583,7 @@ print("> 30N90W Swainson's Hawk: " + "r value = " + str(stats.pearsonr(magStreng
 scatterPlot(magStrength30N90W, percentagesNAHawk30N90W, "30N90W Swainson's Hawk Magnetic Strength", "30N90WShBird.png", "Magnetic Strength (nT)", "rosybrown")
 doubleYAxisPlotMaker(2000,2020, magStrength30N90W, percentagesNAHawk30N90W, "5R Analysis of Swainson's Hawk 30N90W from 2000-2020(M)", "Magnetic Strength (nT)", "Population Density %", "DOUBLEAXIS_ShBird30N90W_M.png", "tab:red", "tab:blue")
 
-exit()
+
 print("|------------------------------------------------------------------------|")#section end
 #Custom double Y-axis plot for WESEF:
 t = np.arange(2000,2020, 1)
@@ -1178,7 +1182,7 @@ print("Pectoral White-Rumped Sandpiper (WrBird) - South America Successfully Upd
 #forktailed flycatcher (control, native south american bird)
 fTailed = pd.read_csv(r"forktailedFiltered.csv")
 ftd = pygmt.Figure()
-ftd.basemap(region = n232n, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird) - South America"'])
+ftd.basemap(region = worldRegion, projection = "M8i", frame=["a", '+t"Fork-tailed Flycatcher [Control] (FtBird) - South America"'])
 ftd.coast(land="burlywood", water="lightblue")
 pygmt.makecpt(cmap="plasma", series=[fTailed.year.min(), fTailed.year.max()])
 ftd.plot(
