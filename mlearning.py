@@ -154,16 +154,12 @@ def clusterID(minYear, maxYear, birdList, birdNames):
                         xs = a[:,0] # Selects all xs from the array
                         ys = a[:,1]  # Selects all ys from the array
                         latlon = temp[['decimalLatitude', 'decimalLongitude']].to_numpy()
-                        # print(latlon)
-                        # print("A", a)
-
 
                         # Code that identifies the clustering using the DBSCAN algorithm
                         clustering = DBSCAN(eps = 3.5, min_samples = 5).fit(latlon, y = None, sample_weight = temp['individualCount'].tolist())
                         clustering.labels_
                         clusterLabels = clustering.labels_ 
                         unique_labels = set(clusterLabels)
-                        #print(unique_labels)
                         num_clusters = len(set(clusterLabels))
                         print(num_clusters)
                         n_clusters_ = len(set(clusterLabels)) - (1 if -1 in clusterLabels else 0)

@@ -9,7 +9,9 @@ def yearCount(smallSet, bigSet, yearMin, yearMax):
 
 def mapMaker(yearMin, yearMax, birdName, rawBirdFile, latMin, latMax, lonMin, lonMax):
     rawBirdData = pd.read_csv(rawBirdFile)
-    rawBirdData = rawBirdData.loc[rawBirdData['occurrenceStatus']=='PRESENT', ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 'day', 'month', 'year']].copy()
+    rawBirdData = rawBirdData.loc[rawBirdData['occurrenceStatus']=='PRESENT', 
+                ['eventDate', 'individualCount', 'decimalLatitude', 'decimalLongitude', 
+                'day', 'month', 'year']].copy()
     filteredBirdData = rawBirdData.query('@yearMin <= year <= @yearMax')
     filteredBirdData = filteredBirdData.query('individualCount < 1000')
 
@@ -36,7 +38,9 @@ def mapMaker(yearMin, yearMax, birdName, rawBirdFile, latMin, latMax, lonMin, lo
     finalRegion = [latMin,latMax,lonMin,lonMax]
 
     Fig = pygmt.Figure()
-    Fig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t' + birdName  + "_" + lonMinName + lonMaxName + latMaxName + latMaxName + "(" + str(yearMin) + "-" + str(yearMax) + ")"])
+    Fig.basemap(region=finalRegion,projection="M8i",frame=["a", '+t' +
+                birdName  + "_" + lonMinName + lonMaxName + 
+                latMaxName + latMaxName + "(" + str(yearMin) + "-" + str(yearMax) + ")"])
     Fig.coast(land="burlywood", water="lightblue")
     pygmt.makecpt(cmap="viridis", series=[yearMin,yearMax])
     Fig.plot(

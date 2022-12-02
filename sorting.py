@@ -440,7 +440,7 @@ doubleYAxisPlotMaker(2000,2020, magStrength3060S, percentagesWhite3060S, "5R Ana
 
 scatterPlot(climate3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Temperature", "30S60WWrBird_T.png", "Temperature (F)", "tab:green")
 doubleYAxisPlotMaker(2000,2020, climate3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(T)", "Temperature (F)", "Population Density %", "DOUBLEAXIS_WrBird30S60W_T.png", "tab:red", "tab:blue")
-doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "STS_DOUBLEAXIS_WrBird30S60W_P.png", "tab:red", "tab:green")
+doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "STS_DOUBLEAXIS_WrBird30S60W_T.png", "tab:red", "tab:green")
 
 scatterPlot(prcp3060S, percentagesWhite3060S, "30S60W White-rumped Sandpiper Precipitation", "30S60WWrBird_P.png", "Precipitation (in)", "tab:green")
 doubleYAxisPlotMaker(2000,2020, prcp3060S, percentagesWhite3060S, "5R Analysis of White-rumped Sandpiper 30S60W from 2000-2020(P)", "Precipitation (in)", "Population Density %", "DOUBLEAXIS_WrBird30S60W_P.png", "tab:red", "tab:blue")
